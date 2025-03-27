@@ -1,0 +1,16 @@
+.surface-overlay{
+    background-color: aliceblue !important;
+}
+
+#CompanyName{
+    font-weight: bold;
+    font-size: 1.8em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family:"Oswald", sans-serif;
+    margin-left: 12px;
+}
+#logo{
+    WIDTH: 85PX;
+    HEIGHT: 65PX;
+}
