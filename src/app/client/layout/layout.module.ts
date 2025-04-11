@@ -9,6 +9,8 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { LayoutComponent } from './layout.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from 'src/app/shared/footer/footer.component';
+import { AccueilComponent } from '../accueil/accueil.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -16,7 +18,7 @@ import { FooterComponent } from 'src/app/shared/footer/footer.component';
   declarations: [
     LayoutComponent,
     NavbarComponent,
-    FooterComponent,
+    FooterComponent
   ],
   imports: [
     CommonModule,
