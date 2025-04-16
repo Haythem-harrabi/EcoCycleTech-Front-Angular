@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './client/layout/layout.component';
 import { AccueilComponent } from './client/accueil/accueil.component';
 import { AdminLayoutComponent } from './admin/admin-layout/admin-layout.component';
+import { NotfoundComponent } from './shared/notfound/notfound.component';
 
 const routes: Routes = [
   {
@@ -13,7 +14,11 @@ const routes: Routes = [
     
 },
 {
-  path: 'admin', component: AdminLayoutComponent,
+  path: 'admin',
+  loadChildren: () => import('./admin/admin-layout.module').then(m => m.AdminLayoutModule)
+},
+{
+  path: '**', component: NotfoundComponent,
 },
 ];
 

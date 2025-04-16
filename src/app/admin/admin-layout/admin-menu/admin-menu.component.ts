@@ -21,25 +21,18 @@ export class AdminMenuComponent implements OnInit {
               ]
           },
           {
-              label: 'UI Components',
+              label: 'Manage',
               items: [
-                  { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-                  { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-                  { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
-                  { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
-                  { label: 'Button', icon: 'pi pi-fw pi-mobile', routerLink: ['/uikit/button'], class: 'rotated-icon' },
-                  { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
-                  { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list'] },
-                  { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree'] },
-                  { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel'] },
-                  { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay'] },
-                  { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media'] },
-                  { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu'], preventExact: true },
-                  { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
-                  { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
-                  { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
-                  { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] },
-                  { label: 'MyDashBoard', icon: 'pi pi-fw pi-id-card', routerLink: ['/mydashboard'] }
+                { label: 'Eco-Drive', icon: 'pi pi-fw pi-database',
+                items: [
+                    { label: 'Overview', icon: 'pi pi-fw pi-server' },
+                    { label: 'Add storage plan', icon: 'pi pi-fw pi-plus-circle' },
+                ] },
+                  { label: 'Repairing operations', icon: 'pi pi-fw pi-check-square', routerLink: ['##'] },
+                  { label: 'Recycling operations', icon: 'pi pi-fw pi-bookmark', routerLink: ['##'] },
+                  { label: 'Events', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['##'] },
+                  { label: 'Eco-Drive', icon: 'pi pi-fw pi-mobile', routerLink: ['##'], class: 'rotated-icon' },
+                  { label: 'Pickup stations', icon: 'pi pi-fw pi-table', routerLink: ['##'] },
               ]
           },
           {
@@ -148,17 +141,6 @@ export class AdminMenuComponent implements OnInit {
                               ]
                           },
                       ]
-                  }
-              ]
-          },
-          {
-              label: 'Get Started',
-              items: [
-                  {
-                      label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']
-                  },
-                  {
-                      label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
                   }
               ]
           }

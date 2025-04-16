@@ -1,6 +1,7 @@
 #logo{
-    WIDTH: 345PX;
+    WIDTH: 330PX;
     HEIGHT: 290PX;
+    margin-right: 90px;
 }
 
 
@@ -21,4 +22,10 @@
 .subscribe-container{
     display: flex;
     justify-content: center;
+}
+.footerdiv{
+    margin-top: 50px;
+}
+.subscribe-container{
+    margin-bottom: 50px;
 }

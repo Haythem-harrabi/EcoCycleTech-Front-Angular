@@ -8,14 +8,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccueilComponent } from './client/accueil/accueil.component';
 import { AddPlanStockageComponent } from './admin/GestionPlansStockage/add-plan-stockage/add-plan-stockage.component';
 import { PlanStockageListComponent } from './admin/GestionPlansStockage/plan-stockage-list/plan-stockage-list.component';
-import { AdminLayoutModule } from './admin/admin-layout/admin-layout.module';
+import { AdminLayoutModule } from './admin/admin-layout.module';
+import { NotfoundComponent } from './shared/notfound/notfound.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccueilComponent,
-    AddPlanStockageComponent,
-    PlanStockageListComponent,
+    NotfoundComponent,
   ],
   imports: [
     BrowserModule,

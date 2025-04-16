@@ -1,1 +1,49 @@
-<p>add-plan-stockage works!</p>
+<div class="plan-form-wrapper">
+  <div class="plan-form-container animated fadeInUp">
+  <h2 class="p-text-center p-mb-4">Create New Storage Plan</h2>
+
+  <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
+    <div class="p-grid p-formgrid">
+
+      <!-- Title -->
+      <div class="inputdiv p-field p-col-12 p-md-6">
+        <label for="title">Title*</label>
+        <input pInputText id="title" formControlName="titre"
+               [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['titre'].errors }">
+        
+        <small *ngIf="submitted && f['titre'].errors" class="p-error">
+          <span *ngIf="f['titre'].errors['required']">Title is required</span>
+          <span *ngIf="f['titre'].errors['minlength']">Minimum 3 characters required</span>
+        </small>
+      </div>
+
+      <!-- Max Size -->
+      <div class="inputdiv p-field p-col-12 p-md-6">
+        <label for="maxSize">Maximum Size (GB)*</label>
+        <p-inputNumber id="maxSize" formControlName="tailleMax" [min]="0" [step]="0.01" mode="decimal"
+                       [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['tailleMax'].errors }"></p-inputNumber>
+        <small *ngIf="submitted && f['tailleMax'].errors" class="p-error">
+          <span *ngIf="f['tailleMax'].errors['required']">Size is required</span>
+          <span *ngIf="f['tailleMax'].errors['min']">Must be greater than 0</span>
+        </small>
+      </div>
+
+      <!-- Price -->
+      <div class="inputdiv p-field p-col-12 p-md-6">
+        <label for="price">Price (TND)*</label>
+        <p-inputNumber id="price" formControlName="prix" [min]="0" [step]="0.01" mode="currency" currency="TND"
+                       locale="en-TN"
+                       [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['prix'].errors }"></p-inputNumber>
+        <small *ngIf="submitted && f['prix'].errors" class="p-error">
+          <span *ngIf="f['prix'].errors['required']">Price is required</span>
+          <span *ngIf="f['prix'].errors['min']">Must be a positive value</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="btn-div p-d-flex p-jc-end p-mt-4">
+      <button pButton type="submit" label="Save" icon="pi pi-save" class="p-button-success" > </button>
+    </div>
+  </form>
+</div>
+</div>

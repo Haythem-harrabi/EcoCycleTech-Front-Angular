@@ -1,0 +1,110 @@
+.plan-form-container {
+  max-width: 900px;
+  margin: auto;
+
+  h2 {
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  ::ng-deep .p-error {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+  }
+
+  ::ng-deep .ng-invalid.ng-dirty {
+    border-color: #f44336;
+  }
+
+  ::ng-deep .p-inputtext, 
+  ::ng-deep .p-inputnumber {
+    width: 100%;
+  }
+}
+
+
+.plan-form-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #e0f7fa, #f5f5f5);
+  padding: 2rem;
+}
+
+.plan-form-container {
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  animation: fadeInUp 1s ease-out;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+input.p-inputtext, .p-inputnumber input {
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 1rem;
+}
+
+.plan-form-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
+}
+
+h2{
+  margin-bottom: 2rem;
+  font-family: sans-serif;
+}
+
+.inputdiv {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  input,
+  .p-inputnumber {
+    margin-bottom: 0.4rem;
+    width: 350px;
+  }
+
+  small.p-error {
+    color: #f44336;
+    font-size: 0.875rem;
+    margin-top: 0.2rem;
+  }
+
+ 
+}
+
+
+.btn-div{
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 200px;
+  }
+
+}
