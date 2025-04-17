@@ -1,0 +1,341 @@
+<!-- login.component.html -->
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="card-tabs">
+      <div [class.active]="activeTab === 'signin'" (click)="switchTab('signin')">Connexion</div>
+      <div [class.active]="activeTab === 'signup'" (click)="switchTab('signup')">Inscription</div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="card-content" *ngIf="activeTab === 'signin'">
+      <div class="card-header">
+        <h2>Connexion</h2>
+        <div class="social-buttons">
+          <!-- Icons are commented as requested -->
+          <!-- <button class="social-btn facebook"><i class="fab fa-facebook-f"></i></button> -->
+          <!-- <button class="social-btn google"><i class="fab fa-google"></i></button> -->
+        </div>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-with-icon">
+            <i class="fas fa-envelope"></i>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email" 
+              placeholder="Entrez votre email"
+            >
+          </div>
+          <div class="validation-message" *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email est obligatoire</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Format d'email invalide</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="password" 
+              formControlName="password" 
+              placeholder="Entrez votre mot de passe"
+            >
+            <i class="password-toggle" [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" (click)="togglePasswordVisibility()"></i>
+          </div>
+          <div class="validation-message" *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Mot de passe est obligatoire</span>
+          </div>
+        </div>
+
+        <div class="remember-me">
+          <label>
+            <input type="checkbox" formControlName="rememberMe">
+            <span>Se souvenir de moi</span>
+          </label>
+          <a class="forgot-password" (click)="showForgotPasswordForm()">Mot de passe oublié?</a>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="loginForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Se connecter</span>
+          <div class="loader" *ngIf="isLoading"></div>
+        </button>
+      </form>
+    </div>
+
+    <!-- Register Form -->
+    <div class="card-content" *ngIf="activeTab === 'signup'">
+      <div class="card-header">
+        <h2>Inscription</h2>
+      </div>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()">
+        <div class="error-message" *ngIf="signupErrorMessage">{{ signupErrorMessage }}</div>
+        
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="nom">Nom</label>
+            <div class="input-with-icon">
+              <i class="fas fa-user"></i>
+              <input type="text" id="nom" formControlName="nom" placeholder="Nom">
+            </div>
+            <div class="validation-message" *ngIf="signupForm.get('nom')?.invalid && (signupForm.get('nom')?.dirty || signupForm.get('nom')?.touched)">
+              <span *ngIf="signupForm.get('nom')?.errors?.['required']">Nom est obligatoire</span>
+            </div>
+          </div>
+
+          <div class="form-group half">
+            <label for="prenom">Prénom</label>
+            <div class="input-with-icon">
+              <i class="fas fa-user"></i>
+              <input type="text" id="prenom" formControlName="prenom" placeholder="Prénom">
+            </div>
+            <div class="validation-message" *ngIf="signupForm.get('prenom')?.invalid && (signupForm.get('prenom')?.dirty || signupForm.get('prenom')?.touched)">
+              <span *ngIf="signupForm.get('prenom')?.errors?.['required']">Prénom est obligatoire</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email-signup">Email</label>
+          <div class="input-with-icon">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email-signup" formControlName="email" placeholder="Email">
+          </div>
+          <div class="validation-message" *ngIf="signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty || signupForm.get('email')?.touched)">
+            <span *ngIf="signupForm.get('email')?.errors?.['required']">Email est obligatoire</span>
+            <span *ngIf="signupForm.get('email')?.errors?.['email']">Format d'email invalide</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user-tag"></i>
+            <input type="text" id="username" formControlName="username" placeholder="Nom d'utilisateur">
+          </div>
+          <div class="validation-message" *ngIf="signupForm.get('username')?.invalid && (signupForm.get('username')?.dirty || signupForm.get('username')?.touched)">
+            <span *ngIf="signupForm.get('username')?.errors?.['required']">Nom d'utilisateur est obligatoire</span>
+          </div>
+          <div class="validation-message" *ngIf="signupErrorMessage && signupErrorMessage.includes('nom d\'utilisateur')">
+            {{ signupErrorMessage }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="numTelephone">Numéro de téléphone</label>
+          <div class="input-with-icon">
+            <i class="fas fa-phone"></i>
+            <input type="tel" id="numTelephone" formControlName="numTelephone" placeholder="Numéro de téléphone">
+          </div>
+          <div class="validation-message" *ngIf="signupForm.get('numTelephone')?.invalid && (signupForm.get('numTelephone')?.dirty || signupForm.get('numTelephone')?.touched)">
+            <span *ngIf="signupForm.get('numTelephone')?.errors?.['required']">Numéro de téléphone est obligatoire</span>
+            <span *ngIf="signupForm.get('numTelephone')?.errors?.['pattern']">Le numéro doit contenir exactement 8 chiffres</span>
+          </div>
+        </div>
+        
+
+        <div class="form-group">
+          <label for="dateNaissance">Date de naissance</label>
+          <div class="input-with-icon">
+            <i class="fas fa-calendar-alt"></i>
+            <input type="date" id="dateNaissance" formControlName="dateNaissance">
+          </div>
+          <div class="validation-message" *ngIf="signupForm.get('dateNaissance')?.invalid && (signupForm.get('dateNaissance')?.dirty || signupForm.get('dateNaissance')?.touched)">
+            <span *ngIf="signupForm.get('dateNaissance')?.errors?.['required']">Date de naissance est obligatoire</span>
+            <span *ngIf="signupForm.get('dateNaissance')?.errors?.['minAge']">Vous devez avoir au moins 12 ans pour vous inscrire</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="adresse">Adresse</label>
+          <div class="input-with-icon">
+            <i class="fas fa-map-marker-alt"></i>
+            <input type="text" id="adresse" formControlName="adresse" placeholder="Adresse">
+          </div>
+          <div class="validation-message" *ngIf="signupForm.get('adresse')?.invalid && (signupForm.get('adresse')?.dirty || signupForm.get('adresse')?.touched)">
+            <span *ngIf="signupForm.get('adresse')?.errors?.['required']">Adresse est obligatoire</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password-signup">Mot de passe</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input [type]="showSignupPassword ? 'text' : 'password'" id="password-signup" formControlName="password" placeholder="Mot de passe">
+            <i class="password-toggle" [class]="showSignupPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" (click)="toggleSignupPasswordVisibility()"></i>
+          </div>
+          <div class="validation-message" *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
+            <span *ngIf="signupForm.get('password')?.errors?.['required']">Mot de passe est obligatoire</span>
+            <span *ngIf="signupForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 8 caractères</span>
+            <span *ngIf="signupForm.get('password')?.errors?.['noUpperCase']">Le mot de passe doit contenir au moins une lettre majuscule</span>
+            <span *ngIf="signupForm.get('password')?.errors?.['noLowerCase']">Le mot de passe doit contenir au moins une lettre minuscule</span>
+            <span *ngIf="signupForm.get('password')?.errors?.['noNumeric']">Le mot de passe doit contenir au moins un chiffre</span>
+            <span *ngIf="signupForm.get('password')?.errors?.['noSpecialChar']">Le mot de passe doit contenir au moins un caractère spécial</span>
+          </div>
+        </div>
+        <!-- Ajouter après le champ de mot de passe -->
+<div class="password-strength-indicator" *ngIf="signupForm.get('password')?.value">
+  <div class="strength-label">Force du mot de passe:</div>
+  <div class="strength-meter">
+    <div class="strength-bar" [ngClass]="{
+      'weak': getPasswordStrength() === 1,
+      'medium': getPasswordStrength() === 2,
+      'strong': getPasswordStrength() === 3,
+      'very-strong': getPasswordStrength() === 4
+    }" [style.width.%]="getPasswordStrength() * 25"></div>
+  </div>
+  <div class="strength-text" [ngClass]="{
+    'weak-text': getPasswordStrength() === 1,
+    'medium-text': getPasswordStrength() === 2,
+    'strong-text': getPasswordStrength() === 3,
+    'very-strong-text': getPasswordStrength() === 4
+  }">
+    {{ getPasswordStrengthText() }}
+  </div>
+</div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirmer mot de passe</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input [type]="showSignupPassword ? 'text' : 'password'" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirmer mot de passe">
+          </div>
+          <div class="validation-message" *ngIf="signupForm.get('confirmPassword')?.invalid && (signupForm.get('confirmPassword')?.dirty || signupForm.get('confirmPassword')?.touched)">
+            <span *ngIf="signupForm.get('confirmPassword')?.errors?.['required']">Confirmation du mot de passe est obligatoire</span>
+            <span *ngIf="signupForm.errors?.['passwordMismatch']">Les mots de passe ne correspondent pas</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="photoDeProfil">Photo de profil</label>
+          <div class="file-input-container">
+            <input type="file" id="photoDeProfil" (change)="onFileSelected($event)" accept="image/*">
+            <label for="photoDeProfil" class="file-input-label">
+              <i class="fas fa-upload"></i>
+              <span>{{ selectedFileName || 'Choisir une photo' }}</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group recaptcha-container">
+          <re-captcha 
+            formControlName="recaptcha"
+            siteKey="6Le8_BsrAAAAAFAjCDgSsaalLSru_ThytinrF3cL">
+          </re-captcha>
+          <div class="validation-message" *ngIf="signupForm.get('recaptcha')?.invalid && (signupForm.get('recaptcha')?.dirty || signupForm.get('recaptcha')?.touched)">
+            <span *ngIf="signupForm.get('recaptcha')?.errors?.['required']">Veuillez confirmer que vous n'êtes pas un robot</span>
+          </div>
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="signupForm.invalid || isSignupLoading">
+          <span *ngIf="!isSignupLoading">S'inscrire</span>
+          <div class="loader" *ngIf="isSignupLoading"></div>
+        </button>
+      </form>
+    </div>
+
+    <!-- Forgot Password Form -->
+<div class="card-content" *ngIf="activeTab === 'forgot'">
+  <div class="card-header">
+    <h2>Réinitialiser le mot de passe</h2>
+  </div>
+
+  <!-- Step 1: Email Input -->
+  <form *ngIf="forgotPasswordStep === 'email'" [formGroup]="forgotPasswordForm" (ngSubmit)="onForgotPasswordSubmit()">
+    <div class="success-message" *ngIf="forgotPasswordSuccess">{{ forgotPasswordSuccess }}</div>
+    <div class="error-message" *ngIf="forgotPasswordError">{{ forgotPasswordError }}</div>
+    
+    <div class="form-group">
+      <label for="email-reset">Email</label>
+      <div class="input-with-icon">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email-reset" formControlName="email" placeholder="Entrez votre email">
+      </div>
+      <div class="validation-message" *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.dirty || signupForm.get('password')?.touched)">
+        <span *ngIf="signupForm.get('password')?.errors?.['required']">Mot de passe est obligatoire</span>
+        <span *ngIf="signupForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 8 caractères</span>
+        <span *ngIf="signupForm.get('password')?.errors?.['passwordStrength']">Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="switchTab('signin')">Retour</button>
+      <button type="submit" class="btn-submit" [disabled]="forgotPasswordForm.invalid || isForgotPasswordLoading">
+        <span *ngIf="!isForgotPasswordLoading">Envoyer OTP</span>
+        <div class="loader" *ngIf="isForgotPasswordLoading"></div>
+      </button>
+    </div>
+  </form>
+
+  <!-- Step 2: OTP Verification -->
+  <form *ngIf="forgotPasswordStep === 'otp'" [formGroup]="otpVerificationForm" (ngSubmit)="onVerifyOtpSubmit()">
+    <div class="success-message" *ngIf="forgotPasswordSuccess">{{ forgotPasswordSuccess }}</div>
+    <div class="error-message" *ngIf="forgotPasswordError">{{ forgotPasswordError }}</div>
+    
+    <div class="form-group">
+      <label for="otp">Code OTP</label>
+      <div class="input-with-icon">
+        <i class="fas fa-key"></i>
+        <input type="text" id="otp" formControlName="otp" placeholder="Entrez le code à 6 chiffres">
+      </div>
+      <div class="validation-message" *ngIf="otpVerificationForm.get('otp')?.invalid && (otpVerificationForm.get('otp')?.dirty || otpVerificationForm.get('otp')?.touched)">
+        <span *ngIf="otpVerificationForm.get('otp')?.errors?.['required']">Le code OTP est obligatoire</span>
+        <span *ngIf="otpVerificationForm.get('otp')?.errors?.['pattern']">Le code OTP doit contenir 6 chiffres</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="forgotPasswordStep = 'email'">Retour</button>
+      <button type="submit" class="btn-submit" [disabled]="otpVerificationForm.invalid || isForgotPasswordLoading">
+        <span *ngIf="!isForgotPasswordLoading">Vérifier</span>
+        <div class="loader" *ngIf="isForgotPasswordLoading"></div>
+      </button>
+    </div>
+  </form>
+
+  <!-- Step 3: New Password -->
+  <form *ngIf="forgotPasswordStep === 'newPassword'" [formGroup]="newPasswordForm" (ngSubmit)="onNewPasswordSubmit()">
+    <div class="success-message" *ngIf="forgotPasswordSuccess">{{ forgotPasswordSuccess }}</div>
+    <div class="error-message" *ngIf="forgotPasswordError">{{ forgotPasswordError }}</div>
+    
+    <div class="form-group">
+      <label for="new-password">Nouveau mot de passe</label>
+      <div class="input-with-icon">
+        <i class="fas fa-lock"></i>
+        <input [type]="showPassword ? 'text' : 'password'" id="new-password" formControlName="password" placeholder="Entrez votre nouveau mot de passe">
+        <i class="password-toggle" [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" (click)="togglePasswordVisibility()"></i>
+      </div>
+      <div class="validation-message" *ngIf="newPasswordForm.get('password')?.invalid && (newPasswordForm.get('password')?.dirty || newPasswordForm.get('password')?.touched)">
+        <span *ngIf="newPasswordForm.get('password')?.errors?.['required']">Le mot de passe est obligatoire</span>
+        <span *ngIf="newPasswordForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirm-password">Confirmer le mot de passe</label>
+      <div class="input-with-icon">
+        <i class="fas fa-lock"></i>
+        <input [type]="showPassword ? 'text' : 'password'" id="confirm-password" formControlName="confirmPassword" placeholder="Confirmez votre nouveau mot de passe">
+      </div>
+      <div class="validation-message" *ngIf="newPasswordForm.get('confirmPassword')?.invalid && (newPasswordForm.get('confirmPassword')?.dirty || newPasswordForm.get('confirmPassword')?.touched)">
+        <span *ngIf="newPasswordForm.get('confirmPassword')?.errors?.['required']">La confirmation du mot de passe est obligatoire</span>
+      </div>
+      <div class="validation-message" *ngIf="newPasswordForm.errors?.['passwordMismatch']">
+        Les mots de passe ne correspondent pas
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="forgotPasswordStep = 'otp'">Retour</button>
+      <button type="submit" class="btn-submit" [disabled]="newPasswordForm.invalid || isForgotPasswordLoading">
+        <span *ngIf="!isForgotPasswordLoading">Réinitialiser</span>
+        <div class="loader" *ngIf="isForgotPasswordLoading"></div>
+      </button>
+    </div>
+  </form>
+</div>

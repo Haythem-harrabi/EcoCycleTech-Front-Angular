@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../UserManagement/services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -6,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent {
+  authService!:AuthService;
 
+  // In your navbar or header component
+logout(): void {
+  this.authService.logout();
+}
 }

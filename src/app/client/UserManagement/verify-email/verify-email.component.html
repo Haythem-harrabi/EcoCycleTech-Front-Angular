@@ -1,0 +1,46 @@
+<div class="verification-container">
+    <div class="verification-card">
+      <div class="card-header">
+        <h2>Email Verification</h2>
+      </div>
+      
+      <div class="card-body">
+        <!-- Loading state -->
+        <div *ngIf="isLoading" class="loading-container">
+          <div class="spinner"></div>
+          <p>Verifying your email address...</p>
+        </div>
+        
+        <!-- Success state -->
+        <div *ngIf="!isLoading && isVerified" class="success-container">
+          <div class="success-icon">✓</div>
+          <h3>Email Verified Successfully!</h3>
+          <p>Your email has been verified. You can now login to your account.</p>
+          <button class="btn-primary" (click)="goToLogin()">Go to Login</button>
+        </div>
+        
+        <!-- Error state -->
+        <div *ngIf="!isLoading && !isVerified" class="error-container">
+          <div class="error-icon">✗</div>
+          <h3>Verification Failed</h3>
+          <p>{{ errorMessage }}</p>
+          
+          <!-- Resend verification section -->
+          <div class="resend-section">
+            <h4>Need a new verification email?</h4>
+            <p>Enter your email address below:</p>
+            <div class="form-group">
+              <input type="email" #emailInput placeholder="Your email address" class="form-control">
+            </div>
+            <button class="btn-secondary" (click)="resendVerification(emailInput.value)">
+              Resend Verification
+            </button>
+          </div>
+          
+          <div class="mt-3">
+            <button class="btn-outline" (click)="goToLogin()">Return to Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
