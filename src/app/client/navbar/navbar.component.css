@@ -94,4 +94,9 @@
     font-size: 16px;
   }
 
+  .layout-topbar-logo{
+    text-decoration: none;
+    color : inherit
+  }
+
   

@@ -21,6 +21,9 @@ import { ButtonModule } from 'primeng/button';
 import { AdminLayoutRoutingModule } from './admin-layout-routing.module';
 import { CardModule } from 'primeng/card';
 import { PlanStockageListComponent } from './GestionPlansStockage/plan-stockage-list/plan-stockage-list.component';
+import { TableModule } from 'primeng/table';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TagModule } from 'primeng/tag';
 
 
 
@@ -50,6 +53,9 @@ import { PlanStockageListComponent } from './GestionPlansStockage/plan-stockage-
     InputNumberModule,
     ButtonModule,
     CardModule,
+    TableModule,
+    ProgressBarModule,
+    TagModule,
     ReactiveFormsModule,
     AdminLayoutRoutingModule
   ]

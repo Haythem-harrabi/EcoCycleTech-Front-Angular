@@ -7,10 +7,7 @@ import { NotfoundComponent } from './shared/notfound/notfound.component';
 
 const routes: Routes = [
   {
-    path: '', component: LayoutComponent,
-    children: [
-      { path: '', component: AccueilComponent },
-    ]
+    path: '', loadChildren: () => import('./client/layout.module').then(m => m.LayoutModule)
     
 },
 {

@@ -11,6 +11,7 @@ const routes: Routes = [
     children: [
       { path: 'addPlan', component: AddPlanStockageComponent },
       { path: 'Plans', component: PlanStockageListComponent },
+      { path: 'addPlan/:id', component: AddPlanStockageComponent }
       
     ]
   }

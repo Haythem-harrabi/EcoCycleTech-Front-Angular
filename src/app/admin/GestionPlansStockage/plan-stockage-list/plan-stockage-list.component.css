@@ -3,6 +3,7 @@
     transition: transform 0.3s ease;
     border-radius: 12px;
     overflow: hidden;
+    
   }
 
   :host ::ng-deep .p-card.p-component {
@@ -12,8 +13,15 @@
     background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
+    height: 45vh;
+    width: 65vw;
   
   
+  }
+
+  .plan-container{
+    display: flex;
+    justify-content: center;
   }
   
   
@@ -22,6 +30,11 @@
   }
   
   
+  h1{
+    font-family: "Special Gothic Expanded One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  }
   
   .card-content {
     padding: 1rem;
@@ -33,4 +46,37 @@
   
   .plan-container {
     margin-bottom: 30px;
+  }
+
+  .icon{
+    margin-right: 15px;
+  }
+
+  p{
+    margin-top: 30px;
+    font-size: 21px;
+    display: flex;
+    align-items: center;
+  }
+  p>strong{
+    margin-right: 10px;
+  }
+
+  .button-group-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+  }
+  
+  .action-button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 1rem;
+    width: 10rem;
+    height: 2.75rem;
+  }
+  
+  .action-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }

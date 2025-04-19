@@ -7,6 +7,7 @@ import { PlanStockage } from '../entities/planStockage';
   providedIn: 'root'
 })
 export class PlanStockageService {
+ 
 
   private baseUrl = 'http://localhost:8090/ecoCycleTech/planstockage';
 
@@ -19,16 +20,20 @@ export class PlanStockageService {
   AddPlan(p:PlanStockage):Observable<PlanStockage[]>{
     return this.http.post<PlanStockage[]>(this.baseUrl+'/addPlan',p)
   }
+
+  getPlanById(id: number) {
+    return this.http.get<PlanStockage>(this.baseUrl+ '/getPlan/'+ id)
+  }
+
+
+  UpdatePlan(id:number, p:PlanStockage):Observable<PlanStockage[]>{
+      return this.http.put<PlanStockage[]>(this.baseUrl+'/updatePlan/'+id,p)
+    }
  
-  // GetProductById(id:number):Observable<PlanStockage>{
-  //   return this.http.get<PlanStockage>('http://localhost:3000/products/'+ id)
-  // }
 
-  // DeleteProduct(id: number):Observable<PlanStockage[]>{
-  //   return this.http.delete<PlanStockage[]>('http://localhost:3000/products/'+ id)
-  // }
 
-  // UpdateProduct(id:number, p:PlanStockage):Observable<PlanStockage[]>{
-  //   return this.http.put<PlanStockage[]>('http://localhost:3000/products/'+id,p)
-  // }
+  DeletePlan(id: number):Observable<PlanStockage[]>{
+    return this.http.delete<PlanStockage[]>(this.baseUrl+'/deletePlan/' +id)
+  }
+
 }

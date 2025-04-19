@@ -3,7 +3,7 @@ import { EspaceStockage } from "./espaceStockage";
 export class PlanStockage {
     idPlan: number;
     titre: string;
-    tailleMax: number; // Using number instead of BigDecimal (you can use string if you need precise decimal operations)
+    tailleMax: number; 
     prix: number;
     espaces: EspaceStockage[];
   
