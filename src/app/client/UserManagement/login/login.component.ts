@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit,AfterViewInit {
   activeTab: 'signin' | 'signup' | 'forgot' = 'signin';
   
   // Login form
@@ -38,7 +40,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private socialAuthService: SocialAuthService
+
   ) {
     // Initialize forms
     this.loginForm = this.fb.group({
@@ -79,8 +83,53 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Additional initialization if needed
+    this.socialAuthService.authState.subscribe(user => {
+      if (user) {
+        this.isLoading = true;
+        // Let the auth service handle the login
+       // this.authService.processSocialLogin(user);
+      }
+    });
   }
+  ngAfterViewInit(): void {
+    // Initialize Google Sign-In buttons after the view is initialized
+    setTimeout(() => {
+      console.log("Initializing google buttons after timeout");
+      this.initializeGoogleButtons();
+    }, 2000);
+  }
+  initializeGoogleButtons(): void {
+    console.log("Initializing google buttons")
+    // Initialize Google Sign-In for both tabs
+    this.authService.initializeGoogleSignIn('google-signin-button');
+    
+    // If on signup tab, also initialize that button
+    if (this.activeTab === 'signup') {
+      this.authService.initializeGoogleSignIn('google-signup-button');
+    }
+  }
+//je suis entrain d'essayer une autre solution donc hedha mahouch yzid fi shay 
+  loginWithGoogle(): void {
+    this.isLoading = true;
+    //
+    // this.authService.loginWithGoogle();
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(user => {
+        console.log('Google sign-in successful', user);
+        // The authState subscription should handle this
+      })
+      .catch(error => {
+        console.error('Google sign-in error', error);
+        this.isLoading = false;
+        this.errorMessage = 'Erreur de connexion avec Google';
+      });
+  }
+
+  loginWithFacebook(): void {
+    this.isLoading = true;
+    this.authService.loginWithFacebook();
+  }
+
   ageValidator(minAge: number) {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
@@ -162,6 +211,16 @@ export class LoginComponent implements OnInit {
     this.resetMessages();
     if (tab === 'forgot') {
       this.forgotPasswordStep = 'email';
+    }
+    else {
+      // Re-initialize Google buttons when switching tabs
+      setTimeout(() => {
+        if (tab === 'signin') {
+          this.authService.initializeGoogleSignIn('google-signin-button');
+        } else if (tab === 'signup') {
+          this.authService.initializeGoogleSignIn('google-signup-button');
+        }
+      }, 100);
     }
   }
 

@@ -13,6 +13,9 @@ import { LoginComponent } from './client/UserManagement/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VerifyEmailComponent } from './client/UserManagement/verify-email/verify-email.component';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { OAuth2RedirectComponent } from './client/UserManagement/oauth2-redirect/oauth2-redirect.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,19 +25,43 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
     PlanStockageListComponent,
     LoginComponent,
     VerifyEmailComponent,
+    OAuth2RedirectComponent,
+    
     
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     LayoutModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     AdminLayoutModule,
     ReactiveFormsModule,
     RecaptchaModule,
-    RecaptchaFormsModule
+    RecaptchaFormsModule,
+    SocialLoginModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+         /* {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('278407912957-ja8f7vuh07kn8u9br218sds1p4fe10tb.apps.googleusercontent.com')
+          },*/
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider('1097116375514611')
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -406,3 +406,104 @@ re-captcha {
   transform-origin: left top;
   transform: scale(0.95); /* Adjust if needed to fit your form */
 }
+/* Add these styles to your existing CSS */
+
+.social-buttons {
+  display: flex;
+  flex-direction: column; /* Disposition en colonne pour éviter les problèmes de largeur */
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  margin-bottom: 20px;
+
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 120px;
+}
+
+.social-btn i {
+  margin-right: 8px;
+}
+
+.google {
+  background-color: #DB4437;
+}
+
+.google:hover {
+  background-color: #C1342A;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.facebook:hover {
+  background-color: #2d4373;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.separator span {
+  padding: 0 10px;
+  color: #777;
+  font-size: 12px;
+}
+.google-btn-container {
+  width: 100%;
+  height: 46px; /* Hauteur fixe pour correspondre au bouton Facebook */
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+:host ::ng-deep .google-btn-container div {
+  width: 100% !important;
+  max-width: 280px !important; /* Limite la largeur maximale */
+  border-radius: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  height: 46px !important;
+  overflow: hidden !important; /* Évite le débordement */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Style pour améliorer le texte du bouton Google */
+:host ::ng-deep .google-btn-container div div {
+  padding: 0 !important;
+  height: 100% !important;
+  box-shadow: none !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+
+/* Pour assurer que le logo Google s'affiche correctement */
+:host ::ng-deep .google-btn-container div span {
+  display: flex !important;
+  align-items: center !important;
+  font-size: 14px !important;
+}

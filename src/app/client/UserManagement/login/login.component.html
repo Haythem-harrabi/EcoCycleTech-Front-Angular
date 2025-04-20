@@ -11,12 +11,17 @@
       <div class="card-header">
         <h2>Connexion</h2>
         <div class="social-buttons">
-          <!-- Icons are commented as requested -->
-          <!-- <button class="social-btn facebook"><i class="fab fa-facebook-f"></i></button> -->
-          <!-- <button class="social-btn google"><i class="fab fa-google"></i></button> -->
+          <!-- Replace the button with a container for Google Sign-In button -->
+          <div id="google-signin-button" class="google-btn-container"></div>
+
+          <button class="social-btn facebook" (click)="loginWithFacebook()">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </button>
         </div>
       </div>
-
+      <div class="separator">
+        <span>ou</span>
+      </div>
       <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
         <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
         
@@ -73,6 +78,14 @@
     <div class="card-content" *ngIf="activeTab === 'signup'">
       <div class="card-header">
         <h2>Inscription</h2>
+        <div class="social-buttons">
+          <!-- Same update for signup tab -->
+          <div id="google-signin-button" class="google-btn-container"></div>
+        
+          <button class="social-btn facebook" (click)="loginWithFacebook()">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </button>
+        </div>
       </div>
 
       <form [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()">
