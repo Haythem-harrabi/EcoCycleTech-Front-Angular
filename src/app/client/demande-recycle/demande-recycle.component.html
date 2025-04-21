@@ -1,0 +1,206 @@
+<!-- demande-recycle.component.html -->
+
+<div class="container mt-4">
+  <h2 class="mb-4">Demande de Recyclage</h2>
+
+  <!-- Button to open modal -->
+  <button class="btn btn-primary mb-4" (click)="resetForm(); openModal()">Ajouter une demande</button>
+
+  <h3>📋 Liste des Demandes</h3>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let demande of demandes">
+      <div class="card" style="width: 18rem;">
+        <img
+          *ngIf="demande.imageBase64"
+          [src]="'data:image/png;base64,' + demande.imageBase64"
+          class="card-img-top"
+          alt="Image de la demande"
+        />
+
+        <div class="card-body">
+          <h5 class="card-title">{{ demande.descriptionDemandeRecyclage }}</h5>
+          <p class="card-text">
+            Date de création: {{ demande.dateCreationDemandeRecyclage | date: 'shortDate' }}<br />
+            Nombre d'appareils: {{ demande.nbrAppareils }}<br />
+            Prix estimé: {{ demande.prixDemandeRecyclage | currency: 'EUR' }}
+          </p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            État: <strong>{{ demande.etatDemandeRecyclage || 'ENCOURS' }}</strong>
+          </li>
+        </ul>
+        <div class="card-footer d-flex justify-content-between">
+          <button class="btn btn-warning" (click)="edit(demande); openModal()">Modifier</button>
+          <button class="btn btn-danger" (click)="delete(demande.idDemandeRecyclage)">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #form="ngForm" (ngSubmit)="saveOrUpdate(form)">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }} une Demande
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- ✅ Image Preview -->
+          <div class="mb-3 text-center" *ngIf="demande.imageData">
+            <img
+              [src]="demande.imageData"
+              class="img-fluid rounded"
+              alt="Aperçu image"
+              style="max-height: 150px;"
+            />
+          </div>
+
+          <!-- ✅ Image Upload -->
+          <div class="mb-3">
+            <label for="image" class="form-label">{{ imageLabel }}</label>
+            <input
+              #fileInput
+              id="image"
+              type="file"
+              (change)="onFileChange($event)"
+              class="form-control"
+              [required]="!isEditMode"
+            />
+          </div>
+
+          <!-- ✅ Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input
+              id="description"
+              type="text"
+              [(ngModel)]="demande.descriptionDemandeRecyclage"
+              name="descriptionDemandeRecyclage"
+              #description="ngModel"
+              class="form-control"
+              required
+              minlength="15"
+            />
+            <div
+              *ngIf="description.invalid && (description.dirty || description.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="description.errors?.['required']">
+                La description est obligatoire.
+              </div>
+              <div *ngIf="description.errors?.['minlength']">
+                Minimum
+                {{ description.errors?.['minlength']?.requiredLength }}
+                caractères (actuellement
+                {{ description.errors?.['minlength']?.actualLength }}).
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Date de création -->
+          <div class="mb-3">
+            <label for="date" class="form-label">Date de création</label>
+            <input
+              id="date"
+              type="date"
+              [(ngModel)]="demande.dateCreationDemandeRecyclage"
+              name="dateCreationDemandeRecyclage"
+              #dateField="ngModel"
+              class="form-control"
+              required
+              [max]="today"
+            />
+            <div
+              *ngIf="dateField.invalid && (dateField.dirty || dateField.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="dateField.errors?.['required']">
+                La date est obligatoire.
+              </div>
+              <div *ngIf="demande.dateCreationDemandeRecyclage >= today">
+                La date doit être antérieure à aujourd’hui.
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Nombre d'appareils -->
+          <div class="mb-3">
+            <label for="nbr" class="form-label">Nombre d'appareils</label>
+            <input
+              id="nbr"
+              type="number"
+              [(ngModel)]="demande.nbrAppareils"
+              name="nbrAppareils"
+              #nbrField="ngModel"
+              class="form-control"
+              required
+              min="1"
+            />
+            <div
+              *ngIf="nbrField.invalid && (nbrField.dirty || nbrField.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="nbrField.errors?.['required']">
+                Le nombre est obligatoire.
+              </div>
+              <div *ngIf="nbrField.errors?.['min']">
+                Le nombre doit être supérieur ou égal à 1.
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Prix estimé -->
+          <div class="mb-3">
+            <label for="prix" class="form-label">Prix estimé</label>
+            <input
+              id="prix"
+              type="number"
+              [(ngModel)]="demande.prixDemandeRecyclage"
+              name="prixDemandeRecyclage"
+              #prixField="ngModel"
+              class="form-control"
+              required
+              min="1"
+            />
+            <div
+              *ngIf="prixField.invalid && (prixField.dirty || prixField.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="prixField.errors?.['required']">
+                Le prix est obligatoire.
+              </div>
+              <div *ngIf="prixField.errors?.['min']">
+                Le prix doit être supérieur ou égal à 1.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-success">
+            {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
