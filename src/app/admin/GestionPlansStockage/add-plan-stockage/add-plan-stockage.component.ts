@@ -234,7 +234,7 @@ export class AddPlanStockageComponent  {
 
     this.es.getEspaceById(spaceId).subscribe({
       next: (data) => { console.log(data)
-        user = data.user;
+        // user = data.user;
          
       }
     }
@@ -312,7 +312,7 @@ export class AddPlanStockageComponent  {
 
     this.es.getEspaceById(spaceId).subscribe({
       next: (data) => { console.log(data)
-        user = data.user;
+        // user = data.user;
       }
     })
         Swal.fire({

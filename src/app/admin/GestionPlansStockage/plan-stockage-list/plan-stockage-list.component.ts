@@ -50,8 +50,8 @@ export class PlanStockageListComponent implements OnInit {
         this.planService.DeletePlan(id).subscribe((resultData: any)=>
           {
             Swal.fire({
-              title: "Theme deleted !",
-              text: "Theme deleted successfully!",
+              title: "Plan deleted !",
+              text: "Plan deleted successfully!",
               icon: "success",
               showCloseButton: true,
               didOpen: () => {

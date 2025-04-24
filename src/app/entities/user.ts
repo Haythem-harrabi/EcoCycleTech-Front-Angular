@@ -1,7 +1,13 @@
 export class User{
 
-id !: number;
+    idUser ?: number;
 nom !: string;
 prenom !: string
+
+
+
+constructor(id?: number) {
+    this.idUser = id;
+  }
 
 }

@@ -17,8 +17,8 @@ export class EspaceStockageService {
       return this.http.get<EspaceStockage[]>(`${this.baseUrl}/getAllEspaces`);
     }
   
-    AddEspace(p:EspaceStockage):Observable<EspaceStockage[]>{
-      return this.http.post<EspaceStockage[]>(this.baseUrl+'/addEspace',p)
+    AddEspace(p:EspaceStockage):Observable<EspaceStockage>{
+      return this.http.post<EspaceStockage>(this.baseUrl+'/addEspace',p)
     }
   
     getEspaceById(id: number) {

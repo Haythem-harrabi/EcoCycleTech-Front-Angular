@@ -17,8 +17,6 @@ export class EspaceStockage {
     dateCreation : Date;
     statut: StatutEspace;
     fichiers: Fichier[];
-    user: User | null ;
-    planStockage : PlanStockage | null ;
 
 
 
@@ -30,8 +28,6 @@ export class EspaceStockage {
         dateCreation: Date,
         statut: StatutEspace,
         fichiers: Fichier[] = [],
-        user: User | null = null,
-        planStockage: PlanStockage | null = null
       ) {
         this.idEspace = idEspace;
         this.usedTaille = usedTaille;
@@ -40,8 +36,6 @@ export class EspaceStockage {
         this.dateCreation = new Date(dateCreation);
         this.statut = statut;
         this.fichiers = fichiers;
-        this.user = user;
-        this.planStockage = planStockage;
       }
    
     
@@ -51,17 +45,17 @@ export class EspaceStockage {
                new Date(this.dateExpiration) > new Date();
     }
 
-    getRemainingSpace(): number {
-        return this.planStockage!.tailleMax - this.usedTaille;
-    }
+    // getRemainingSpace(): number {
+    //     return this.planStockage!.tailleMax - this.usedTaille;
+    // }
 
     isExpired(): boolean {
         return new Date() > this.dateExpiration;
       }
 
-      get usagePercentage(): number {
-        return (this.usedTaille / this.planStockage!.tailleMax) * 100;
-      }
+      // get usagePercentage(): number {
+      //   return (this.usedTaille / this.planStockage!.tailleMax) * 100;
+      // }
 
       get isBlocked(): boolean {
         return this.statut === StatutEspace.BLOCKED;

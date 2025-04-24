@@ -1,5 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { PlanStockage } from 'src/app/entities/planStockage';
+import { PlanStockageService } from 'src/app/services/plan-stockage.service';
 
 @Component({
   selector: 'app-eco-drive-accueil',
@@ -47,54 +49,37 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
           })
         )
       ])
+    ]),
+    trigger('popupAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.8)' }),
+        animate('250ms ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'scale(0.8)' }))
+      ])
     ])
+
   ]
 })
-export class EcoDriveAccueilComponent {
+export class EcoDriveAccueilComponent implements OnInit {
   
 currentPlanIndex = 0;
 animationState = 0;
 @ViewChild('plansSection') plansSection!: ElementRef;
 
+plans : PlanStockage[] = []
+popular : boolean = false
 
-plans = [
-  {
-    id: 1,
-    titre: 'EcoBasic',
-    tailleMax: 50,
-    prix: 9.99,
-    popular: false,
-    features: [
-      '50GB Storage',
-      'Basic Security',
-      '24/7 Support'
-    ]
-  },
-  {
-    id: 2,
-    titre: 'EcoPro',
-    tailleMax: 200,
-    prix: 19.99,
-    popular: true,
-    features: [
-      '200GB Storage',
-      'Advanced Security',
-      'Priority Support'
-    ]
-  },
-  {
-    id: 3,
-    titre: 'EcoEnterprise',
-    tailleMax: 500,
-    prix: 39.99,
-    popular: false,
-    features: [
-      '500GB Storage',
-      'Enterprise Security',
-      'Dedicated Account Manager'
-    ]
-  }
-];
+
+constructor(private ps : PlanStockageService){}
+ngOnInit(): void {
+  this.ps.getPlans().subscribe(
+    (data) => {this.plans=data;
+      console.log("plans : " + this.plans)
+    }
+  )
+}
 
 prevPlan() {
   if (this.currentPlanIndex > 0) {
@@ -117,6 +102,8 @@ goToPlan(index: number) {
 selectPlan(plan: any) {
   
   console.log('Selected plan:', plan);
+  this.selectedPlan = plan;
+  this.showPaypal = true;
   // Add your navigation or subscription logic here
 }
 
@@ -126,5 +113,17 @@ scrollToPlans() {
     behavior: 'smooth',
     block: 'nearest'
   });
+}
+
+
+
+
+showPaypal: boolean = false;
+selectedPlan: any = null;
+
+
+
+closePaypal() {
+  this.showPaypal = false;
 }
 }

@@ -13,6 +13,11 @@ import { AccueilComponent } from './accueil/accueil.component';
 import { RouterModule } from '@angular/router';
 import { EcoDriveAccueilComponent } from './GestionStockage/eco-drive-accueil/eco-drive-accueil.component';
 import { LayoutRoutingModule } from './layout-routing.module';
+import { PaypalComponent } from './GestionStockage/paypal/paypal.component';
+import { FormsModule } from '@angular/forms';
+import { NgxPayPalModule } from 'ngx-paypal';
+import { TagModule } from 'primeng/tag';
+import { CardModule } from 'primeng/card';
 
 
 
@@ -22,7 +27,8 @@ import { LayoutRoutingModule } from './layout-routing.module';
     NavbarComponent,
     FooterComponent,
     AccueilComponent,
-    EcoDriveAccueilComponent
+    EcoDriveAccueilComponent,
+    PaypalComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +37,13 @@ import { LayoutRoutingModule } from './layout-routing.module';
     ButtonModule,
     RippleModule,
     StyleClassModule,
-    LayoutRoutingModule
+    LayoutRoutingModule,
+    FormsModule,
+    NgxPayPalModule,
+     CardModule,
+     TagModule,
+    
+    
   ]
 })
 export class LayoutModule { }

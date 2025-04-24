@@ -55,8 +55,8 @@
   
       <!-- Plan Card -->
       <div [@slideFade]="animationState" class="plan-card p-p-5 p-shadow-10" *ngIf="plans[currentPlanIndex]">
-        <div class="plan-badge" [ngClass]="{'popular': plans[currentPlanIndex].popular}">
-          {{ plans[currentPlanIndex].popular ? 'Most Popular' : 'Standard' }}
+        <div class="plan-badge" [ngClass]="{'popular': popular}">
+          {{ popular ? 'Most Popular' : 'Standard' }}
         </div>
         
         <h3 class="plan-title">{{ plans[currentPlanIndex].titre }}</h3>
@@ -69,7 +69,7 @@
         
         <div class="price p-my-4">
           {{ plans[currentPlanIndex].prix | currency:'TND':'symbol':'1.2-2' }}
-          <span class="period">/month</span>
+          <span class="period">/ month</span>
         </div>
         
         <ul class="features-list p-my-4">
@@ -84,8 +84,8 @@
                 icon="pi pi-arrow-right"
                 class="p-button-rounded"
                 [ngClass]="{
-                  'p-button-success': !plans[currentPlanIndex].popular, 
-                  'p-button-help': plans[currentPlanIndex].popular
+                  'p-button-success': popular, 
+                  'p-button-help': popular
                 }"
                 (click)="selectPlan(plans[currentPlanIndex])">
         </button>
@@ -107,5 +107,12 @@
             [ngClass]="{'active': currentPlanIndex === i}"
             (click)="goToPlan(i)">
       </span>
+    </div>
+
+
+    <div class="paypal-modal-backdrop" *ngIf="showPaypal" (click)="closePaypal()">
+      <div class="paypal-modal-content" (click)="$event.stopPropagation()"  @popupAnimation>
+        <app-paypal [selectedPlan]="selectedPlan" (close)="closePaypal()"></app-paypal>
+      </div>
     </div>
   </div>
