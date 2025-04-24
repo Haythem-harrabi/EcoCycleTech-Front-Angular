@@ -8,6 +8,7 @@ import { EspaceStockageService } from 'src/app/services/espace-stockage.service'
 import { concatMap } from 'rxjs/operators';
 import { SubscriptionService } from 'src/app/services/subscription.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { paypal } from 'src/environment/environment-vars';
 
 declare var window: any;
 
@@ -57,7 +58,7 @@ export class PaypalComponent implements OnInit {
   private initConfig(): void {
     this.payPalConfig = {
       currency: this.currency,
-      clientId: "AfvlBW4lz55pwiKfI8Ls-mBNP2zmEyJqWfF6SZLOw8hDPY1_UTnr-loZddLYuk-oBwamCVWL9dtTeooC",
+      clientId: paypal.apiKey,
       createOrderOnClient: (data) => <ICreateOrderRequest>{
         intent: 'CAPTURE',
         purchase_units: [
