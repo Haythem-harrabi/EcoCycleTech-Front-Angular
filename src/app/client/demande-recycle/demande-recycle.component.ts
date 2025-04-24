@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation,ViewChild, ElementRef } from '@angular/core';
 import { DemandeRecyclageService } from '../../services/demande-recyclage/demande-recyclage.service';
 import { NgForm } from '@angular/forms';
+import { CommentaireDemande } from 'src/app/entities/demanderecyclage/commentaire-demande.model';
+import { CommentaireDemandeService } from 'src/app/services/demande-recyclage/commentaire-demande.service';
 
-declare var bootstrap: any;
+declare var bootstrap: any; 
 
 @Component({
   selector: 'app-demande-recycle',
@@ -11,7 +13,14 @@ declare var bootstrap: any;
   encapsulation: ViewEncapsulation.None
 })
 export class DemandeRecycleComponent implements OnInit, AfterViewInit {
+  deleteId: number | null = null;
   demandes: any[] = [];
+  @ViewChild('form') form!: NgForm;
+  commentaires: CommentaireDemande[] = [];
+  newComment: string = '';
+  //currentUserId: number = null; // Replace this with your actual logged-in user logic
+  
+
   demande: any = {
     idDemandeRecyclage: null,
     dateCreationDemandeRecyclage: '',
@@ -29,7 +38,8 @@ export class DemandeRecycleComponent implements OnInit, AfterViewInit {
   imageLabel = 'Choisir une image';
   today = new Date().toISOString().split('T')[0];
 
-  constructor(private demandeService: DemandeRecyclageService) {}
+  constructor(private demandeService: DemandeRecyclageService,
+    private commentaireService: CommentaireDemandeService) {}
 
   ngOnInit(): void {
     this.loadDemandes();
@@ -66,8 +76,11 @@ export class DemandeRecycleComponent implements OnInit, AfterViewInit {
       }
 
       this.update();
+
     } else {
       this.save();
+
+
     }
   }
 
@@ -139,10 +152,55 @@ export class DemandeRecycleComponent implements OnInit, AfterViewInit {
   }
 
   delete(id: number): void {
-    this.demandeService.remove(id).subscribe(() => this.loadDemandes());
+    this.deleteId = id;
+    const modalElement = document.getElementById('confirmDeleteModal');
+    if (modalElement) {
+      const deleteModal = new bootstrap.Modal(modalElement);
+      deleteModal.show();
+    }
   }
+  
+  confirmDelete(): void {
+    if (this.deleteId !== null) {
+      this.demandeService.remove(this.deleteId).subscribe(() => {
+        this.loadDemandes();
+        this.deleteId = null;
+  
+        // Close the confirmation modal
+        const modalElement = document.getElementById('confirmDeleteModal');
+        if (modalElement) {
+          const modalInstance = bootstrap.Modal.getInstance(modalElement);
+          if (modalInstance) {
+            modalInstance.hide();
+          }
+        }
+      });
+    }
+  }
+  
+  selectedDemande: any = null;
+  viewDetails(demande: any): void {
+    this.selectedDemande = demande;
+  
+    if (!this.selectedDemande.idDemandeRecyclage) {
+      console.error("La demande sélectionnée n'a pas d'ID !");
+      return;
+    }
+  
+    this.commentaireService
+      .getCommentsByDemandeId(this.selectedDemande.idDemandeRecyclage)
+      .subscribe(comments => (this.commentaires = comments));
+  
+    const modalElement = document.getElementById('detailsModal');
+    if (modalElement) {
+      const detailsModal = new bootstrap.Modal(modalElement);
+      detailsModal.show();
+    }
+  }
+  
 
   resetForm(): void {
+    this.form.resetForm();
     this.demande = {
       idDemandeRecyclage: null,
       dateCreationDemandeRecyclage: '',
@@ -190,4 +248,39 @@ export class DemandeRecycleComponent implements OnInit, AfterViewInit {
     }
     return new Blob([uintArray], { type: 'image/png' });
   }
+
+  submitComment(): void {
+    if (!this.newComment.trim()) return;
+  
+    if (!this.selectedDemande || !this.selectedDemande.idDemandeRecyclage) {
+      console.error('Aucune demande sélectionnée ou ID manquant');
+      alert('Erreur : la demande sélectionnée est invalide.');
+      return;
+    }
+  
+    const comment: CommentaireDemande = {
+      content: this.newComment,
+      user: null, // ou { idUser: 1 } selon ton contexte
+      demandeRecyclage: { idDemandeRecyclage: this.selectedDemande.idDemandeRecyclage }
+    };
+  
+    this.commentaireService.addComment(comment).subscribe(newC => {
+      this.commentaires.push(newC);
+      this.newComment = '';
+    });
+
+    
+  }
+  
+  deleteComment(commentId: number): void {
+    if (!confirm('Voulez-vous vraiment supprimer ce commentaire ?')) return;
+  
+    this.commentaireService.deleteComment(commentId).subscribe(() => {
+      this.commentaires = this.commentaires.filter(c => c.idCommentaire !== commentId);
+    });
+  }
+
+  
+
+
 }
