@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -65,9 +66,8 @@ export class LoginComponent implements OnInit,AfterViewInit {
         this.passwordStrengthValidator
       ]],
       confirmPassword: ['', Validators.required],
-      photoDeProfil: ['',Validators.required],
-      recaptcha: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator });
+      photoDeProfil: ['']
+        }, { validators: this.passwordMatchValidator });
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -102,7 +102,6 @@ export class LoginComponent implements OnInit,AfterViewInit {
     console.log("Initializing google buttons")
     // Initialize Google Sign-In for both tabs
     this.authService.initializeGoogleSignIn('google-signin-button');
-    
     // If on signup tab, also initialize that button
     if (this.activeTab === 'signup') {
       this.authService.initializeGoogleSignIn('google-signup-button');
@@ -263,7 +262,7 @@ export class LoginComponent implements OnInit,AfterViewInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { email, password, rememberMe } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
     this.authService.login(email, password).subscribe({
       next: () => {
@@ -272,8 +271,40 @@ export class LoginComponent implements OnInit,AfterViewInit {
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Email ou mot de passe incorrect';
-        console.error('Erreur de connexion:', err);
+        
+        if (err instanceof HttpErrorResponse) {
+          switch (err.status) {
+            case 0:
+              this.errorMessage = 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.';
+              break;
+            case 400:
+              this.errorMessage = 'Requête invalide. Veuillez vérifier vos informations.';
+              break;
+            case 401:
+              this.errorMessage = 'Email ou mot de passe incorrect';
+              break;
+            case 403:
+              this.errorMessage = 'Accès non autorisé';
+              break;
+            case 500:
+              this.errorMessage = 'Erreur serveur. Veuillez réessayer plus tard.';
+              break;
+            default:
+              this.errorMessage = 'Erreur inconnue. Veuillez réessayer.';
+          }
+        } else if (err.message) {
+          // Handle non-HTTP errors
+          this.errorMessage = err.message;
+        } else {
+          this.errorMessage = 'Erreur inconnue. Veuillez réessayer.';
+        }
+        
+        console.error('Détails de l\'erreur:', {
+          error: err,
+          status: err.status,
+          message: err.message,
+          stack: err.stack
+        });
       }
     });
   }
@@ -340,7 +371,6 @@ export class LoginComponent implements OnInit,AfterViewInit {
         ...this.signupForm.value,
         photoDeProfil: this.selectedFile,
         dateNaissance: this.formatDateForBackend(this.signupForm.get('dateNaissance')?.value),
-        recaptchaToken: this.signupForm.get('recaptcha')?.value
       };
       delete userData.confirmPassword;
     
@@ -351,7 +381,6 @@ export class LoginComponent implements OnInit,AfterViewInit {
         },
         error: (err) => {
           this.handleRegistrationError(err);
-          this.signupForm.get('recaptcha')?.reset();
         }
       });
     }

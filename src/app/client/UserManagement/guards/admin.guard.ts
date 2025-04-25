@@ -1,28 +1,54 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChildFn, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminGuard implements CanActivate {
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    // 1. Vérifie si l'utilisateur est connecté ET a le bon rôle
-    const requiredRoles = route.data['roles'] as Array<string>;
-    const user = this.authService.getCurrentUser(); // Implémentez cette méthode dans AuthService
-
-    if (user && requiredRoles.includes(user.role)) {
-      return true;
+    // Get current user synchronously first
+    const user = this.authService.getCurrentUser();
+    
+    if (user && user.role === 'ADMIN') {
+      return of(true);
     }
 
-    // 2. Redirige vers /login si non autorisé
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
-    return false;
+    return this.authService.validateToken().pipe(
+      switchMap(isValid => {
+        if (!isValid) {
+          this.authService.storeRedirectUrl(state.url);
+          this.router.navigate(['/login']);
+          return of(false);
+        }
+
+        const requiredRoles = route.data['roles'] as Array<string>;
+        const user = this.authService.getCurrentUser();
+        
+        if (!user || !user.role) {
+          this.authService.storeRedirectUrl(state.url);
+          this.router.navigate(['/login']);
+          return of(false);
+        }
+        
+        const hasRequiredRole = requiredRoles.includes(user.role);
+        
+        if (hasRequiredRole) {
+          return of(true);
+        }
+        
+        // If not authorized, redirect to home or access denied
+        this.router.navigate(['/']);
+        return of(false);
+      })
+    );
   }
 }

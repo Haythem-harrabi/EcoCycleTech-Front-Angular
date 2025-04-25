@@ -1,0 +1,144 @@
+<div class="profile-container">
+  <!-- Header Section -->
+  <div class="profile-header bg-light py-4 mb-4">
+    <div class="container">
+      <h1 class="profile-title mb-0">My Profile</h1>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Alert Messages -->
+    <div *ngIf="updateSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+      Profile updated successfully!
+      <button type="button" class="btn-close" (click)="updateSuccess = false"></button>
+    </div>
+    
+    <div *ngIf="updateError" class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{errorMessage}}
+      <button type="button" class="btn-close" (click)="updateError = false"></button>
+    </div>
+
+    <div class="card profile-card shadow-sm">
+      <div class="card-body p-4">
+        <!-- Loading Spinner -->
+        <div *ngIf="loading" class="d-flex justify-content-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        
+        <!-- Profile Content -->
+        <div *ngIf="!loading" class="row">
+          <!-- Left Column - Profile Picture -->
+          <div class="col-12 col-md-4 text-center mb-4 mb-md-0">
+            <div class="profile-picture-container mb-4">
+              <img [src]="imagePreview || 'assets/images/default-avatar.png'" 
+                   alt="Profile picture" 
+                   class="profile-picture rounded-circle img-thumbnail">
+              
+              <label for="upload-photo" class="profile-picture-edit-btn">
+                <i class="bi bi-camera-fill"></i>
+                <span class="visually-hidden">Change photo</span>
+              </label>
+              <input type="file" 
+                     id="upload-photo" 
+                     accept="image/*" 
+                     class="d-none" 
+                     (change)="onFileSelect($event)">
+            </div>
+            
+            <h3 class="profile-name">{{user.prenom}} {{user.nom}}</h3>
+            <p class="profile-username text-muted">{{user.username}}</p>
+          </div>
+          
+          <!-- Right Column - Profile Form -->
+          <div class="col-12 col-md-8">
+            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+              <div class="row g-3">
+                <!-- Personal Information Section -->
+                <div class="col-12">
+                  <h4 class="section-title mb-3">Personal Information</h4>
+                </div>
+                
+                <!-- First Name -->
+                <div class="col-12 col-md-6 mb-3">
+                  <label for="prenom" class="form-label">First Name</label>
+                  <input id="prenom" type="text" class="form-control" formControlName="prenom"
+                         [ngClass]="{'is-changed': profileForm.get('prenom')?.value !== originalFormValues.prenom}">
+                  <small *ngIf="profileForm.get('prenom')?.value !== originalFormValues.prenom" 
+                         class="text-primary change-indicator">Modified</small>
+                </div>
+                
+                <!-- Last Name -->
+                <div class="col-12 col-md-6 mb-3">
+                  <label for="nom" class="form-label">Last Name</label>
+                  <input id="nom" type="text" class="form-control" formControlName="nom"
+                         [ngClass]="{'is-changed': profileForm.get('nom')?.value !== originalFormValues.nom}">
+                  <small *ngIf="profileForm.get('nom')?.value !== originalFormValues.nom" 
+                         class="text-primary change-indicator">Modified</small>
+                </div>
+                
+                <!-- Account Information Section -->
+                <div class="col-12 mt-4">
+                  <h4 class="section-title mb-3">Account Information</h4>
+                </div>
+                
+                <!-- Email -->
+                <div class="col-12 col-md-6 mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input id="email" type="email" class="form-control" formControlName="email" readonly>
+                  <small class="text-muted">Email cannot be changed</small>
+                </div>
+                
+                <!-- Username -->
+                <div class="col-12 col-md-6 mb-3">
+                  <label for="username" class="form-label">Username</label>
+                  <input id="username" type="text" class="form-control" formControlName="username" readonly>
+                  <small class="text-muted">Username cannot be changed</small>
+                </div>
+                
+                <!-- Contact Information Section -->
+                <div class="col-12 mt-4">
+                  <h4 class="section-title mb-3">Contact Information</h4>
+                </div>
+                
+                <!-- Phone Number -->
+                <div class="col-12 col-md-6 mb-3">
+                  <label for="numTelephone" class="form-label">Phone Number</label>
+                  <input id="numTelephone" type="tel" class="form-control" formControlName="numTelephone"
+                         [ngClass]="{'is-changed': profileForm.get('numTelephone')?.value !== originalFormValues.numTelephone}">
+                  <small *ngIf="profileForm.get('numTelephone')?.value !== originalFormValues.numTelephone" 
+                         class="text-primary change-indicator">Modified</small>
+                </div>
+                
+                <!-- Address -->
+                <div class="col-12 mb-4">
+                  <label for="adresse" class="form-label">Address</label>
+                  <textarea id="adresse" class="form-control" rows="3" formControlName="adresse"
+                            [ngClass]="{'is-changed': profileForm.get('adresse')?.value !== originalFormValues.adresse}"></textarea>
+                  <small *ngIf="profileForm.get('adresse')?.value !== originalFormValues.adresse" 
+                         class="text-primary change-indicator">Modified</small>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="col-12 text-end">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small *ngIf="isFormChanged() || uploadedImage" class="text-success unsaved-changes">
+                      <i class="bi bi-info-circle me-1"></i> You have unsaved changes
+                    </small>
+                    <button type="submit" class="btn btn-primary save-btn" 
+                            [disabled]="isSubmitting || (!isFormChanged() && !uploadedImage)">
+                      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Save Changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

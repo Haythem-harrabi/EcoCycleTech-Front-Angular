@@ -1,4 +1,6 @@
 import { Component, HostListener } from '@angular/core';
+import { AuthService } from '../UserManagement/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -6,8 +8,79 @@ import { Component, HostListener } from '@angular/core';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  currentUser: any = null;
+  isUserMenuVisible = false;
+  unreadCount = 0;
+  defaultAvatar = 'assets/img/default-avatar.png'; // Updated path
+
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loadUserProfile();
+  }
+
+  loadUserProfile(): void {
+    this.currentUser = this.authService.getCurrentUser();
+    if (this.currentUser?.photoDeProfil) {
+      this.currentUser.photoDeProfil = this.getProfileImageUrl(this.currentUser.photoDeProfil);
+    }
+  }
+
+  getProfileImageUrl(photoPath: string): string {
+    if (!photoPath) return this.defaultAvatar;
+    
+    // Handle different image source cases:
+    if (photoPath.startsWith('http')) return photoPath; // External URL
+    if (photoPath.startsWith('data:')) return photoPath; // Base64 encoded
+    if (photoPath.startsWith('assets/')) return photoPath; // Local asset
+    
+    // API served image - adjust based on your API
+    return `/api/uploads/${photoPath}`; // Or your API endpoint
+  }
+
+  handleImageError(event: any): void {
+    event.target.src = this.defaultAvatar;
+  }
 
 
+  toggleUserMenu(): void {
+    this.isUserMenuVisible = !this.isUserMenuVisible;
+  }
+
+  showUserMenu(show: boolean): void {
+    if (window.innerWidth > 992) { // Desktop seulement
+      this.isUserMenuVisible = show;
+    }
+  }
+  
+  getUserDisplayName(): string {
+    if (!this.currentUser) return 'User';
+    
+    // Try multiple possible name fields
+    const displayName = this.currentUser.username || 
+                       this.currentUser.name || 
+                       this.currentUser.email;
+    
+    if (!displayName) return 'User';
+    
+    // Safe split operation
+    return typeof displayName === 'string' 
+      ? displayName.split(' ')[0] 
+      : 'User';
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser?.role === 'ADMIN';
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.currentUser = null; // Clear local reference
+
+  }
 
 
 
@@ -43,6 +116,11 @@ export class NavbarComponent {
 
     
   }
+  const navItems = document.querySelectorAll('.nav-element a');
+    navItems.forEach(item => {
+      item.classList.remove('active-nav-item');
+    });
+    (event.target as HTMLElement).classList.add('active-nav-item');
   }
 
 

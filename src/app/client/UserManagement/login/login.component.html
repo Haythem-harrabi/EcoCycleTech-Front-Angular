@@ -80,7 +80,7 @@
         <h2>Inscription</h2>
         <div class="social-buttons">
           <!-- Same update for signup tab -->
-          <div id="google-signin-button" class="google-btn-container"></div>
+          <div id="google-signup-button" class="google-btn-container"></div>
         
           <button class="social-btn facebook" (click)="loginWithFacebook()">
             <i class="fab fa-facebook-f"></i> Facebook
@@ -236,15 +236,7 @@
             </label>
           </div>
         </div>
-        <div class="form-group recaptcha-container">
-          <re-captcha 
-            formControlName="recaptcha"
-            siteKey="6Le8_BsrAAAAAFAjCDgSsaalLSru_ThytinrF3cL">
-          </re-captcha>
-          <div class="validation-message" *ngIf="signupForm.get('recaptcha')?.invalid && (signupForm.get('recaptcha')?.dirty || signupForm.get('recaptcha')?.touched)">
-            <span *ngIf="signupForm.get('recaptcha')?.errors?.['required']">Veuillez confirmer que vous n'êtes pas un robot</span>
-          </div>
-        </div>
+
         <button type="submit" class="btn-submit" [disabled]="signupForm.invalid || isSignupLoading">
           <span *ngIf="!isSignupLoading">S'inscrire</span>
           <div class="loader" *ngIf="isSignupLoading"></div>

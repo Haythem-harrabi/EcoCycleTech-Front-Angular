@@ -8,21 +8,33 @@ import { AdminGuard } from './client/UserManagement/guards/admin.guard';
 import { Role } from './client/UserManagement/enum/role';
 import { VerifyEmailComponent } from './client/UserManagement/verify-email/verify-email.component';
 import { OAuth2RedirectComponent } from './client/UserManagement/oauth2-redirect/oauth2-redirect.component';
-
+import { UserProfileComponent } from './client/UserManagement/user-profile/user-profile.component';
+import { AuthGuard } from './client/UserManagement/guards/auth.guard';
+import { UserManagementComponent } from './admin/UserManagement/user-management/user-management.component';
 const routes: Routes = [
   {
     path: '', 
     component: LayoutComponent,
     children: [
-      { path: '', component: AccueilComponent },
+      { path: '', component: AccueilComponent }
     ]
   },
+  {
+    path: 'user-profile',
+    component: UserProfileComponent,
+    canActivate: [AuthGuard] // Protect the profile route
+
+ },
   { path: 'login', component: LoginComponent },
   {
     path: 'admin', 
     component: AdminLayoutComponent,
     canActivate: [AdminGuard], // Protection de la route admin
-    data: { roles: [Role.ADMIN] } // Rôle requis (remplacez par votre logique)
+    data: { roles: [Role.ADMIN] },// Rôle requis (remplacez par votre logique)
+    children: [
+      { path: 'users', component: UserManagementComponent },  // Make sure this component exists
+      //{ path: 'user-statistics', component: UserStatisticsComponent } // Same for this
+    ] 
   },
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'oauth2/redirect', component: OAuth2RedirectComponent },

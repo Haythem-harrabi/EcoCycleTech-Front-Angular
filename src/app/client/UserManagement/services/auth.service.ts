@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap, catchError } from 'rxjs/operators';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { tap, catchError, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 declare var google: any;
 
@@ -13,6 +13,9 @@ declare var google: any;
 export class AuthService {
     private apiUrl = '/api';
     private readonly AUTH_TOKEN_KEY = 'auth_token';
+    private readonly USER_DATA_KEY = 'user_data';
+    private readonly TOKEN_REFRESH_INTERVAL = 30 * 60 * 1000; // 30 minutes
+  private refreshTokenTimeout: any;
 
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$: Observable<any> = this.currentUserSubject.asObservable();
@@ -22,6 +25,7 @@ export class AuthService {
     private router: Router,
     private socialAuthService: SocialAuthService
   ) {
+    this.startTokenRefreshTimer();
     this.loadUserFromStorage();
     
     // Subscribe to social auth state changes
@@ -30,6 +34,42 @@ export class AuthService {
         this.processSocialLogin(user);
       }
     });
+  }
+  private startTokenRefreshTimer() {
+    if (!this.isLoggedIn()) return;
+
+    // Set timer to refresh token before it expires
+    const token = this.getToken();
+    const jwt = this.parseJwt(token);
+    const expires = new Date(jwt.exp * 1000);
+    const timeout = expires.getTime() - Date.now() - (60 * 1000); // Refresh 1 minute before expiry
+
+    this.refreshTokenTimeout = setTimeout(() => {
+      this.refreshToken().subscribe();
+    }, timeout);
+  }
+  private stopTokenRefreshTimer() {
+    clearTimeout(this.refreshTokenTimeout);
+  }
+
+  refreshToken(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/refresh-token`, {}).pipe(
+      tap(response => {
+        this.handleAuthSuccess(response);
+      }),
+      catchError(error => {
+        this.logout();
+        return throwError(() => error);
+      })
+    );
+  }
+
+  private parseJwt(token: any): any {
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+      return null;
+    }
   }
 /*
    processSocialLogin(user: SocialUser): void {
@@ -180,16 +220,54 @@ export class AuthService {
   }
   // User authentication
   login(email: string, password: string): Observable<any> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
       tap(response => {
+        // Add validation for the response structure
+        if (!response || !response.token) {
+          console.log('Invalid authentication response:', response);
+          throw new Error('Invalid authentication response: Missing token');
+        }
+        
+        // Enhanced logging for debugging
+        console.log('Login successful - User data:', {
+          id: response.id,
+          email: response.email,
+          role: response.role
+        });
+        
         this.handleAuthSuccess(response);
       }),
       catchError(error => {
-        return throwError(() => error);
+        // Enhanced error logging
+        console.error('Login error details:', {
+          status: error.status,
+          message: error.message,
+          url: error.url,
+          error: error.error
+        });
+        
+        // Rethrow with more context
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 401) {
+            throw new Error('Invalid email or password');
+          } else if (error.status === 0) {
+            throw new Error('Unable to connect to server');
+          }
+        }
+        throw error;
       })
     );
   }
+  // User profile update
+  updateCurrentUser(userData: any): void {
+    if (!userData) return;
 
+    const currentData = this.getCurrentUser() || {};
+    const mergedData = { ...currentData, ...userData };
+
+    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(mergedData));
+    this.currentUserSubject.next(mergedData);
+  }
   // User registration with profile picture upload
   register(userData: any): Observable<any> {
     const formData = new FormData();
@@ -203,10 +281,7 @@ export class AuthService {
     if (userData.photoDeProfil) {
       formData.append('photoDeProfil', userData.photoDeProfil, userData.photoDeProfil.name);
     }
-    //recaptcha
-    if (userData.recaptchaToken) {
-      formData.append('recaptchaToken', userData.recaptchaToken);
-    }
+    
     
     return this.http.post<any>(`${this.apiUrl}/auth/register`, formData).pipe(
       tap(response => {
@@ -260,6 +335,30 @@ export class AuthService {
       })
     );
   }
+  
+  
+  // Method to validate token on app startup
+  validateToken(): Observable<boolean> {
+    const token = this.getToken();
+    if (!token) {
+      return of(false);
+    }
+  
+    return this.http.get<any>(`${this.apiUrl}/auth/validate`).pipe(
+      map(response => {
+        if (response.valid) {
+          return true;
+        } else {
+          this.clearAuthData();
+          return false;
+        }
+      }),
+      catchError(() => {
+        this.clearAuthData();
+        return of(false);
+      })
+    );
+  }
 
   // Step 3: Change password
   changePassword(email: string, password: string, repeatPassword: string): Observable<any> {
@@ -279,14 +378,46 @@ export class AuthService {
 
   // Handle successful authentication
    handleAuthSuccess(response: LoginResponse): void {
-    localStorage.setItem('auth_token', response.token);
-    localStorage.setItem('user_data', JSON.stringify({
-      id: response.id,
-      email: response.email,
-      role: response.role
-    }));
-    this.currentUserSubject.next(response);
-    this.redirectBasedOnRole(response.role);
+    // Basic validation
+    if (!response) {
+    throw new Error('Empty authentication response');
+   }
+
+  // Ensure we have at least a token
+  if (!response?.token) {
+    console.error('Invalid auth response:', response);
+    throw new Error('Invalid authentication response');
+  }
+
+
+    const userData = {
+      ...response,
+      token:response.token,
+      id: response.id || 0, // Default ID if missing
+      email: response.email || 'unknown@example.com', // Default email
+      role: response.role || 'USER', // Default role
+      username: response.username || response.email?.split('@')[0] || 'user', // Default username      // Include any additional user data
+    };
+
+    localStorage.setItem(this.AUTH_TOKEN_KEY, response.token);
+    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(userData));
+    this.currentUserSubject.next(userData);
+    console.log('Use Authenticated:', userData);
+    this.startTokenRefreshTimer();
+
+
+    this.redirectAfterLogin();
+  }
+
+  // Redirect after successful login
+  private redirectAfterLogin(): void {
+    const redirectUrl = sessionStorage.getItem('redirectUrl');
+    if (redirectUrl) {
+      sessionStorage.removeItem('redirectUrl');
+      this.router.navigateByUrl(redirectUrl);
+    } else {
+      this.redirectBasedOnRole(this.currentUserSubject.value?.role);
+    }
   }
 
   // Redirect user based on role
@@ -294,10 +425,15 @@ export class AuthService {
     if (role === 'ADMIN') {
       this.router.navigate(['/admin']);
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     }
   }
-
+  
+  storeRedirectUrl(url: string): void {
+    if (!url.includes('/login') && !url.includes('/verify-email')) {
+      sessionStorage.setItem('redirectUrl', url);
+    }
+  }
   // Load user data from storage on app initialization
    loadUserFromStorage(): void {
     const userData = localStorage.getItem('user_data');
@@ -306,20 +442,73 @@ export class AuthService {
     }
   }
 
-  // Get current user information
+  //  Getcurrent user information
   getCurrentUser(): any {
-    const userData = localStorage.getItem('user_data');
-    return userData ? JSON.parse(userData) : null;
+    /*const userData = localStorage.getItem('user_data');
+    return userData ? JSON.parse(userData) : null;*/
+    try {
+      const userData = localStorage.getItem(this.USER_DATA_KEY);
+      return userData ? JSON.parse(userData) : null;
+    } catch (e) {
+      console.error('Error parsing user data', e);
+      this.clearAuthData();
+      return null;
+    }
+  }
+  
+  private clearAuthData(): void {
+    localStorage.removeItem(this.AUTH_TOKEN_KEY);
+    localStorage.removeItem(this.USER_DATA_KEY);
+    this.currentUserSubject.next(null);
+  }
+
+  getCurrentUserProfile(): Observable<any> {
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => new Error('No authentication token available'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(`${this.apiUrl}/auth/me`, { headers }).pipe(
+      tap(user => {
+        this.updateCurrentUser(user);
+      }),
+      catchError(error => {
+        if (error.status === 401 || error.status === 403) {
+          this.clearAuthData();
+        }
+        return throwError(() => error);
+      })
+    );
+  }
+  
+  // Get user ID
+  getUserId(): number | null {
+    const userData = localStorage.getItem(this.USER_DATA_KEY);
+    if (userData) {
+      const user = JSON.parse(userData);
+      return user.id;
+    }
+    return null;
   }
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('auth_token');
+    //ancienne implementation
+    //return !!localStorage.getItem(this.AUTH_TOKEN_KEY);
+    const token = this.getToken();
+    const user = this.getCurrentUser();
+    console.log('Authentication check - Token:', !!token, 'User:', !!user);
+    return !!token && !!user;
   }
 
   // Get authentication token
   getToken(): string | null {
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem(this.AUTH_TOKEN_KEY);
   }
 
   // User logout
@@ -327,18 +516,14 @@ export class AuthService {
     // Call the backend logout endpoint if you have one
     // this.http.post(`${this.apiUrl}/auth/logout`, {}).subscribe();
     this.socialAuthService.signOut().catch(() => {
-      console.log('Not logged in with social provider or already signed out');
+      console.log('Social provider already signed out');
     });
-    // Clear local storage
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_data');
-    
-    // Clear any other stored user data
-    sessionStorage.removeItem('auth_token');
-    sessionStorage.removeItem('user_data');
+    this.stopTokenRefreshTimer();
+    this.clearAuthData();
+
     
     // Update behavior subject
-    this.currentUserSubject.next(null);
+    //this.currentUserSubject.next(null);
     
     // Redirect to login page
     this.router.navigate(['/login']);
@@ -348,8 +533,10 @@ export class AuthService {
 // Response interface for login
 interface LoginResponse {
   token: string;
-  type: string;
   id: number;
   email: string;
   role: string;
+  username?: string;
+  name?: string;
+  [key: string]: any;
 }

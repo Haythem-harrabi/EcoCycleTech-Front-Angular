@@ -1,0 +1,55 @@
+.user-badge {
+    border-radius: 2px;
+    padding: .25em .5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+.user-badge.status-active {
+    background-color: #C8E6C9;
+    color: #256029;
+}
+
+.user-badge.status-inactive {
+    background-color: #FFCDD2;
+    color: #C63737;
+}
+
+.user-badge.status-banned {
+    background-color: #FEEDAF;
+    color: #8A5340;
+}
+
+.user-badge.role-admin {
+    background-color: #B3E5FC;
+    color: #23547B;
+}
+
+.user-badge.role-user {
+    background-color: #ECCFFF;
+    color: #694382;
+}
+
+.user-badge.role-moderator {
+    background-color: #FFD8B2;
+    color: #805B36;
+}
+
+:host ::ng-deep .p-dialog .product-image {
+    width: 150px;
+    margin: 0 auto 2rem auto;
+    display: block;
+}
+
+@media screen and (max-width: 960px) {
+    :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td:last-child {
+        text-align: center;
+    }
+
+    :host ::ng-deep .p-datatable .p-datatable-tbody > tr > td:nth-child(6) {
+        display: flex;
+        justify-content: center;
+    }
+}
