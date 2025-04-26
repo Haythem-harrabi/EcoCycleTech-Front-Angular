@@ -19,6 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { ListdemanderecycleComponent } from './admin/demande-recycle/listdemanderecycle/listdemanderecycle.component';
+import { PastDateValidatorDirective } from './admin/demande-recycle/listdemanderecycle/past-date.validator';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { ListdemanderecycleComponent } from './admin/demande-recycle/listdemande
     PlanStockageListComponent,
     DemandeRecycleComponent,
     CertificateRecyclageComponent,
-    ListdemanderecycleComponent,
+    ListdemanderecycleComponent,PastDateValidatorDirective,
     
   ],
   imports: [

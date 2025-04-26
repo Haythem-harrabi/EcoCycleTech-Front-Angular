@@ -4,8 +4,9 @@
   <h2 class="mb-4">Demande de Recyclage</h2>
 
   <!-- Button to open modal -->
-  <button class="btn btn-primary mb-4" (click)="resetForm(); openModal()">Ajouter une demande</button>
-
+  <button  class="btn mb-4"  style="background-color: #68b484; border-color: #68b484; color: #fff;" (click)="resetForm(); openModal()">
+  Ajouter une demande
+</button>
   <h3>📋 Liste des Demandes</h3>
 
   <div class="row">
@@ -36,6 +37,9 @@
   <button class="btn btn-info" (click)="viewDetails(demande)">Voir Détails</button>
   <button class="btn btn-warning" (click)="edit(demande); openModal()">Modifier</button>
   <button class="btn btn-danger" (click)="delete(demande.idDemandeRecyclage)">Supprimer</button>
+  <button      *ngIf="demande.etatDemandeRecyclage === 'TRAITE'"       class="btn btn-outline-primary"   (click)="downloadCertificat(demande)" 
+  title="Télécharger le certificat PDF"
+>  <i class="bi bi-file-earmark-pdf"></i> PDF  </button>
 </div>
 
       </div>
@@ -74,18 +78,29 @@
             />
           </div>
 
-          <!-- ✅ Image Upload -->
-          <div class="mb-3">
-            <label for="image" class="form-label">{{ imageLabel }}</label>
-            <input
-              #fileInput
-              id="image"
-              type="file"
-              (change)="onFileChange($event)"
-              class="form-control"
-              [required]="!isEditMode"
-            />
+        <!-- ✅ Image Upload -->
+        <div class="mb-3">
+          <label for="image" class="form-label">{{ imageLabel }}</label>
+          <input
+            #fileInput
+            id="image"
+            name="image"
+            type="file"
+            ngModel
+            #imageField="ngModel"
+            (change)="onFileChange($event)"
+            class="form-control"
+            [required]="!isEditMode"
+          />
+          <div
+            *ngIf="imageField.invalid && (imageField.dirty || imageField.touched)"
+            class="text-danger mt-1"
+          >
+            <div *ngIf="imageField.errors?.['required']">
+              L'image est obligatoire.
+            </div>
           </div>
+        </div>
 
           <!-- ✅ Description -->
           <div class="mb-3">
@@ -117,30 +132,32 @@
           </div>
 
           <!-- ✅ Date de création -->
-          <div class="mb-3">
-            <label for="date" class="form-label">Date de création</label>
-            <input
-              id="date"
-              type="date"
-              [(ngModel)]="demande.dateCreationDemandeRecyclage"
-              name="dateCreationDemandeRecyclage"
-              #dateField="ngModel"
-              class="form-control"
-              required
-              [max]="today"
-            />
-            <div
-              *ngIf="dateField.invalid && (dateField.dirty || dateField.touched)"
-              class="text-danger mt-1"
-            >
-              <div *ngIf="dateField.errors?.['required']">
-                La date est obligatoire.
-              </div>
-              <div *ngIf="demande.dateCreationDemandeRecyclage >= today">
-                La date doit être antérieure à aujourd’hui.
-              </div>
-            </div>
-          </div>
+<!-- Date de création -->
+<div class="mb-3">
+  <label for="date" class="form-label">Date de création</label>
+  <input
+    id="date"
+    name="dateCreationDemandeRecyclage"
+    type="date"
+    class="form-control"
+    [ngModel]="demande.dateCreationDemandeRecyclage || today"
+    (ngModelChange)="demande.dateCreationDemandeRecyclage = $event"
+    #dateField="ngModel"
+    required
+    [max]="today"
+  />
+
+  <div *ngIf="(dateField.invalid && (dateField.dirty || dateField.touched)) || wasSubmitted"
+       class="text-danger mt-1">
+    <div *ngIf="dateField.errors?.['required']">
+      La date est obligatoire.
+    </div>
+    <div *ngIf="dateField.errors?.['max']">
+      La date doit être antérieure ou égale à aujourd'hui ({{ today }}).
+    </div>
+  </div>
+</div>
+
 
           <!-- ✅ Nombre d'appareils -->
           <div class="mb-3">

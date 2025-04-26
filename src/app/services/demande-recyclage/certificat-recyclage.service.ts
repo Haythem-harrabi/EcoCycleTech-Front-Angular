@@ -22,4 +22,7 @@ export class CertificatRecyclageService {
   remove(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/remove/${id}`);
   }
+
+
+  
 }

@@ -18,4 +18,14 @@
     object-fit: cover;
     width: 100%;
   }
-  
+ .ng-invalid.ng-touched:not(form),
+.ng-invalid.ng-dirty:not(form),
+.ng-invalid.has-error:not(form) {
+  border-color: #dc3545;
+}
+
+.text-danger {
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+  color: #dc3545;
+}

@@ -2,7 +2,7 @@
 
 <div class="container mt-4">
     <!-- Add Button -->
-    <button class="btn btn-primary mb-3" (click)="resetForm(); openModal()">Ajouter une demande</button>
+    <button class="btn btn-primary mb-3"  style="background-color: #68b484; border-color: #68b484; color: #fff;" (click)="resetForm(); openModal()">Ajouter une demande</button>
   
     <!-- Search --> 
     <div class="mb-3">
@@ -10,17 +10,26 @@
     </div>
   
     <!-- Table -->
-    <table class="table table-bordered table-hover">
-      <thead class="table-light">
+    <table class="table table-bordered table-hover"  >
+      <thead>
         <tr>
-          <th>Image</th>
-          <th (click)="sortTable('descriptionDemandeRecyclage')" style="cursor: pointer">Description {{ getSortIcon('descriptionDemandeRecyclage') }}</th>
-          <th (click)="sortTable('dateCreationDemandeRecyclage')" style="cursor: pointer">Date {{ getSortIcon('dateCreationDemandeRecyclage') }}</th>
-          <th (click)="sortTable('nbrAppareils')" style="cursor: pointer">Nombre Appareils {{ getSortIcon('nbrAppareils') }}</th>
-          <th (click)="sortTable('prixDemandeRecyclage')" style="cursor: pointer">Prix {{ getSortIcon('prixDemandeRecyclage') }}</th>
-          <th (click)="sortTable('etatDemandeRecyclage')" style="cursor: pointer">Etat {{ getSortIcon('etatDemandeRecyclage') }}</th>
-
-          <th>Actions</th>
+          <th style="background-color: #68b484; color: white;">Image</th>
+          <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('descriptionDemandeRecyclage')">
+            Description {{ getSortIcon('descriptionDemandeRecyclage') }}
+          </th>
+          <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('dateCreationDemandeRecyclage')">
+            Date {{ getSortIcon('dateCreationDemandeRecyclage') }}
+          </th>
+          <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('nbrAppareils')">
+            Nombre Appareils {{ getSortIcon('nbrAppareils') }}
+          </th>
+          <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('prixDemandeRecyclage')">
+            Prix {{ getSortIcon('prixDemandeRecyclage') }}
+          </th>
+          <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('etatDemandeRecyclage')">
+            Etat {{ getSortIcon('etatDemandeRecyclage') }}
+          </th>
+          <th style="background-color: #68b484; color: white;">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -49,6 +58,11 @@
             <button class="btn btn-sm btn-danger" (click)="delete(demande.idDemandeRecyclage)" title="Supprimer">
               <i class="bi bi-trash"></i>
             </button>
+
+            <button      *ngIf="demande.etatDemandeRecyclage === 'TRAITE'"       class="btn btn-outline-primary"   (click)="downloadCertificat(demande)" 
+            title="Télécharger le certificat PDF"
+         >  <i class="bi bi-file-earmark-pdf"></i> PDF  </button>
+
           </td>
           
         </tr>
@@ -93,11 +107,22 @@ aria-hidden="true"
           <input
             #fileInput
             id="image"
+            name="image"
             type="file"
+            ngModel
+            #imageField="ngModel"
             (change)="onFileChange($event)"
             class="form-control"
             [required]="!isEditMode"
           />
+          <div
+            *ngIf="imageField.invalid && (imageField.dirty || imageField.touched)"
+            class="text-danger mt-1"
+          >
+            <div *ngIf="imageField.errors?.['required']">
+              L'image est obligatoire.
+            </div>
+          </div>
         </div>
 
         <!-- ✅ Description -->
@@ -128,33 +153,39 @@ aria-hidden="true"
             </div>
           </div>
         </div>
+<!-- Date de création -->
+<div class="mb-3">
+  <label for="date" class="form-label">Date de création</label>
+  <input
+    id="date"
+    name="dateCreationDemandeRecyclage"
+    type="date"
+    class="form-control"
+    [ngModel]="demande.dateCreationDemandeRecyclage || today"
+    (ngModelChange)="demande.dateCreationDemandeRecyclage = $event"
+    #dateField="ngModel"
+    required
+    pastDate             
+    [max]="today"         
+  />
 
-        <!-- ✅ Date de création -->
-        <div class="mb-3">
-          <label for="date" class="form-label">Date de création</label>
-          <input
-            id="date"
-            type="date"
-            [(ngModel)]="demande.dateCreationDemandeRecyclage"
-            name="dateCreationDemandeRecyclage"
-            #dateField="ngModel"
-            class="form-control"
-            required
-            [max]="today"
-          />
-          <div
-            *ngIf="dateField.invalid && (dateField.dirty || dateField.touched)"
-            class="text-danger mt-1"
-          >
-            <div *ngIf="dateField.errors?.['required']">
-              La date est obligatoire.
-            </div>
-            <div *ngIf="demande.dateCreationDemandeRecyclage && demande.dateCreationDemandeRecyclage.toISOString().split('T')[0] > today">
-            La date doit être antérieure à aujourd’hui.
-            </div>
-            
-          </div>
-        </div>
+  <div
+    *ngIf="
+      (dateField.invalid && (dateField.dirty || dateField.touched))
+      || wasSubmitted
+    "
+    class="text-danger mt-1"
+  >
+    <div *ngIf="dateField.errors?.['required']">
+      La date est obligatoire.
+    </div>
+    <div *ngIf="dateField.errors?.['notInPast']">
+      La date doit être inférieure ou égale à aujourd’hui ({{ today }}).
+    </div>
+  </div>
+</div>
+
+
 
         <!-- ✅ Nombre d'appareils -->
         <div class="mb-3">

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { CertificatRecyclage } from 'src/app/entities/demanderecyclage/certificat-recyclage.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,9 @@ export class DemandeRecyclageService {
   }
 
 
+  getCertificatByDemandeId(demandeId: number): Observable<CertificatRecyclage> {
+    return this.http.get<CertificatRecyclage>(`http://localhost:8090/ecoCycleTech/certificatRecyclage/byDemande/${demandeId}`);
+  }
 
   
 }
