@@ -16,6 +16,18 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private publicUrls = [
+    '/api/auth/register',
+    '/api/auth/login',
+    '/api/auth/verify-email',
+    '/api/auth/verify',
+    '/api/auth/refresh-token',
+    '/api/auth/resend-verification', // For resending verification emails
+    '/api/auth/forgot-password', // For password reset
+    '/api/auth/reset-password', // For resetting password
+      
+
+  ];
 
   constructor(
     private authService: AuthService,
@@ -23,6 +35,10 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log('Intercepting request to:', request.url);
+    if (this.isPublicRequest(request.url)) {
+      console.log('Skipping auth interceptor for public URL:', request.url);
+      return next.handle(request);
+    }
 
     // Get the auth token
     const token = this.authService.getToken();
@@ -59,32 +75,42 @@ export class AuthInterceptor implements HttpInterceptor {
   private addTokenToRequest(request: HttpRequest<any>, token: string): HttpRequest<any> {
     return request.clone({
       setHeaders: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`
       }
     });
   }
-
-  private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  private isPublicRequest(url: string): boolean {
+    return this.publicUrls.some(publicUrl => url.startsWith(publicUrl));
+  }
+  private handle401Error(
+    request: HttpRequest<any>, next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+  
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
-
-      // Here you would implement token refresh logic if your API supports it
-      // For now, we'll just logout the user
+  
+      // (tu pourrais tenter un refresh token ici)
+  
       this.authService.logout();
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
-      return of(); // Return an empty observable
+      this.router.navigate(
+        ['/login'],
+        { queryParams: { returnUrl: this.router.url } }
+      );
+  
+      //  ⬇️  renvoie un observable "vide" mais typé
+      return of<HttpEvent<any>>();
     }
-
+  
     return this.refreshTokenSubject.pipe(
       filter(token => token != null),
       take(1),
-      switchMap(token => {
-        return next.handle(this.addTokenToRequest(request, token));
-      })
+      switchMap(token =>
+        next.handle(this.addTokenToRequest(request, token!))
+      )
     );
   }
+  
 
   private handle403Error(): void {
     const currentUser = this.authService.getCurrentUser();

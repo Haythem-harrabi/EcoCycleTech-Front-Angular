@@ -1,0 +1,22 @@
+<!-- notifications.component.html -->
+<h2 class="mb-4 text-xl font-semibold">Notifications</h2>
+
+<div *ngIf="!notifs.length" class="text-gray-500">
+  aucune notification
+</div>
+
+<ul class="space-y-3">
+  <li *ngFor="let n of notifs"
+      class="p-3 rounded-lg bg-slate-50 border flex justify-between">
+    <div>
+      <div class="font-medium">{{ n.label }}</div>
+      <div class="text-sm text-gray-600" [innerHTML]="n.body"></div>
+    </div>
+
+    <button
+      class="text-xs px-2 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-700"
+      (click)="markAsRead(n)">
+      OK
+    </button>
+  </li>
+</ul>

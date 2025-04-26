@@ -19,6 +19,9 @@ export class AuthService {
 
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$: Observable<any> = this.currentUserSubject.asObservable();
+  private _emailVerified$ = new BehaviorSubject<boolean>(false);
+  emailVerified$          = this._emailVerified$.asObservable();
+
 
   constructor(
     private http: HttpClient, 
@@ -35,6 +38,19 @@ export class AuthService {
       }
     });
   }
+  saveUnverifiedUser(user: any) {
+    localStorage.setItem(this.USER_DATA_KEY, JSON.stringify(user));
+    /* drapeau pour le point rouge                                 */
+    localStorage.setItem('emailNotVerified', 'true');
+    this.currentUserSubject.next(user);               // réveil du navbar
+  }
+
+  
+  notifyEmailVerified()    { this._emailVerified$.next(true); }
+  hasUnverifiedMail(): boolean {
+    return localStorage.getItem('emailNotVerified')=== 'true';
+  }
+
   private startTokenRefreshTimer() {
     if (!this.isLoggedIn()) return;
 
@@ -271,6 +287,7 @@ export class AuthService {
   // User registration with profile picture upload
   register(userData: any): Observable<any> {
     const formData = new FormData();
+    console.log('Registering user with API URL:', `${this.apiUrl}/auth/register`);
     
     Object.keys(userData).forEach(key => {
       if (key !== 'photoDeProfil' && key !== 'recaptchaToken' || userData[key] === null) {
@@ -284,11 +301,11 @@ export class AuthService {
     
     
     return this.http.post<any>(`${this.apiUrl}/auth/register`, formData).pipe(
-      tap(response => {
-        if (response.token) {
-          this.storeToken(response.token);
-        }
-      }),
+      //tap(response => {
+      //  if (response.token) {
+      //    this.storeToken(response.token);
+      //  }
+      //}),
       catchError(error => throwError(() => error))
     );
   }
@@ -436,11 +453,12 @@ export class AuthService {
   }
   // Load user data from storage on app initialization
    loadUserFromStorage(): void {
-    const userData = localStorage.getItem('user_data');
+    const userData = localStorage.getItem(this.USER_DATA_KEY);
     if (userData) {
       this.currentUserSubject.next(JSON.parse(userData));
     }
   }
+  get user$() { return this.currentUser$; }
 
   //  Getcurrent user information
   getCurrentUser(): any {
@@ -500,16 +518,18 @@ export class AuthService {
   isAuthenticated(): boolean {
     //ancienne implementation
     //return !!localStorage.getItem(this.AUTH_TOKEN_KEY);
-    const token = this.getToken();
+    /*const token = this.getToken();
     const user = this.getCurrentUser();
     console.log('Authentication check - Token:', !!token, 'User:', !!user);
-    return !!token && !!user;
+    return !!token && !!user;*/
+    return !!this.getCurrentUser();
   }
 
   // Get authentication token
   getToken(): string | null {
     return localStorage.getItem(this.AUTH_TOKEN_KEY);
   }
+  
 
   // User logout
   logout(): void {

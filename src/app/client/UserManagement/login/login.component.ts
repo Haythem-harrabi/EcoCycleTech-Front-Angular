@@ -4,6 +4,8 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { GoogleLoginProvider, SocialAuthService } from '@abacritt/angularx-social-login';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';  // Add this import
+import { NotificationService } from '../services/notification.service';
 
 
 @Component({
@@ -42,7 +44,9 @@ export class LoginComponent implements OnInit,AfterViewInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private socialAuthService: SocialAuthService
+    private socialAuthService: SocialAuthService,
+    private snackBar: MatSnackBar,
+    private notif: NotificationService
 
   ) {
     // Initialize forms
@@ -362,26 +366,47 @@ export class LoginComponent implements OnInit,AfterViewInit {
         this.markAllFormControlsAsTouched();
         return;
       }
+
     
       this.isSignupLoading = true;
       this.signupErrorMessage = '';
+      const raw = this.signupForm.value;
     
       // Préparation des données
       const userData = {
         ...this.signupForm.value,
         photoDeProfil: this.selectedFile,
-        dateNaissance: this.formatDateForBackend(this.signupForm.get('dateNaissance')?.value),
+        dateNaissance: this.formatDateForBackend(raw.dateNaissance),
       };
       delete userData.confirmPassword;
     
       // Appel du service
       this.authService.register(userData).subscribe({
-        next: (response) => {
-          this.handleRegistrationSuccess(response);
+        next: (res) => {
+          // 1. on mémorise un “faux” user le temps qu'il vérifie son mail
+          this.authService.saveUnverifiedUser({
+            id      : res.id,              // → ou le champ que renvoie /register
+            email   : raw.email,
+            prenom  : raw.prenom,
+            nom     : raw.nom,
+            username: raw.username,
+            role    : 'USER'
+          });
+      
+          // 2. notification
+          this.snackBar.open(
+            'Compte créé ! Vérifie ton e-mail avant de continuer.',
+            'OK', { duration: 6000 }
+          );
+      
+          // 3. pastille rouge
+          this.notif.add('EMAIL_NOT_VERIFIED');
+      
+          // 4. redirection home
+          this.router.navigate(['']);
+          this.isSignupLoading = false;
         },
-        error: (err) => {
-          this.handleRegistrationError(err);
-        }
+        error: (err) => this.handleRegistrationError(err)
       });
     }
     
@@ -399,19 +424,22 @@ export class LoginComponent implements OnInit,AfterViewInit {
       return d.toISOString().split('T')[0]; // Format YYYY-MM-DD
     }
     
-    private handleRegistrationSuccess(response: any): void {
+   /* 
+   private handleRegistrationSuccess(response: any): void {
       this.isSignupLoading = false;
+      this.snackBar.open('Registration successful! Please verify your email to continue.', 'Close', {
+        duration: 5000
+      });
       
-      // Gestion de la réponse réussie
-      if (response.token) {
-        this.authService.storeToken(response.token);
-        this.router.navigate(['/']);
-      } else {
         // Redirection vers la page de vérification si nécessaire
-        this.router.navigate(['/verify-email']);
-      }
+        setTimeout(() => {
+          this.router.navigate(['/verify-email'], { 
+            skipLocationChange: true // This prevents browser history updates which might trigger interceptors
+          });
+        }, 500);
+      
     }
-    
+    */
     private handleRegistrationError(err: any): void {
       this.isSignupLoading = false;
       

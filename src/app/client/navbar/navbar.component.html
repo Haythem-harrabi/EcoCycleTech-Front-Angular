@@ -111,14 +111,13 @@
                          (mouseenter)="showUserMenu(true)"
                          (mouseleave)="showUserMenu(false)">
                          
-                         <div class="user-avatar-wrapper">
-                            <img [src]="currentUser?.photoDeProfil || defaultAvatar" 
+                        <div class="user-avatar-wrapper">
+                            <img [src]="currentUser?.photoDeProfil || defaultAvatar"
                                  (error)="handleImageError($event)"
-                                 class="user-avatar-img"
-                                 alt="User profile">
-                            <div *ngIf="unreadCount > 0" class="notification-dot"></div>
+                                 class="user-avatar-img" alt="User profile">
+                            <!-- red dot on avatar -->
+                            <div *ngIf="notifCount" class="notification-dot"></div>
                           </div>
-                        
                         <span class="user-name">{{ getUserDisplayName() }}</span>
                         <i class="dropdown-icon bi bi-chevron-down"></i>
                     </div>
@@ -150,13 +149,43 @@
                             <span>Settings</span>
                         </a>
                         
-                        <a routerLink="/notifications" class="panel-item notification-item">
-                            <i class="bi bi-bell"></i>
-                            <span>Notifications</span>
-                            <span *ngIf="unreadCount > 0" class="notification-bubble">
-                                {{unreadCount}}
-                            </span>
+                        <a routerLink="/notifications"
+                        class="panel-item notification-item">
+                         <i class="bi bi-bell"></i>
+                        <span>Notifications</span>
+
+                        <!-- pastille compteur -->
+                        <span *ngIf="notifCount"
+                          class="notification-bubble">
+                            {{ notifCount }}
+                        </span>
                         </a>
+                        <!-- 2️⃣  Aperçu des notifications directement dans le menu -->
+<ul *ngIf="notifs.length"
+class="mt-2 space-y-2 max-h-40 overflow-y-auto">
+
+<li *ngFor="let n of notifs"
+   class="px-3 py-2 rounded bg-slate-50
+          flex justify-between items-start text-sm">
+
+    <div class="pr-2">
+        <div class="font-medium">{{ n.label }}</div>
+        <div class="text-gray-600"
+             [innerHTML]="n.body"></div>
+    </div>
+
+    <button class="text-xs px-1.5 py-0.5 rounded
+                   bg-emerald-600 text-white
+                   hover:bg-emerald-700"
+            (click)="markAsRead(n)">
+       OK
+    </button>
+</li>
+
+</ul>
+
+<div *ngIf="notifs.length" class="panel-divider"></div>
+
                         
                         <div *ngIf="isAdmin()">
                             <div class="panel-divider"></div>

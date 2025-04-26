@@ -4,9 +4,9 @@
         <h2>Email Verification</h2>
       </div>
       
-      <div class="card-body">
-        <!-- Loading state -->
+      <div class="card-body">        <!-- Loading state -->
         <div *ngIf="isLoading" class="loading-container">
+
           <div class="spinner"></div>
           <p>Verifying your email address...</p>
         </div>
@@ -24,6 +24,9 @@
           <div class="error-icon">✗</div>
           <h3>Verification Failed</h3>
           <p>{{ errorMessage }}</p>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
           
           <!-- Resend verification section -->
           <div class="resend-section">

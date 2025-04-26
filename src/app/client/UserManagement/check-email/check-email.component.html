@@ -1,0 +1,25 @@
+<div class="wrapper mat-elevation-z4">
+    <h1>Vérifiez votre boîte mail 📬</h1>
+  
+    <p>
+      Nous avons envoyé un lien de confirmation à
+      <strong>{{ email || 'votre adresse e-mail' }}</strong>.<br>
+      Cliquez sur le bouton « Activer mon compte » contenu dans ce message
+      pour terminer l’inscription.
+    </p>
+  
+    <button mat-flat-button color="primary"
+            (click)="openMailClient()">
+      Ouvrir ma messagerie
+    </button>
+  
+    <p class="hint">
+      Vous n’avez rien reçu ?<br>
+      Regardez dans le dossier « Spam » ou ré-essayez dans quelques minutes.
+    </p>
+  
+    <button mat-button (click)="goToLogin()">
+      Revenir à la connexion
+    </button>
+  </div>
+  

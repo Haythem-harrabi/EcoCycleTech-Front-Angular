@@ -38,48 +38,53 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadUserProfile();
-  }
+    this.fetchProfileFromCurrentUser();
+   }
 
-  loadUserProfile(): void {
-    const userId = this.authService.getCurrentUser()?.id;
-    if (!userId) {
-      this.showError('User not authenticated');
-      this.loading = false;
-      return;
-    }
-
-    this.http.get<any>(`/api/auth/fetch/${userId}`).pipe(
-      finalize(() => this.loading = false)
-    ).subscribe({
-      next: (userData) => {
-        this.user = userData;
-        
-        // Mettre à jour le formulaire avec les données de l'utilisateur
-        const formValues = {
-          nom: userData.nom || '',
-          prenom: userData.prenom || '',
-          email: userData.email || '',
-          username: userData.username || '',
-          numTelephone: userData.numTelephone || '',
-          adresse: userData.adresse || ''
-        };
-        
-        this.profileForm.patchValue(formValues);
-        
-        // Stocker les valeurs originales pour comparaison ultérieure
-        this.originalFormValues = { ...formValues };
-
-        if (userData.photoDeProfil) {
-          this.imagePreview = 'data:image/jpeg;base64,' + userData.photoDeProfil;
-        }
-      },
-      error: (error) => {
-        console.error('Failed to load user profile', error);
-        this.showError('Failed to load user profile');
+   private fetchProfileFromCurrentUser(): void {
+    this.authService.currentUser$
+    .subscribe(u => {
+      if (!u?.email) {
+        this.showError('Utilisateur inconnu');
+        this.loading = false;
+        return;
       }
+      this.fetchProfile(u.email);          // <-- e-mail
     });
   }
+  
+   private fetchProfile(email: string): void {
+    this.loading = true;
+
+  this.http.get<any>(`/api/users/${encodeURIComponent(email)}`)
+    .pipe(finalize(() => (this.loading = false)))
+    .subscribe({
+      next : data  => this.fillForm(data),
+      error: ()    => this.showError('Failed to load user profile')
+    });
+  }
+
+  private fillForm(userData: any) {
+    this.user = userData;                            // avatar + nom
+  
+    const formValues = {
+      nom         : userData.nom         ?? '',
+      prenom      : userData.prenom      ?? '',
+      email       : userData.email       ?? '',
+      username    : userData.username    ?? '',
+      numTelephone: userData.numTelephone?? '',
+      adresse     : userData.adresse     ?? ''
+    };
+  
+    this.profileForm.patchValue(formValues);
+    this.originalFormValues = { ...formValues };
+  
+    if (userData.photoDeProfil) {
+      this.imagePreview = 'data:image/jpeg;base64,' + userData.photoDeProfil;
+    }
+  }
+
+  
 
   onFileSelect(event: any): void {
     if (event.target.files && event.target.files.length) {
@@ -110,64 +115,44 @@ export class UserProfileComponent implements OnInit {
   }
 
   updateProfile(): void {
-    // Vérifier si le formulaire a été modifié
     if (!this.isFormChanged() && !this.uploadedImage) {
       this.showError('No changes were made to save');
       return;
     }
-
-    const userId = this.authService.getCurrentUser()?.id;
-    if (!userId) {
-      this.showError('User not authenticated');
-      return;
-    }
-
+  
+    const id = this.user.id;                       // ⭐ récupéré du DTO
+    if (!id) { this.showError('Utilisateur inconnu'); return; }
+  
     this.isSubmitting = true;
-    this.updateSuccess = false;
-    this.updateError = false;
-
+  
     const formData = new FormData();
-    const formValues = this.profileForm.getRawValue();
-    
-    // N'inclure que les champs qui ont été modifiés
-    Object.keys(formValues).forEach(key => {
-      if (formValues[key] !== null && formValues[key] !== undefined && 
-          formValues[key] !== this.originalFormValues[key]) {
-        formData.append(key, formValues[key]);
+    const current  = this.profileForm.getRawValue();
+  
+    Object.keys(current).forEach(k => {
+      if (current[k] !== this.originalFormValues[k]) {
+        formData.append(k, current[k]);
       }
     });
-
     if (this.uploadedImage) {
       formData.append('photoDeProfil', this.uploadedImage, this.uploadedImage.name);
     }
-
-    this.http.put<any>(`/api/auth/update/${userId}`, formData).pipe(
-      finalize(() => this.isSubmitting = false)
-    ).subscribe({
-      next: (response) => {
-        this.showSuccess('Profile updated successfully');
-        
-        // Mettre à jour les valeurs originales avec les nouvelles valeurs
-        this.originalFormValues = { ...formValues };
-        
-        // Update user data in local storage if needed
-        const currentUser = this.authService.getCurrentUser();
-        if (currentUser) {
-          currentUser.nom = formValues.nom;
-          currentUser.prenom = formValues.prenom;
-          this.authService.updateCurrentUser(currentUser);
-        }
-      },
-      error: (error) => {
-        console.error('Failed to update profile', error);
-        this.showError(error.error?.message || 'Failed to update profile');
-      }
-    });
+  
+    this.http.put(`/api/auth/update/${id}`, formData)
+             .pipe(finalize(() => (this.isSubmitting = false)))
+             .subscribe({
+               next : (res: any) => {
+                 this.showSuccess('Profile updated successfully');
+                 this.originalFormValues = { ...current };
+                 this.authService.updateCurrentUser(res.user);  // maj localStorage / navbar
+               },
+               error: () => this.showError('Failed to update profile')
+             });
   }
+  
 
   // Vérifier si le formulaire a été modifié
   isFormChanged(): boolean {
-    const currentValues = this.profileForm.getRawValue();
+    const currentValues = this.profileForm.value;
     return Object.keys(currentValues).some(key => 
       currentValues[key] !== this.originalFormValues[key]
     );

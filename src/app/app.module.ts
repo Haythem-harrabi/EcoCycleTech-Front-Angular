@@ -32,6 +32,9 @@ import { AdminGuard } from './client/UserManagement/guards/admin.guard';
 import { UserManagementComponent } from './admin/UserManagement/user-management/user-management.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CheckEmailComponent } from './client/UserManagement/check-email/check-email.component';
+import { NotificationsComponent } from './client/UserManagement/notifications/notifications.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +44,9 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     LoginComponent,
     VerifyEmailComponent,
     OAuth2RedirectComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    CheckEmailComponent,
+    NotificationsComponent
    // UserManagementComponent
     
     
@@ -66,7 +71,8 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     ToastModule,
     RippleModule,
     MenuModule,
-    BadgeModule
+    BadgeModule,
+    MatSnackBarModule,
   ],
   providers: [
     MessageService,

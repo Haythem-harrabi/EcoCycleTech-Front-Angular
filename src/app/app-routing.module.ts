@@ -11,20 +11,24 @@ import { OAuth2RedirectComponent } from './client/UserManagement/oauth2-redirect
 import { UserProfileComponent } from './client/UserManagement/user-profile/user-profile.component';
 import { AuthGuard } from './client/UserManagement/guards/auth.guard';
 import { UserManagementComponent } from './admin/UserManagement/user-management/user-management.component';
+import { CheckEmailComponent } from './client/UserManagement/check-email/check-email.component';
+import { NotificationsComponent } from './client/UserManagement/notifications/notifications.component';
 const routes: Routes = [
   {
     path: '', 
     component: LayoutComponent,
     children: [
-      { path: '', component: AccueilComponent }
+      { path: '', component: AccueilComponent },
+      {
+        path: 'user-profile',
+        component: UserProfileComponent,
+        canActivate: [AuthGuard] // Protect the profile route
+    
+     },
+     { path: 'notifications',component: NotificationsComponent}
     ]
   },
-  {
-    path: 'user-profile',
-    component: UserProfileComponent,
-    canActivate: [AuthGuard] // Protect the profile route
-
- },
+  
   { path: 'login', component: LoginComponent },
   {
     path: 'admin', 
@@ -36,6 +40,8 @@ const routes: Routes = [
       //{ path: 'user-statistics', component: UserStatisticsComponent } // Same for this
     ] 
   },
+  { path: 'notifications',component: NotificationsComponent},
+  { path: 'check-email', component: CheckEmailComponent },
   { path: 'verify-email', component: VerifyEmailComponent },
   { path: 'oauth2/redirect', component: OAuth2RedirectComponent },
   { path: 'oauth2/callback', component: OAuth2RedirectComponent },

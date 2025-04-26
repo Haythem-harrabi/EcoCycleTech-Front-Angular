@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { AuthService } from '../UserManagement/services/auth.service';
 import { Router } from '@angular/router';
+import { AppNotification, NotificationService } from '../UserManagement/services/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,16 +11,30 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
   currentUser: any = null;
   isUserMenuVisible = false;
-  unreadCount = 0;
+  notifCount = 0;         
+  notifs: AppNotification[] = [];      
   defaultAvatar = 'assets/img/default-avatar.png'; // Updated path
 
   constructor(
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notif:NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.loadUserProfile();
+    //à vérifier ken enahiha ou bien nkhaliha 
+    //this.loadUserProfile();
+    this.authService.currentUser$.subscribe(u => this.currentUser = u);
+
+    /* pastille rouge */
+    this.notif.changes$.subscribe(list => {
+      this.notifs     = list;
+      this.notifCount = list.length;
+    });
+    /* rafraîchir au démarrage (rechargement de page) */
+    if (this.authService.hasUnverifiedMail()) {
+      this.notifCount = 1;
+    }
   }
 
   loadUserProfile(): void {
@@ -122,7 +137,11 @@ export class NavbarComponent {
     });
     (event.target as HTMLElement).classList.add('active-nav-item');
   }
-
+/** appelé par le bouton OK dans le menu */
+markAsRead(n: AppNotification) {
+  this.notif.remove(n.key);       // retire du store…
+  // la sous-liste et le compteur se mettront à jour
+}
 
 // handle clicks outside the dropdowns
   @HostListener('document:click', ['$event'])
