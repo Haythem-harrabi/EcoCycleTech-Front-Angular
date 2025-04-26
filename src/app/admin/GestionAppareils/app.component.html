@@ -1,0 +1,79 @@
+<!-- dashboard.component.html -->
+<div class="container-fluid">
+  <!-- Sidebar -->
+  <div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-success text-white sidebar" style="height: 100vh; position: fixed; top: 0; left: 0;">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active text-white" href="#">
+              <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/Reservations">
+              <i class="fas fa-calendar-check"></i> Reservations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="/Appareils">
+              <i class="fas fa-cogs"></i> Appareils
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="#">
+              <i class="fas fa-users"></i> Users
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4" style="margin-left: 16.66667%; padding-top: 20px;">
+      <h2 class="text-success">Devices Management</h2>
+      <div class="row">
+        <!-- Dashboard Cards -->
+        <div class="col-md-3 mb-4">
+          <div class="card shadow-lg border-success">
+            <div class="card-body text-center">
+              <h5 class="card-title text-success">Total Users</h5>
+              <p class="card-text">1,234</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="card shadow-lg border-success">
+            <div class="card-body text-center">
+              <h5 class="card-title text-success">Total Orders</h5>
+              <p class="card-text">567</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="card shadow-lg border-success">
+            <div class="card-body text-center">
+              <h5 class="card-title text-success">Sales</h5>
+              <p class="card-text">$10,000</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4">
+          <div class="card shadow-lg border-success">
+            <div class="card-body text-center">
+              <h5 class="card-title text-success">Pending Orders</h5>
+              <p class="card-text">50</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Content (Charts, Tables, etc.) -->
+      <div class="row">
+        <!-- Add your additional widgets or charts here -->
+      </div>
+    </main>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

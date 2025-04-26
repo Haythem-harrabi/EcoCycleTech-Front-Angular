@@ -1,0 +1,8 @@
+export enum EtatAppareilEnum {
+  NEUF = 'NEUF',
+  UTILISE = 'UTILISE',
+  REPARABLE = 'REPARABLE',
+  HS = 'HS',
+  OCCASION = 'OCCASION',
+  RECONDITIONNE = 'RECONDITIONNE'
+}

@@ -1,0 +1,60 @@
+/* dashboard.component.css
+
+/* Green Shades */
+:root {
+  --primary-green: #28a745;
+  --light-green: #5dbb77;
+  --dark-green: #1e7e34;
+}
+
+.sidebar {
+  background-color: var(--primary-green);
+  height: 100%;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.sidebar .nav-link {
+  color: white;
+}
+
+.sidebar .nav-link:hover {
+  color: var(--light-green);
+}
+
+.card {
+  border: 1px solid var(--light-green);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-title {
+  color: var(--primary-green);
+  font-size: 1.1rem;
+}
+
+.card-text {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--dark-green);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: var(--primary-green);
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.container-fluid {
+  padding-top: 20px;
+}
+
+/* Additional Styling for the Dashboard */
+.row {
+  margin-top: 20px;
+}

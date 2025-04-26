@@ -1,0 +1,124 @@
+<main class="col-md-10 offset-md-2 p-4" style="margin-left: 16.66667%; padding-top: 20px;">
+  <h1>Appareil</h1>
+
+  <div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+      Informations sur l'appareil
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="AppareilForm">
+        <div class="mb-3">
+          <label>Nom</label>
+          <input type="text" class="form-control" placeholder="Nom de l'appareil" formControlName="nom">
+          <div *ngIf="AppareilForm.controls['nom']?.invalid && AppareilForm.controls['nom']?.touched" class="alert alert-danger mt-1">
+            <p *ngIf="AppareilForm.controls['nom']?.hasError('required')">Le nom est obligatoire</p>
+            <p *ngIf="AppareilForm.controls['nom']?.hasError('minlength')">Le nom doit contenir au moins 4 caractères</p>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>État de l'appareil</label>
+          <select class="form-control" formControlName="etatAppareil">
+            <option value="" disabled selected>Sélectionnez un état</option>
+            <option *ngFor="let etat of etatAppareilOptions" [value]="etat">
+              {{ etat }}
+            </option>
+          </select>
+          <div *ngIf="AppareilForm.get('etatAppareil')?.invalid && AppareilForm.get('etatAppareil')?.touched" class="alert alert-danger mt-1">
+            <p *ngIf="AppareilForm.get('etatAppareil')?.hasError('required')">
+              L'état est obligatoire
+            </p>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Marque</label>
+          <input type="text" class="form-control" placeholder="Marque de l'appareil" formControlName="marque">
+          <div *ngIf="AppareilForm.controls['marque']?.invalid && AppareilForm.controls['marque']?.touched" class="alert alert-danger mt-1">
+            <p *ngIf="AppareilForm.controls['marque']?.hasError('required')">La marque est obligatoire</p>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Description</label>
+          <textarea class="form-control" placeholder="Description de l'appareil" formControlName="description"></textarea>
+          <div *ngIf="AppareilForm.controls['description']?.invalid && AppareilForm.controls['description']?.touched" class="alert alert-danger mt-1">
+            <p *ngIf="AppareilForm.controls['description']?.hasError('required')">La description est obligatoire</p>
+          </div>
+
+          <button type="button" class="btn btn-info mt-2" (click)="onPredictPrix()">Prédire le prix</button>
+
+          <div *ngIf="prixPrevu !== undefined" class="mt-2 alert alert-info">
+            Prix prédit : {{ prixPrevu | currency:'DT' }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Image</label>
+          <div class="d-flex">
+            <input type="file" class="form-control me-2" (change)="onFileSelected($event)" accept="image/*">
+            <button class="btn btn-outline-primary" type="button" (click)="uploadImage()" [disabled]="!selectedFile">
+              Upload
+            </button>
+          </div>
+
+          <!-- Image URL input (readonly) -->
+          <input type="text" class="form-control mt-2" placeholder="URL de l'image" formControlName="imageurl" readonly>
+
+          <!-- Loading spinner during upload -->
+          <div *ngIf="imageUploading" class="mt-2">
+            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            <span class="ms-2">Téléchargement en cours...</span>
+          </div>
+
+          <!-- Success message -->
+          <div *ngIf="uploadSuccess" class="alert alert-success mt-2">
+            Image téléchargée avec succès!
+          </div>
+
+          <!-- Validation errors for imageurl -->
+          <div *ngIf="AppareilForm.get('imageurl')?.invalid && AppareilForm.get('imageurl')?.touched" class="alert alert-danger mt-2">
+            <p *ngIf="AppareilForm.get('imageurl')?.hasError('required')">
+              L'URL de l'image est obligatoire
+            </p>
+          </div>
+
+          <!-- Preview of selected image before upload -->
+          <div *ngIf="imagePreview" class="mt-2">
+            <img [src]="imagePreview" alt="Aperçu de l'image" style="max-height: 200px; max-width: 100%;">
+          </div>
+
+          <!-- Preview of uploaded image from imageurl if no selected file preview -->
+          <div *ngIf="AppareilForm.get('imageurl')?.value && !imagePreview" class="mt-2">
+            <img [src]="AppareilForm.get('imageurl')?.value" alt="Image de l'appareil" style="max-height: 200px; max-width: 100%;">
+          </div>
+        </div>
+
+
+        <div class="mb-3">
+          <label>Prix</label>
+          <input type="number" class="form-control"
+          [placeholder]="prixPrevu !== undefined ? prixPrevu : 'Prix de l\'appareil'"
+          formControlName="prix">
+           <div *ngIf="AppareilForm.controls['prix']?.invalid && AppareilForm.controls['prix']?.touched" class="alert alert-danger mt-1">
+            <p *ngIf="AppareilForm.controls['prix']?.hasError('required')">Le prix est obligatoire</p>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Catégorie</label>
+          <select class="form-control" formControlName="categorie">
+            <option value="Electronique">Electronique</option>
+            <option value="Telephonique">Téléphonique</option>
+          </select>
+          <div *ngIf="AppareilForm.controls['categorie']?.invalid && AppareilForm.controls['categorie']?.touched" class="alert alert-danger mt-1">
+            <p>La catégorie est obligatoire</p>
+          </div>
+        </div>
+
+        <button class="btn btn-success mt-3" type="button" [disabled]="AppareilForm.invalid" (click)="save()">Enregistrer</button>
+      </form>
+    </div>
+  </div>
+  </main>

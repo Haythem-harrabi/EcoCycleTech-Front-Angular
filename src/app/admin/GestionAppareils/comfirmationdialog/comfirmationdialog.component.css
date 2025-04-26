@@ -1,0 +1,106 @@
+/* Dialog Container */
+.mat-dialog-container {
+    background-color: #f8fafc !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+  }
+  
+  /* Title Section */
+  .mat-dialog-title {
+    color: #2d3748;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  /* Content Area */
+  .mat-dialog-content {
+    padding: 16px 0 !important;
+    color: #4a5568;
+    line-height: 1.6;
+    max-height: 70vh !important;
+  }
+  
+  .dialog-content p {
+    margin-bottom: 20px;
+  }
+  
+  /* Appareil Info Section */
+  .appareil-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.858);
+    margin: 16px 0;
+    border: 1px solid #edf2f7;
+  }
+  
+  .appareil-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .appareil-info h3 {
+    color: #2d3748;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  
+  .appareil-info p {
+    color: #4a5568;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  
+  /* Actions Section */
+  .mat-dialog-actions {
+    padding: 16px 0 0 0 !important;
+    margin-top: 16px;
+    border-top: 1px solid #e2e8f0;
+    justify-content: flex-end;
+  }
+  
+  /* Buttons */
+  .mat-button {
+    color: #64748b !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+  }
+  
+  .mat-button:hover {
+    background-color: #f1f5f9 !important;
+  }
+  
+  .mat-raised-button {
+    background-color: #3b82f6 !important;
+    color: white !important;
+    font-weight: 500;
+    padding: 8px 20px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(241, 241, 243, 0.796) !important;
+  }
+  
+  .mat-raised-button:hover {
+    background-color: #2563eb !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important;
+  }
+  
+  /* Focus State */
+  .cdk-focused .cdk-keyboard-focused {
+    outline: 2px solid #93c5fd !important;
+    outline-offset: 2px;
+  }

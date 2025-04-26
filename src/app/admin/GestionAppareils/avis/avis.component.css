@@ -1,0 +1,204 @@
+/* ===== Base Styles ===== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  h2 {
+    color: #2d3748;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #4299e1, #667eea);
+    border-radius: 2px;
+  }
+  
+  /* ===== Empty State ===== */
+  .container > div:first-child {
+    text-align: center;
+    padding: 3rem 0;
+    color: #718096;
+    font-size: 1.1rem;
+  }
+  
+  /* ===== Card Styles ===== */
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background: white;
+    position: relative;
+  }
+  
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-body {
+    padding: 1.75rem;
+  }
+  
+  .card-title {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #4299e1;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .card-text {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+  
+  .card-text strong {
+    color: #2d3748;
+    font-weight: 600;
+  }
+  
+  /* ===== Button Styles ===== */
+  .btn {
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    margin-right: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+  }
+  
+  .btn:hover::after {
+    left: 100%;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #4aa99f, #32c1b3);
+    color: white;
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.25);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(83, 146, 131, 0.35);
+  }
+  
+  .btn-warning {
+    background: linear-gradient(135deg, #2db16d, #20dd98);
+    color: white;
+    box-shadow: 0 4px 12px rgba(237, 137, 54, 0.25);
+  }
+  
+  .btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(237, 137, 54, 0.35);
+  }
+  
+  .btn-danger {
+    background: linear-gradient(135deg, #2db16d, #5eb058);
+    color: white;
+    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.25);
+  }
+  
+  .btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 101, 101, 0.35);
+  }
+  
+  /* ===== Rating Indicator ===== */
+  .rating-indicator {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  
+  .rating-stars {
+    color: #7ac174;
+    margin-right: 0.5rem;
+  }
+  
+  /* ===== Responsive Design ===== */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1.5rem 1rem;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    .btn {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+  
+  /* ===== Animation for List Items ===== */
+  .card {
+    animation: slideUp 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  @keyframes slideUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Staggered animations for each card */
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.2s; }
+  .card:nth-child(3) { animation-delay: 0.3s; }
+  .card:nth-child(4) { animation-delay: 0.4s; }
+  .card:nth-child(5) { animation-delay: 0.5s; }
