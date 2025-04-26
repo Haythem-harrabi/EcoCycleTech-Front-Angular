@@ -150,15 +150,17 @@ export class PaypalComponent implements OnInit {
     
     //user dependent
     let user =  new User(1);
+
+    
     //create space 
     let espace = new EspaceStockage(  
       0,                            
-      0,                                // usedTaille (in GB, for example)
-      this.selectedPlan.prix,                               // prix (price, for example in TND)
-      endDate,            // dateExpiration
-      new Date(),            // dateCreation
-      StatutEspace.ACTIVE,               // statut
-      [] // fichiers array
+      0,                                
+      this.selectedPlan.prix,                               
+      endDate,          
+      new Date(),           
+      StatutEspace.ACTIVE,              
+      [] 
     );
     
     //Add space before adding subscription
@@ -176,18 +178,15 @@ export class PaypalComponent implements OnInit {
           this.selectedPlan,
           espaceResponse
         );
-    
         console.log('Subscription to be added:', sub);
-    
-        // Step 2: Add the subscription
         return this.ss.addSubscription(sub);
       })
     ).subscribe(
       (response) => {
-        console.log('✅ Subscription added successfully:', response);
+        console.log('Subscription added successfully:', response);
       },
       (error) => {
-        console.error('❌ Error occurred while adding subscription:', error);
+        console.error('Error occurred while adding subscription:', error);
       }
     );
 

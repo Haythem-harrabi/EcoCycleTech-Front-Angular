@@ -5,6 +5,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { AccueilComponent } from './accueil/accueil.component';
 import { EcoDriveAccueilComponent } from './GestionStockage/eco-drive-accueil/eco-drive-accueil.component';
 import { PaypalComponent } from './GestionStockage/paypal/paypal.component';
+import { EspaceStockageComponent } from './GestionStockage/espace-stockage/espace-stockage.component';
 
 
 
@@ -15,7 +16,8 @@ const routes: Routes = [
     children: [
       { path: '', component: AccueilComponent },
       { path: 'EcoDrive', component: EcoDriveAccueilComponent }     ,
-      {path:'Checkout', component: PaypalComponent} 
+      {path:'Checkout', component: PaypalComponent} ,
+      {path:'space', component: EspaceStockageComponent}
     ]
   }
 ];

@@ -18,6 +18,23 @@ import { FormsModule } from '@angular/forms';
 import { NgxPayPalModule } from 'ngx-paypal';
 import { TagModule } from 'primeng/tag';
 import { CardModule } from 'primeng/card';
+import { EspaceStockageComponent } from './GestionStockage/espace-stockage/espace-stockage.component';
+import { FileUploadModule } from 'primeng/fileupload';
+import { CloudinaryModule } from '@cloudinary/ng';
+import {
+  BreadcrumbModule,
+} from 'primeng/breadcrumb';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule} from 'primeng/toast';
+import { TableModule} from 'primeng/table';
+import { NgxFilesizeModule } from 'ngx-filesize';
+import { SelectButtonModule } 
+    from 'primeng/selectbutton';
+
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
+
+
 
 
 
@@ -28,7 +45,8 @@ import { CardModule } from 'primeng/card';
     FooterComponent,
     AccueilComponent,
     EcoDriveAccueilComponent,
-    PaypalComponent
+    PaypalComponent,
+    EspaceStockageComponent,
   ],
   imports: [
     CommonModule,
@@ -42,8 +60,16 @@ import { CardModule } from 'primeng/card';
     NgxPayPalModule,
      CardModule,
      TagModule,
-    
-    
+     FileUploadModule,
+     CloudinaryModule,
+     BreadcrumbModule,
+     DialogModule,
+     ToastModule,
+     TableModule,
+     NgxFilesizeModule,
+     SelectButtonModule,
+     ProgressSpinnerModule
+
   ]
 })
 export class LayoutModule { }

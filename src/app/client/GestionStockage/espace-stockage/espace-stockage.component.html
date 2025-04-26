@@ -1,0 +1,147 @@
+<div class="storage-container p-4">
+  <!-- Toast for notifications -->
+  <p-toast></p-toast>
+  
+  <!-- Breadcrumb navigation -->
+  <div class="breadcrumb-container mb-3">
+    <p-breadcrumb [model]="breadcrumbItems" [home]="home"></p-breadcrumb>
+  </div>
+  
+  <!-- Toolbar with PrimeNG components -->
+  <div class="toolbar flex align-items-center justify-content-between mb-3">
+    <div class="left-tools flex align-items-center">
+      <p-button icon="pi pi-cloud-upload" label="Upload" styleClass="upload-btn mr-2" (click)="openUploadWidget()"></p-button>
+      <p-button icon="pi pi-folder" label="New Folder" styleClass="newfolder-btn mr-2 p-button-secondary" (click)="createNewFolder()"></p-button>
+    </div>
+    
+    <div class="center-tools">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Search files..." [(ngModel)]="searchQuery" (keyup.enter)="filterItems()"/>
+      </span>
+    </div>
+    
+    <div class="right-tools">
+      <p-selectButton [options]="viewOptions" 
+                     [(ngModel)]="viewMode" optionLabel="value" optionValue="value"
+                     (onChange)="changeViewMode($event.value)">
+        <ng-template let-item>
+          <i [class]="item.icon"></i>
+        </ng-template>
+      </p-selectButton>
+    </div>
+  </div>
+  
+  <!-- File/Folder display area -->
+  <p-card styleClass="file-main-content h-full">
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="flex justify-content-center p-5">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+    
+    <!-- Empty state -->
+    <div *ngIf="!loading && items.length === 0" class="empty-state text-center p-5">
+      <i class="pi pi-folder-open" style="font-size: 3rem"></i>
+      <h3>This folder is empty</h3>
+      <p>Upload files or create folders to get started</p>
+    </div>
+    
+    <!-- Grid View -->
+    <div *ngIf="!loading && items.length > 0 && viewMode === 'grid'" class="grid-view">
+      <div class="grid">
+        <div *ngFor="let item of items" class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2" >
+          <div class="file-card p-3 m-2 border-round cursor-pointer" 
+               (click)="item.type === 'folder' ? navigateToFolder(item) : null"
+               [ngClass]="{'folder-card': item.type === 'folder', 'file-card': item.type === 'file'}">
+            <div class="file-icon flex justify-content-center align-items-center mb-2">
+              <i *ngIf="item.type === 'folder'" class="pi pi-folder" style="font-size: 3rem"></i>
+              
+              <!-- Image preview for images -->
+              <img *ngIf="item.type === 'file' && ['jpg', 'jpeg', 'png', 'gif'].includes(item.format || '')"
+                   [src]="item.url" alt="Preview" class="img-preview">
+              
+              <!-- File type icons -->
+              <i *ngIf="item.type === 'file' && !['jpg', 'jpeg', 'png', 'gif'].includes(item.format || '') && ['pdf'].includes(item.format || '')" 
+                 class="pi pi-file-pdf" style="font-size: 3rem"></i>
+              <i *ngIf="item.type === 'file' && !['jpg', 'jpeg', 'png', 'gif'].includes(item.format || '') && ['doc', 'docx'].includes(item.format || '')" 
+                 class="pi pi-file-word" style="font-size: 3rem"></i>
+              <i *ngIf="item.type === 'file' && !['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'].includes(item.format || '')" 
+                 class="pi pi-file" style="font-size: 3rem"></i>
+            </div>
+            <div class="file-name text-center text-truncate">
+              {{ item.name }}
+            </div>
+            <!-- access icon to folders -->
+            <i *ngIf="item.type === 'folder'" class="pi pi-arrow-up-right folder-hover-icon"></i>
+
+            <div class="file-actions flex justify-content-center mt-2">
+              <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger p-button-text"
+                       (click)="$event.stopPropagation(); deleteItem(item)"></p-button>
+                      
+                       <div class="download-div">
+                       <a *ngIf="item.type === 'file'"
+                       [href]="getDownloadUrl(item)"
+                       download
+                       class="download-btn p-button p-button-rounded p-button-text"
+                       style="text-decoration: none; color: inherit;"
+                       (click)="$event.stopPropagation()">
+                      <i class="pi pi-download"></i>
+                    </a>
+                    </div>
+                    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
+    <!-- List View -->
+    <div *ngIf="!loading && items.length > 0 && viewMode === 'list'" class="list-view">
+      <p-table [value]="items" styleClass="p-datatable-sm" [rowHover]="true">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem"></th>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Uploaded At</th>
+            <th style="width: 8rem">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+          <tr (click)="item.type === 'folder' ? navigateToFolder(item) : null" 
+              [ngClass]="{'cursor-pointer': item.type === 'folder'}">
+            <td>
+              <i *ngIf="item.type === 'folder'" class="pi pi-folder"></i>
+              <i *ngIf="item.type === 'file' && ['jpg', 'jpeg', 'png', 'gif'].includes(item.format || '')" class="pi pi-image"></i>
+              <i *ngIf="item.type === 'file' && ['pdf'].includes(item.format || '')" class="pi pi-file-pdf"></i>
+              <i *ngIf="item.type === 'file' && ['doc', 'docx'].includes(item.format || '')" class="pi pi-file-word"></i>
+              <i *ngIf="item.type === 'file' && !['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'].includes(item.format || '')" class="pi pi-file"></i>
+            </td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.type === 'file' ? (item.size | filesize) : '--' }}</td>
+            <td>{{ item.created_at | date:'medium' }}</td>
+            <td>
+              <div class="flex justify-content-between">
+                <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger p-button-text p-button-sm"
+                         (click)="$event.stopPropagation(); deleteItem(item)"></p-button>
+                        
+                         <div class="download-div">
+                         <a *ngIf="item.type === 'file'"
+                         [href]="getDownloadUrl(item)"
+                         download
+                         class="download-btn p-button p-button-rounded p-button-text"
+                         style="text-decoration: none; color: inherit;"
+                         (click)="$event.stopPropagation()">
+                        <i class="pi pi-download"></i>
+                      </a>
+                    </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </p-card>
+</div>

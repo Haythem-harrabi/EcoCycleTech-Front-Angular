@@ -35,4 +35,10 @@ export class SubscriptionService {
   deleteSubscription(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/deleteSubscription/${id}`);
   }
+
+
+  getUserSpace(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/activeEspace/${id}`);
+  }
+
 }
