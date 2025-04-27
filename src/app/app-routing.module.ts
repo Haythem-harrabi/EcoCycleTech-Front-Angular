@@ -13,6 +13,8 @@ import { AuthGuard } from './client/UserManagement/guards/auth.guard';
 import { UserManagementComponent } from './admin/UserManagement/user-management/user-management.component';
 import { CheckEmailComponent } from './client/UserManagement/check-email/check-email.component';
 import { NotificationsComponent } from './client/UserManagement/notifications/notifications.component';
+import { ChatComponent } from './client/UserManagement/chat/chat.component';
+import { UserStatisticsComponent } from './admin/UserManagement/user-statistics/user-statistics.component';
 const routes: Routes = [
   {
     path: '', 
@@ -28,6 +30,7 @@ const routes: Routes = [
      { path: 'notifications',component: NotificationsComponent}
     ]
   },
+  {path:'chat',component:ChatComponent},
   
   { path: 'login', component: LoginComponent },
   {
@@ -37,7 +40,7 @@ const routes: Routes = [
     data: { roles: [Role.ADMIN] },// Rôle requis (remplacez par votre logique)
     children: [
       { path: 'users', component: UserManagementComponent },  // Make sure this component exists
-      //{ path: 'user-statistics', component: UserStatisticsComponent } // Same for this
+      { path: 'user-statistics', component: UserStatisticsComponent } // Same for this
     ] 
   },
   { path: 'notifications',component: NotificationsComponent},

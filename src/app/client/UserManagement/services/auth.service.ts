@@ -265,7 +265,17 @@ export class AuthService {
         // Rethrow with more context
         if (error instanceof HttpErrorResponse) {
           if (error.status === 401) {
-            throw new Error('Invalid email or password');
+            const errorMsg = error.error?.error || '';
+
+      if (errorMsg.includes('banned')) {
+        throw new Error('Your account is banned. Please contact support.');
+      }
+      if (errorMsg.includes('inactive')) {
+        throw new Error('Your account is inactive. Please contact support.');
+      }
+      
+            
+          throw new Error('Invalid email or password');
           } else if (error.status === 0) {
             throw new Error('Unable to connect to server');
           }
@@ -413,7 +423,9 @@ export class AuthService {
       id: response.id || 0, // Default ID if missing
       email: response.email || 'unknown@example.com', // Default email
       role: response.role || 'USER', // Default role
-      username: response.username || response.email?.split('@')[0] || 'user', // Default username      // Include any additional user data
+      username: response.username || response.email?.split('@')[0] || 'user',
+      emailVerified: response.emailVerified || false // AJOUT
+      // Default username      // Include any additional user data
     };
 
     localStorage.setItem(this.AUTH_TOKEN_KEY, response.token);
@@ -558,5 +570,6 @@ interface LoginResponse {
   role: string;
   username?: string;
   name?: string;
+  emailVerified?: boolean; // AJOUT
   [key: string]: any;
 }

@@ -25,7 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
     '/api/auth/resend-verification', // For resending verification emails
     '/api/auth/forgot-password', // For password reset
     '/api/auth/reset-password', // For resetting password
-      
+    '/api/chat/ask'
 
   ];
 
@@ -80,7 +80,7 @@ export class AuthInterceptor implements HttpInterceptor {
     });
   }
   private isPublicRequest(url: string): boolean {
-    return this.publicUrls.some(publicUrl => url.startsWith(publicUrl));
+    return this.publicUrls.some(publicUrl => url.includes(publicUrl));
   }
   private handle401Error(
     request: HttpRequest<any>, next: HttpHandler

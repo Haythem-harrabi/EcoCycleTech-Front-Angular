@@ -11,6 +11,8 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from 'src/app/shared/footer/footer.component';
 import { AccueilComponent } from '../accueil/accueil.component';
 import { RouterModule } from '@angular/router';
+import { ChatComponent } from '../UserManagement/chat/chat.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -18,8 +20,9 @@ import { RouterModule } from '@angular/router';
   declarations: [
     LayoutComponent,
     NavbarComponent,
-    FooterComponent
-  ],
+    FooterComponent,
+    ChatComponent
+    ],
   imports: [
     CommonModule,
     DividerModule,
@@ -28,6 +31,8 @@ import { RouterModule } from '@angular/router';
     ButtonModule,
     RippleModule,
     StyleClassModule,
+    //added by user
+    FormsModule
   ],
   exports: [LayoutComponent]
 })

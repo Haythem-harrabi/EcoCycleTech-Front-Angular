@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -25,6 +26,7 @@ export class UserProfileComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private authService: AuthService,
+    private router: Router,
     // private toastr: ToastrService // Décommentez si vous utilisez Toastr
   ) {
     this.profileForm = this.fb.group({
@@ -143,7 +145,8 @@ export class UserProfileComponent implements OnInit {
                next : (res: any) => {
                  this.showSuccess('Profile updated successfully');
                  this.originalFormValues = { ...current };
-                 this.authService.updateCurrentUser(res.user);  // maj localStorage / navbar
+                 this.authService.updateCurrentUser(res.user);
+                   // maj localStorage / navbar
                },
                error: () => this.showError('Failed to update profile')
              });
@@ -162,7 +165,12 @@ export class UserProfileComponent implements OnInit {
     this.updateSuccess = true;
     // Si vous utilisez Toastr
     // this.toastr.success(message);
-    setTimeout(() => this.updateSuccess = false, 5000); // Hide after 5 seconds
+    setTimeout(() => {
+      this.updateSuccess = false;
+      this.router.navigate(['/home']); // 🔥 Redirection vers Home après 5 sec
+    }, 5000);
+    //redirect to home page
+     
   }
 
   private showError(message: string): void {

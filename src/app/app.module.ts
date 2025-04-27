@@ -35,6 +35,7 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CheckEmailComponent } from './client/UserManagement/check-email/check-email.component';
 import { NotificationsComponent } from './client/UserManagement/notifications/notifications.component';
+import { UserStatisticsComponent } from './admin/UserManagement/user-statistics/user-statistics.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +47,8 @@ import { NotificationsComponent } from './client/UserManagement/notifications/no
     OAuth2RedirectComponent,
     UserProfileComponent,
     CheckEmailComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    UserStatisticsComponent
    // UserManagementComponent
     
     

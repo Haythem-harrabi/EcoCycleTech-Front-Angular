@@ -69,18 +69,23 @@ export class UserManagementComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        const updatedUser = { ...user, active: !user.active };
-        this.userService.updateUser(updatedUser).subscribe({
+        const action = user.active 
+          ? this.userService.deactivateUser(user.idUser) 
+          : this.userService.activateUser(user.idUser);
+  
+        action.subscribe({
           next: () => {
+            user.active = !user.active; // ✅ Mise à jour locale directe
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: `User ${updatedUser.active ? 'activated' : 'deactivated'} successfully`,
+              detail: `User ${user.active ? 'activated' : 'deactivated'} successfully`,
               life: 3000
             });
-            this.loadUsers();
+            // Plus besoin de reload complet si tu veux rapide
+            // this.loadUsers(); // (à garder si nécessaire pour recharger tout propre)
           },
-          error: (error) => {
+          error: () => {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
@@ -92,6 +97,7 @@ export class UserManagementComponent implements OnInit {
       }
     });
   }
+  
 
   toggleUserBan(user: any) {
     this.confirmationService.confirm({
@@ -99,18 +105,20 @@ export class UserManagementComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        const updatedUser = { ...user, banned: !user.banned };
-        this.userService.updateUser(updatedUser).subscribe({
+        const action = user.banned ? this.userService.unbanUser(user.idUser) : this.userService.banUser(user.idUser);
+  
+        action.subscribe({
           next: () => {
+            user.banned = !user.banned; // ✅ Mise à jour locale de l'état sans reload
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
-              detail: `User ${updatedUser.banned ? 'banned' : 'unbanned'} successfully`,
+              detail: `User ${user.banned ? 'banned' : 'unbanned'} successfully`,
               life: 3000
             });
-            this.loadUsers();
+            // Plus besoin de this.loadUsers();
           },
-          error: (error) => {
+          error: () => {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
@@ -122,7 +130,8 @@ export class UserManagementComponent implements OnInit {
       }
     });
   }
-
+  
+  
   deleteUser(user: any) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete this user?',

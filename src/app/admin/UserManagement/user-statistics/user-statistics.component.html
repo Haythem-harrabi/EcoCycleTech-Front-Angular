@@ -1,0 +1,37 @@
+<!-- Chart 4 - Adaptation -->
+<section class="py-3 py-md-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-9 col-xl-8 col-xxl-7">
+          <div class="card widget-card border-light shadow-sm">
+            <div class="card-body p-4">
+              <div class="d-block d-sm-flex align-items-center justify-content-between mb-3">
+                <div class="mb-3 mb-sm-0">
+                  <h5 class="card-title widget-card-title">User Age Distribution</h5>
+                </div>
+                <div>
+                  <select class="form-select text-secondary border-light-subtle" disabled>
+                    <option selected>Age Statistics</option>
+                  </select>
+                </div>
+              </div>
+  
+              <!-- Spinner pendant chargement -->
+              <div *ngIf="loading" class="text-center my-4">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+  
+              <!-- Chart ou statistiques -->
+              <div *ngIf="!loading">
+                <div id="ageChart"></div>
+              </div>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

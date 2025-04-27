@@ -23,7 +23,7 @@ export class UserService {
   }
 
   updateUser(user: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/update/${user.id}`, user);
+    return this.http.put<any>(`${this.apiUrl}/update/${user.idUser}`, user);
   }
 
   deleteUser(id: number): Observable<any> {
@@ -32,19 +32,19 @@ export class UserService {
 
   // Additional methods for specific user actions
   banUser(id: number): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}/ban`, {});
+    return this.http.put<any>(`${this.apiUrl}/users/${id}/ban`, {});
   }
 
   unbanUser(id: number): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}/unban`, {});
+    return this.http.put<any>(`${this.apiUrl}/users/${id}/unban`, {});
   }
 
   activateUser(id: number): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}/activate`, {});
+    return this.http.put<any>(`${this.apiUrl}/users/${id}/activate`, {});
   }
 
   deactivateUser(id: number): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}/deactivate`, {});
+    return this.http.put<any>(`${this.apiUrl}/users/${id}/deactivate`, {});
   }
 
   // Statistics methods
