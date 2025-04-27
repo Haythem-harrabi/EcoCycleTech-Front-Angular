@@ -480,6 +480,10 @@ export class LoginComponent implements OnInit,AfterViewInit {
           this.signupErrorMessage = error.message || 'Ce nom d\'utilisateur est déjà pris.';
           this.signupForm.get('username')?.setErrors({ taken: true });
           break;
+          case 'numTelephone':
+          this.signupErrorMessage = error.message || 'Ce numéro de téléphone est déjà pris.';
+          this.signupForm.get('numTelephone')?.setErrors({ taken: true });
+          break;
         default:
           this.signupErrorMessage = error.message || 'Erreur de validation';
       }

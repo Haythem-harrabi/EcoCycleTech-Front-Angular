@@ -1,24 +1,54 @@
-#logo{
-    WIDTH: 345PX;
-    HEIGHT: 290PX;
+#logo {
+    width: 150px; /* Reduced size for better fit in footer */
+    height: 120px;
 }
 
-
-.send-btn{
+.send-btn {
     height: 60px;
     background-color: aliceblue !important;
     margin-left: 20px;
     border-radius: 12px;
-    transition : 0.3s ease
-    
+    transition: 0.3s ease;
 }
 
-.send-btn:hover{
+.send-btn:hover {
     background-color: rgb(214, 224, 235) !important;
     scale: 1.05;
 }
 
-.subscribe-container{
+.subscribe-container {
     display: flex;
     justify-content: center;
+}
+
+/* Ensure the grid displays horizontally on large screens */
+.grid {
+    display: flex;
+    flex-direction: column; /* Default for small screens */
+    flex-wrap: wrap;
+}
+
+@media (min-width: 992px) {
+    .grid {
+        flex-direction: row !important; /* Horizontal layout on large screens */
+    }
+}
+
+/* Ensure columns take up correct width */
+@media (min-width: 992px) {
+    .lg\:col-3 {
+        flex: 0 0 25%; /* 4 columns = 25% each */
+        max-width: 25%;
+    }
+}
+
+/* Center content on smaller screens */
+@media (max-width: 991px) {
+    .flex-column {
+        align-items: center;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
 }

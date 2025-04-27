@@ -180,4 +180,11 @@ export class UserProfileComponent implements OnInit {
     // this.toastr.error(message);
     setTimeout(() => this.updateError = false, 5000); // Hide after 5 seconds
   }
+  returnToHome(): void {
+    if (this.isFormChanged() || this.uploadedImage) {
+      const confirmNavigation = confirm('You have unsaved changes. Are you sure you want to return to the home page?');
+      if (!confirmNavigation) return;
+    }
+    this.router.navigate(['']);
+  }
 }

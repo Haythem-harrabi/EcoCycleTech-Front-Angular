@@ -151,6 +151,9 @@
             <span *ngIf="signupForm.get('numTelephone')?.errors?.['required']">Numéro de téléphone est obligatoire</span>
             <span *ngIf="signupForm.get('numTelephone')?.errors?.['pattern']">Le numéro doit contenir exactement 8 chiffres</span>
           </div>
+          <div class="validation-message" *ngIf="signupErrorMessage && signupErrorMessage.includes('numéro de téléphone')">
+            {{ signupErrorMessage }}
+          </div>
         </div>
         
 

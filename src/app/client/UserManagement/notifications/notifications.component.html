@@ -1,20 +1,21 @@
-<!-- notifications.component.html -->
-<h2 class="mb-4 text-xl font-semibold">Notifications</h2>
+<h2 class="mb-6 text-2xl font-bold text-gray-800">Notifications</h2>
 
-<div *ngIf="!notifs.length" class="text-gray-500">
-  aucune notification
+<div *ngIf="!notifs.length" class="empty-state flex flex-col items-center justify-center py-10">
+  <i class="pi pi-bell text-4xl text-gray-400 mb-3"></i>
+  <p class="text-gray-500 text-lg">Aucune notification</p>
 </div>
 
-<ul class="space-y-3">
+<ul class="space-y-4">
   <li *ngFor="let n of notifs"
-      class="p-3 rounded-lg bg-slate-50 border flex justify-between">
-    <div>
-      <div class="font-medium">{{ n.label }}</div>
-      <div class="text-sm text-gray-600" [innerHTML]="n.body"></div>
+      class="notification-card p-4 rounded-xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex justify-between items-center"
+      [@fadeIn]="true">
+    <div class="flex-1">
+      <div class="font-semibold text-lg text-gray-800">{{ n.label }}</div>
+      <div class="text-sm text-gray-500 mt-1" [innerHTML]="n.body"></div>
     </div>
 
     <button
-      class="text-xs px-2 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-700"
+      class="text-sm px-3 py-1.5 rounded-full bg-gradient-to-r from-teal-500 to-teal-600 text-white hover:from-teal-600 hover:to-teal-700 transition-all duration-200 shadow-sm"
       (click)="markAsRead(n)">
       OK
     </button>

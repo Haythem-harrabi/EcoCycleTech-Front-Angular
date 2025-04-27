@@ -1,44 +1,49 @@
-<!-- Bouton pour ouvrir/fermer le chat -->
-<button class="btn btn-primary chat-toggle-btn" (click)="toggleChat()">
-  💬 Chat
-</button>
-
-<!-- Popup Chatbot -->
-<div class="chat-popup"[class.show]="isChatOpen">
+<div class="chat-popup" [class.show]="isChatOpen">
   <section>
     <div class="container py-2">
-
-      <div class="card" id="chat1" style="border-radius: 15px;">
-        <div
-          class="card-header d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0"
-          style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+      <div class="card" id="chat1">
+        <!-- Card Header -->
+        <div class="card-header d-flex justify-content-between align-items-center p-3 text-white">
           <i class="fas fa-angle-left"></i>
-          <p class="mb-0 fw-bold">Live Chat</p>
+          <p class="mb-0 fw-bold">EcoCycle Chat</p>
           <i class="fas fa-times" style="cursor:pointer;" (click)="toggleChat()"></i>
         </div>
 
-        <div class="card-body">
-
+        <!-- Scrollable Messages Area -->
+        <div class="card-body" #chatContainer>
           <div *ngFor="let message of messages">
-            <div [ngClass]="{'d-flex flex-row justify-content-start mb-4': message.role === 'assistant', 'd-flex flex-row justify-content-end mb-4': message.role === 'user'}">
-              <img *ngIf="message.role === 'assistant'" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar" style="width: 45px; height: 100%;">
-              <div class="p-3 ms-3 me-3" style="border-radius: 15px;" [ngStyle]="{'background-color': message.role === 'assistant' ? 'rgba(57, 192, 237, 0.2)' : '#f0f0f0'}">
-                <p class="small mb-0">{{ message.content }}</p>
+            <div [ngClass]="{'d-flex flex-row justify-content-start mb-3': message.role === 'assistant', 'd-flex flex-row justify-content-end mb-3': message.role === 'user'}">
+              <img *ngIf="message.role === 'assistant'" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar" class="avatar">
+              <div class="message-bubble p-3 ms-2 me-2" [ngClass]="{'message-assistant': message.role === 'assistant', 'message-user': message.role === 'user'}">
+                <p class="mb-0">{{ message.content }}</p>
               </div>
-              <img *ngIf="message.role === 'user'" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar" style="width: 45px; height: 100%;">
+              <img *ngIf="message.role === 'user'" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp" alt="avatar" class="avatar">
             </div>
           </div>
 
+          <!-- Loading Indicator -->
+          <div *ngIf="isLoading" class="d-flex flex-row justify-content-start mb-3">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar" class="avatar">
+            <div class="message-bubble message-assistant p-3 ms-2">
+              <p class="mb-0 text-muted">Typing...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fixed Input Area -->
+        <div class="card-footer p-3">
           <div class="form-outline">
-            <textarea [(ngModel)]="userInput" class="form-control bg-body-tertiary" id="textAreaExample" rows="2" (keydown.enter)="sendMessage()"></textarea>
+            <textarea [(ngModel)]="userInput" class="form-control" id="textAreaExample" rows="2" (keydown)="onKeyDown($event)" [disabled]="isLoading"></textarea>
             <label class="form-label" for="textAreaExample">Type your message</label>
           </div>
-
-          <button class="btn btn-info mt-2 w-100" (click)="sendMessage()">Send</button>
-
+          <button class="btn btn-primary mt-2 w-100" (click)="sendMessage()" [disabled]="isLoading">Send</button>
         </div>
       </div>
-
     </div>
   </section>
 </div>
+
+<!-- Chat Toggle Button -->
+<button class="chat-toggle-btn" (click)="toggleChat()">
+  <i class="fas fa-comments"></i>
+</button>
