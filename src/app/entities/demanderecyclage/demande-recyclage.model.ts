@@ -3,6 +3,7 @@ import { CertificatRecyclage } from './certificat-recyclage.model';
 
 export class DemandeRecyclage {
   idDemandeRecyclage!: number| null;
+  title!: string | null;
   dateCreationDemandeRecyclage!: Date| null;
   descriptionDemandeRecyclage!: string| null;
   nbrAppareils!: number;

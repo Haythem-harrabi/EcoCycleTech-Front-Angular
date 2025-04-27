@@ -20,10 +20,12 @@
         />
 
         <div class="card-body">
-          <h5 class="card-title">{{ demande.descriptionDemandeRecyclage }}</h5>
+                    <h5 class="card-title">{{ demande.title }}</h5>
+
+        <!--  <h5 class="card-title">{{ demande.descriptionDemandeRecyclage }}</h5>-->
           <p class="card-text">
             Date de création: {{ demande.dateCreationDemandeRecyclage | date: 'shortDate' }}<br />
-            Nombre d'appareils: {{ demande.nbrAppareils }}<br />
+          <!---  Nombre d'appareils: {{ demande.nbrAppareils }}<br /> -->
             Prix estimé: {{ demande.prixDemandeRecyclage | currency: 'EUR' }}
           </p>
         </div>
@@ -102,6 +104,31 @@
           </div>
         </div>
 
+
+
+        <!-- ✅ Title -->
+        <div class="mb-3">
+          <label for="title" class="form-label">Titre</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            class="form-control"
+            required minlength="3" maxlength="15"
+            [(ngModel)]="demande.title" #titleField="ngModel"
+          />
+          <div *ngIf="titleField.invalid && (titleField.dirty || titleField.touched)" class="text-danger">
+            <div *ngIf="titleField.errors?.['required']">Le titre est obligatoire.</div>
+            <div *ngIf="titleField.errors?.['minlength']">
+              Minimum {{ titleField.errors?.['minlength'].requiredLength }} caractères.
+            </div>
+            <div *ngIf="titleField.errors?.['maxlength']">
+              Maximum {{ titleField.errors?.['maxlength'].requiredLength }} caractères.
+            </div>
+          </div>
+        </div>
+
+
           <!-- ✅ Description -->
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
@@ -136,16 +163,19 @@
 <div class="mb-3">
   <label for="date" class="form-label">Date de création</label>
   <input
-    id="date"
-    name="dateCreationDemandeRecyclage"
-    type="date"
-    class="form-control"
-    [ngModel]="demande.dateCreationDemandeRecyclage || today"
-    (ngModelChange)="demande.dateCreationDemandeRecyclage = $event"
-    #dateField="ngModel"
-    required
-    [max]="today"
-  />
+  id="date"
+  name="dateCreationDemandeRecyclage"
+  type="date"
+  class="form-control"
+  [ngModel]="demande.dateCreationDemandeRecyclage 
+               ? (demande.dateCreationDemandeRecyclage | date:'yyyy-MM-dd') 
+               : today"
+  (ngModelChange)="demande.dateCreationDemandeRecyclage = $event"
+  #dateField="ngModel"
+  required
+  [max]="today"
+/>
+
 
   <div *ngIf="(dateField.invalid && (dateField.dirty || dateField.touched)) || wasSubmitted"
        class="text-danger mt-1">
@@ -256,6 +286,8 @@
           [src]="'data:image/png;base64,' + selectedDemande.imageBase64"
           class="img-fluid mb-3 detail-image"
           alt="Image de la demande" />
+          <p><strong>Description:</strong> {{ selectedDemande.title }}</p>
+
                <p><strong>Description:</strong> {{ selectedDemande.descriptionDemandeRecyclage }}</p>
           <p><strong>Date de création:</strong> {{ selectedDemande.dateCreationDemandeRecyclage | date: 'shortDate' }}</p>
           <p><strong>Nombre d'appareils:</strong> {{ selectedDemande.nbrAppareils }}</p>

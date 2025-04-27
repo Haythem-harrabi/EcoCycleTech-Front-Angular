@@ -14,6 +14,8 @@
       <thead>
         <tr>
           <th style="background-color: #68b484; color: white;">Image</th>
+          <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('title')">
+            Title {{ getSortIcon('title') }}
           <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('descriptionDemandeRecyclage')">
             Description {{ getSortIcon('descriptionDemandeRecyclage') }}
           </th>
@@ -37,6 +39,7 @@
           <td class="align-middle">
             <img *ngIf="demande.imageBase64" [src]="'data:image/png;base64,' + demande.imageBase64" class="img-thumbnail" style="height: 80px; width: 80px;" />
           </td>
+          <td class="align-middle">{{ demande.title }}</td>
           <td class="align-middle">{{ demande.descriptionDemandeRecyclage }}</td>
           <td class="align-middle">{{ demande.dateCreationDemandeRecyclage | date: 'shortDate' }}</td>
           <td class="align-middle">{{ demande.nbrAppareils }}</td>
@@ -125,6 +128,29 @@ aria-hidden="true"
           </div>
         </div>
 
+        <!-- ✅ Title -->
+        <div class="mb-3">
+          <label for="title" class="form-label">Titre</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            class="form-control"
+            required minlength="3" maxlength="15"
+            [(ngModel)]="demande.title" #titleField="ngModel"
+          />
+          <div *ngIf="titleField.invalid && (titleField.dirty || titleField.touched)" class="text-danger">
+            <div *ngIf="titleField.errors?.['required']">Le titre est obligatoire.</div>
+            <div *ngIf="titleField.errors?.['minlength']">
+              Minimum {{ titleField.errors?.['minlength'].requiredLength }} caractères.
+            </div>
+            <div *ngIf="titleField.errors?.['maxlength']">
+              Maximum {{ titleField.errors?.['maxlength'].requiredLength }} caractères.
+            </div>
+          </div>
+        </div>
+        
+
         <!-- ✅ Description -->
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
@@ -153,37 +179,37 @@ aria-hidden="true"
             </div>
           </div>
         </div>
-<!-- Date de création -->
-<div class="mb-3">
-  <label for="date" class="form-label">Date de création</label>
-  <input
-    id="date"
-    name="dateCreationDemandeRecyclage"
-    type="date"
-    class="form-control"
-    [ngModel]="demande.dateCreationDemandeRecyclage || today"
-    (ngModelChange)="demande.dateCreationDemandeRecyclage = $event"
-    #dateField="ngModel"
-    required
-    pastDate             
-    [max]="today"         
-  />
+        <!-- Date de création -->
+        <div class="mb-3">
+          <label for="date" class="form-label">Date de création</label>
+          <input
+            id="date"
+            name="dateCreationDemandeRecyclage"
+            type="date"
+            class="form-control"
+            [ngModel]="(demande.dateCreationDemandeRecyclage | date:'yyyy-MM-dd') || today"
+            (ngModelChange)="demande.dateCreationDemandeRecyclage = $event"
+            #dateField="ngModel"
+            required
+            pastDate             
+            [max]="today"         
+          />
 
-  <div
-    *ngIf="
-      (dateField.invalid && (dateField.dirty || dateField.touched))
-      || wasSubmitted
-    "
-    class="text-danger mt-1"
-  >
-    <div *ngIf="dateField.errors?.['required']">
-      La date est obligatoire.
-    </div>
-    <div *ngIf="dateField.errors?.['notInPast']">
-      La date doit être inférieure ou égale à aujourd’hui ({{ today }}).
-    </div>
-  </div>
-</div>
+          <div
+            *ngIf="
+              (dateField.invalid && (dateField.dirty || dateField.touched))
+              || wasSubmitted
+            "
+            class="text-danger mt-1"
+          >
+            <div *ngIf="dateField.errors?.['required']">
+              La date est obligatoire.
+            </div>
+            <div *ngIf="dateField.errors?.['notInPast']">
+              La date doit être inférieure ou égale à aujourd’hui ({{ today }}).
+            </div>
+          </div>
+        </div>
 
 
 

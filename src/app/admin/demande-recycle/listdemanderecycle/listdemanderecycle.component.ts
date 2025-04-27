@@ -40,6 +40,7 @@ declare var bootstrap: any;
     
       demande: DemandeRecyclage = {
         idDemandeRecyclage: 0,
+        title:null,
         dateCreationDemandeRecyclage: new Date(),
         descriptionDemandeRecyclage: '',
         nbrAppareils: 0,
@@ -118,6 +119,7 @@ declare var bootstrap: any;
     
         validateForm(): boolean {
           const desc = this.demande.descriptionDemandeRecyclage;
+          const t = this.demande.title?.trim() || '';
           // force a Date object out of whatever came back from the date input
           const selectedDate = this.demande.dateCreationDemandeRecyclage
             ? new Date(this.demande.dateCreationDemandeRecyclage)
@@ -125,19 +127,24 @@ declare var bootstrap: any;
         
           // midnight today (parsed from yyyy-MM-dd)
           const todayDate = new Date(this.today);
-        
+          if (t.length < 3 || t.length > 15) {
+            alert('Le titre doit faire entre 3 et 15 caractères.');
+            return false;
+          }
+          
+          console.log('titre:', t);
+
           console.log('selectedDate:', selectedDate);
           console.log('selectedDate < todayDate:', selectedDate && selectedDate < todayDate);
         
           return (
-            !!desc &&
-              desc.trim().length >= 15 &&
-            !!selectedDate &&
-              selectedDate < todayDate &&
+            !!desc && desc.trim().length >= 15 &&
+            !!selectedDate && selectedDate < todayDate &&
             this.demande.nbrAppareils > 0 &&
             this.demande.prixDemandeRecyclage > 0 &&
             (!!this.demande.imageData || this.isEditMode)
           );
+          
         }
         
         
@@ -251,6 +258,7 @@ declare var bootstrap: any;
         this.form.resetForm();
         this.demande = {
           idDemandeRecyclage: null,
+          title: '',
           dateCreationDemandeRecyclage:null,
           descriptionDemandeRecyclage: '',
           nbrAppareils: 0,
@@ -329,15 +337,17 @@ declare var bootstrap: any;
       }
     
       applyFilters(): void {
-        const query = this.searchQuery.toLowerCase();
+        const q = this.searchQuery.toLowerCase();
         this.filteredDemandes = this.demandes.filter(d =>
-          d.descriptionDemandeRecyclage.toLowerCase().includes(query) ||
-          d.dateCreationDemandeRecyclage.toLowerCase().includes(query) ||
-          d.nbrAppareils.toString().includes(query) ||
-          d.prixDemandeRecyclage.toString().includes(query)
+        (d.title     || '').toLowerCase().includes(q) ||
+          d.descriptionDemandeRecyclage.toLowerCase().includes(q) ||
+          d.dateCreationDemandeRecyclage.toLowerCase().includes(q) ||
+          d.nbrAppareils.toString().includes(q) ||
+          d.prixDemandeRecyclage.toString().includes(q)
         );
         this.sortData();
       }
+      
 
       sortData(): void {
         const direction = this.sortDirection === 'asc' ? 1 : -1;
@@ -431,7 +441,7 @@ declare var bootstrap: any;
       
               y += lineHeight;
             };
-      
+            drawRow('Titre          :', demande.title ?? '—');
             drawRow('Description          :', demande.descriptionDemandeRecyclage ?? '—');
             drawRow('Nombre d’appareils    :', String(demande.nbrAppareils ?? '—'));
             drawRow('Prix                  :', `${(demande.prixDemandeRecyclage ?? 0).toFixed(2)} DT`);
@@ -461,7 +471,7 @@ declare var bootstrap: any;
           });
       }
       
-       pastDateValidator(): ValidatorFn {
+      pastDateValidator(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
           if (!control.value) {
             return null; // let required-validator handle empty

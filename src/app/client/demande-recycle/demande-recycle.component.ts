@@ -31,6 +31,7 @@ export class DemandeRecycleComponent implements OnInit, AfterViewInit {
   // form model
   demande: DemandeRecyclage = {
     idDemandeRecyclage: null,
+    title: null,
     dateCreationDemandeRecyclage: new Date(),
     descriptionDemandeRecyclage: '',
     nbrAppareils: 0,
@@ -73,6 +74,7 @@ export class DemandeRecycleComponent implements OnInit, AfterViewInit {
     this.form.resetForm();
     this.demande = {
       idDemandeRecyclage: null,
+      title: '',
       dateCreationDemandeRecyclage:null,
       descriptionDemandeRecyclage: '',
       nbrAppareils: 0,
@@ -293,6 +295,8 @@ export class DemandeRecycleComponent implements OnInit, AfterViewInit {
           doc.setFont('helvetica','normal').setTextColor('#c00').text(value, left+150, y, { maxWidth: w-left-150-40 });
           y += lh;
         };
+        drawRow('Titre      :', demande.title|| '—');
+
         drawRow('Description          :', demande.descriptionDemandeRecyclage || '—');
         drawRow('Nombre d’appareils    :', `${demande.nbrAppareils}`);
         drawRow('Prix                  :', `${demande.prixDemandeRecyclage.toFixed(2)} DT`);
