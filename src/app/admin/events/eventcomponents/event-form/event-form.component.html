@@ -1,0 +1,71 @@
+<div class="form-container">
+    <h2>{{ isEditMode ? 'Edit Event' : 'Create New Event' }}</h2>
+    
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+       <!-- Show ID field only in edit mode -->
+    <div class="form-group" *ngIf="isEditMode">
+      <label>Event ID</label>
+      <input type="text" [value]="eventId" readonly class="form-control readonly-field">
+    </div>
+      <div class="form-group">
+        <label>Event Name*</label>
+        <input type="text" formControlName="nomEvenement" class="form-control">
+        <small *ngIf="eventForm.get('nomEvenement')?.invalid && eventForm.get('nomEvenement')?.touched" class="error">
+          Event name is required
+        </small>
+      </div>
+  
+      <div class="form-group">
+        <label>Event Date & Time*</label>
+        <input 
+          type="datetime-local" 
+          formControlName="dateEvenement" 
+          class="form-control"
+          step="1"
+        >
+      </div>
+    
+  
+      <div class="form-group">
+        <label>Location*</label>
+        <input type="text" formControlName="localisationEvenement" class="form-control">
+        <small *ngIf="eventForm.get('localisationEvenement')?.invalid && eventForm.get('localisationEvenement')?.touched" class="error">
+          Location is required
+        </small>
+      </div>
+  
+      <div class="form-group">
+        <label>Capacity*</label>
+        <input type="number" formControlName="nbrPlacesEvenement" class="form-control" min="1">
+        <small *ngIf="eventForm.get('nbrPlacesEvenement')?.invalid && eventForm.get('nbrPlacesEvenement')?.touched" class="error">
+          Valid capacity is required (minimum 1)
+        </small>
+      </div>
+  
+      <div class="form-group">
+        <label>Price (TND)*</label>
+        <input type="number" formControlName="prixEvenement" class="form-control" min="0" step="0.01">
+        <small *ngIf="eventForm.get('prixEvenement')?.invalid && eventForm.get('prixEvenement')?.touched" class="error">
+          Valid price is required (minimum 0)
+        </small>
+      </div>
+  
+      <div class="form-group">
+        <label>Provenance*</label>
+        <input type="text" formControlName="provenanceEvenement" class="form-control">
+        <small *ngIf="eventForm.get('provenanceEvenement')?.invalid && eventForm.get('provenanceEvenement')?.touched" class="error">
+          Provenance is requireded
+        </small>
+      </div>
+  
+      <div class="form-group">
+        <label>Aftermovie URL</label>
+        <input type="url" formControlName="aftermovie" class="form-control">
+      </div>
+  
+  
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid">{{ isEditMode ? 'Update Event' : 'Create Event' }}</button>
+        <button type="button" class="btn btn-secondary" (click)="navigateToEvents()">Cancel</button>      </div>
+    </form>
+  </div>

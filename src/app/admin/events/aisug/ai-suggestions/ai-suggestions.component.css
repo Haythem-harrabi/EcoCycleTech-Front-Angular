@@ -1,0 +1,213 @@
+.cohere-container {
+  max-width: 650px;
+  margin: 2.5rem auto;
+  padding: 2.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  position: relative;
+  overflow: visible; /* Changed from hidden to visible to ensure content isn't clipped */
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.cohere-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #0ea5e9, #8b5cf6, #ec4899);
+}
+
+.api-note {
+  color: #64748b;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.api-note::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: #e2e8f0;
+}
+
+.generate-btn, .use-btn {
+  width: 100%;
+  padding: 14px;
+  margin: 12px 0;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.generate-btn {
+  background: linear-gradient(135deg, #3b82f6, #4f46e5);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+}
+
+.generate-btn:disabled {
+  background: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.use-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  margin-top: 18px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.use-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
+
+.cooldown-message {
+  color: #f59e0b;
+  text-align: center;
+  margin: 1.25rem 0;
+  font-size: 0.95rem;
+  padding: 12px;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #f59e0b;
+}
+
+.error-message {
+  color: #ef4444;
+  background-color: #fee2e2;
+  padding: 16px;
+  border-radius: 10px;
+  margin: 1.25rem 0;
+  font-size: 0.95rem;
+  border-left: 3px solid #ef4444;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.suggestion-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.75rem;
+  margin-top: 1.75rem;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  transition: all 0.3s ease;
+  overflow: visible; /* Ensure content isn't clipped */
+  word-wrap: break-word; /* Handle long text */
+}
+
+.suggestion-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+}
+
+.suggestion-content {
+  white-space: pre-wrap; /* Preserve formatting but allow wrapping */
+  font-family: inherit;
+  line-height: 1.6;
+  color: #334155;
+}
+
+pre {
+  white-space: pre-wrap;
+  background: #f1f5f9;
+  padding: 1.25rem;
+  border-radius: 10px;
+  font-family: 'Courier New', monospace;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 1.25rem 0;
+  border: 1px solid #e2e8f0;
+  overflow-x: auto;
+  word-break: break-word; /* Ensure code doesn't overflow */
+}
+
+/* Animation effects */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.suggestion-card {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Back link styling */
+.back-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cohere-container {
+      margin: 1.5rem 1rem;
+      padding: 1.75rem;
+      border-radius: 12px;
+  }
+  
+  .generate-btn, .use-btn {
+      padding: 12px;
+      font-size: 0.95rem;
+  }
+  
+  .suggestion-card {
+      padding: 1.25rem;
+  }
+  
+  pre {
+      padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cohere-container {
+      padding: 1.5rem;
+  }
+  
+  .api-note {
+      font-size: 0.85rem;
+  }
+}

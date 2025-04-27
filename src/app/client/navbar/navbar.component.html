@@ -107,10 +107,14 @@
                 <a (click)="SetActive($event)" pRipple pStyleClass="@next" enterClass="hidden" leaveToClass="hidden"
                     class="p-ripple p-element font-medium inline-flex align-items-center cursor-pointer border-left-2 lg:border-left-none  border-transparent hover:border-primary py-3 lg:py-0 px-6 lg:px-3 text-700 select-none text-xl lg:text-base lg:font-base w-full lg:w-auto"><span>Events</span><span
                         class="p-ink" style="height: 72px; width: 72px; top: -16px; left: 18.3906px;"></span></a>
-                <!-- <div
+                <div
                     class="dropdown-menu surface-overlay shadow-none lg:shadow-2 lg:absolute w-full top-100 px-6 py-0 lg:py-6 h-10rem lg:h-30rem z-1 hidden">
-                    <div class="border-2 border-dashed surface-border border-round h-full"></div>
-                </div> -->
+                    <div class="content">
+                        <div class="content-element"> <a style="text-decoration: none" [routerLink]="['/events']" (click)="$event.stopPropagation()"><span>Events</span></a></div>
+                        <div class="content-element"> <a style="text-decoration: none"[routerLink]="['/calendar']" (click)="$event.stopPropagation()"><span>Calendar</span></a></div>
+                        <div class="content-element"> <a style="text-decoration: none"[routerLink]="['/tickets']" (click)="$event.stopPropagation()"><span>Tickets</span></a></div>
+                    </div>
+                </div>
             </li>
 
             

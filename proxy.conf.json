@@ -1,0 +1,14 @@
+
+
+  {
+    "/openai-api": {
+        "target": "https://api.openai.com/v1",
+        "secure": false,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/openai-api": ""
+        },
+        "logLevel": "debug"
+  }
+}
+

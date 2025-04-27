@@ -39,7 +39,9 @@ export class AdminMenuComponent implements OnInit {
                   { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
                   { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
                   { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] },
-                  { label: 'MyDashBoard', icon: 'pi pi-fw pi-id-card', routerLink: ['/mydashboard'] }
+                  { label: 'MyDashBoard', icon: 'pi pi-fw pi-id-card', routerLink: ['/mydashboard'] },
+                  { label: 'Events', icon: 'pi pi-fw pi-calendar', routerLink: ['/admin/events'] },
+                  { label: 'Tickets', icon: 'pi pi-fw pi-ticket', routerLink: ['/admin/tickets'] },
               ]
           },
           {

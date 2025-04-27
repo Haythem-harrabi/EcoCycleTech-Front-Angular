@@ -70,7 +70,8 @@
               "browserTarget": "EcoCycleTech-Front:build:production"
             },
             "development": {
-              "browserTarget": "EcoCycleTech-Front:build:development"
+              "browserTarget": "EcoCycleTech-Front:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -104,5 +105,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "a395066c-0d4f-4eab-8428-f5a7faa99688"
   }
 }

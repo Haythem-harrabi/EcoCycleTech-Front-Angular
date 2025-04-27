@@ -1,0 +1,125 @@
+<section class="tickets-section view-transition"> 
+<div class="ticket-container">
+    <!-- Header Section -->
+    <div class="ticket-header-container">
+        <div class="title-wrapper">
+            <div class="title-content">
+                <h2 *ngIf="isAdmin" class="ticket-main-title">Ticket Management</h2>
+                <h2 *ngIf="isClient" class="ticket-main-title">My Tickets</h2>
+            </div>
+            <button *ngIf="isAdmin" 
+                    (click)="navigateToNewTicket()" 
+                    class="add-ticket-btn">
+                <i class="pi pi-plus"></i>
+                <span>New Ticket</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-container" *ngIf="isAdmin">
+        <div class="search-wrapper">
+            <select [(ngModel)]="searchType" class="search-select" (change)="onSearchTypeChange()">
+                <option value="purchaseDate">Purchase Date</option>
+                <option value="eventdate">Event Date</option>
+                <option value="eventName">Event Name</option>
+                <option value="userId">User ID</option>
+                <option value="userName">User Name</option>
+            </select>
+            <input
+                *ngIf="searchType !== 'eventdate' && searchType !== 'purchaseDate'"
+                type="text" 
+                [(ngModel)]="searchTerm" 
+                (input)="searchTickets()" 
+                placeholder="Search tickets..."
+                class="search-input"
+            >
+            <input
+                *ngIf="searchType === 'eventdate' || searchType === 'purchaseDate'"
+                type="date" 
+                [(ngModel)]="searchTerm" 
+                (change)="searchTickets()"
+                class="search-input"
+            >
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading tickets...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" *ngIf="error">
+        <div class="error-message">
+            <i class="pi pi-exclamation-triangle"></i>
+            <p>{{ error }}</p>
+        </div>
+        <button *ngIf="isAdmin" (onClick)="loadTickets()" class="retry-btn">Retry</button>
+        <button *ngIf="isClient" (onClick)="loadTicketsByUserId()" class="retry-btn">Retry</button>
+    </div>
+
+    <!-- No Results State -->
+    <div *ngIf="!loading && searchTerm && filteredTickets.length === 0" class="no-results-container">
+        <div class="no-results-message">
+            <i class="pi pi-search"></i>
+            <p>No tickets match your search.</p>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && tickets.length === 0 && !searchTerm" class="empty-container">
+        <div class="empty-message">
+            <i class="pi pi-ticket"></i>
+            <h2>No tickets found.</h2>
+        </div>
+    </div>
+
+    <!-- Ticket List -->
+    <div *ngIf="!loading && tickets.length > 0 && filteredTickets.length > 0" class="ticket-list">
+        <p-card *ngFor="let ticket of filteredTickets" class="ticket-card">
+            <!-- Ticket Header -->
+            <ng-template pTemplate="header">
+                <div class="ticket-header">
+                    <h3 *ngIf="isAdmin">Ticket #{{ ticket.idTicketEvenement }}</h3>
+                    <h3 *ngIf="isClient">Ticket {{ ticket.evenement?.nomEvenement }}</h3>
+                    <button *ngIf="isAdmin"
+                            (click)="deleteTicket(ticket.idTicketEvenement!)"
+                            class="delete-btn">
+                        <i class="pi pi-trash"></i>
+                    </button>
+                </div>
+            </ng-template>
+
+            <!-- Ticket Information -->
+            <div class="ticket-info-section">
+                <div class="section-label">Informations</div>
+                <div class="ticket-details" *ngIf="isAdmin">
+                    <p><i class="pi pi-calendar"></i> <strong>Purchase Date:</strong> {{ ticket.dateAchat | date:'medium' }}</p>
+                    <p><i class="pi pi-ticket"></i> <strong>Event:</strong> {{ ticket.evenement?.nomEvenement || 'N/A' }}</p>
+                    <p><i class="pi pi-clock"></i> <strong>Event Date:</strong> {{ ticket.evenement?.dateEvenement | date:'medium' }}</p>
+                    <p><i class="pi pi-user"></i> <strong>User ID:</strong> {{ ticket.user?.idUser || 'Not assigned' }}</p>
+                    <p><i class="pi pi-user"></i> <strong>User Name:</strong> {{ ticket.user?.nom || 'Not assigned' }}</p>
+                    <p><i class="pi pi-envelope"></i> <strong>User Email:</strong> {{ ticket.user?.email || 'Not assigned' }}</p>
+                    <p><i class="pi pi-phone"></i> <strong>User Phone:</strong> {{ ticket.user?.numTelephone }}</p>
+                </div>
+                <div class="ticket-details" *ngIf="isClient">
+                    <p><i class="pi pi-calendar"></i> <strong>Purchase Date:</strong> {{ ticket.dateAchat | date:'medium' }}</p>
+                    <p><i class="pi pi-clock"></i> <strong>Event Date:</strong> {{ ticket.evenement?.dateEvenement | date:'medium' }}</p>
+                    <p><i class="pi pi-user"></i> <strong>User Name:</strong> {{ ticket.user?.nom || 'Not assigned' }}</p>
+                </div>
+            </div>
+
+            <!-- QR Code Section -->
+            <div class="qr-code-section" *ngIf="ticket.qrCodeUrl">
+                <div class="section-label">QR Code</div>
+                <div class="qr-code-container">
+                    <img [src]="ticket.qrCodeUrl" alt="Ticket QR Code" class="qr-code-image">
+                    <p class="qr-help-text"><i class="pi pi-qrcode"></i> Scan this code at event entry</p>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+</section>
