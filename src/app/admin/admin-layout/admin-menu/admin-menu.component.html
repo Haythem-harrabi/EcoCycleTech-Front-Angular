@@ -1,11 +1,36 @@
+
 <ul class="layout-menu">
     <ng-container *ngFor="let item of model; let i = index;">
         <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
         <li *ngIf="item.separator" class="menu-separator"></li>
     </ng-container>
+    
+    <!-- Add your custom menu item outside the ng-container -->
+    <li class="nav-element">
+        <a routerLink="/admin/pointsdecollecte" 
+           pRipple
+           class="p-ripple p-element font-medium inline-flex align-items-center cursor-pointer border-left-2 lg:border-left-none border-transparent hover:border-primary py-3 lg:py-0 px-6 lg:px-3 text-700 select-none text-xl lg:text-base lg:font-base w-full lg:w-auto">
+            <i class="pi pi-map-marker mr-2"></i>
+            <span>Collection Points</span>
+            <span class="p-ink"></span>
+        </a>
+    </li>
+    <li class="nav-element">
+        <a routerLink="/admin/VehiculeList" 
+           pRipple
+           class="p-ripple p-element font-medium inline-flex align-items-center cursor-pointer border-left-2 lg:border-left-none border-transparent hover:border-primary py-3 lg:py-0 px-6 lg:px-3 text-700 select-none text-xl lg:text-base lg:font-base w-full lg:w-auto">
+            <i class="pi pi-map-marker mr-2"></i>
+            <span>Vehicule</span>
+            <span class="p-ink"></span>
+        </a>
+    </li>
+    
+
     <li>
         <a href="https://www.primefaces.org/primeblocks-ng/#/">
-            <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'banner-primeblocks' : 'banner-primeblocks-dark'}}.png" alt="Prime Blocks" class="w-full mt-3"/>
+            <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'banner-primeblocks' : 'banner-primeblocks-dark'}}.png" 
+                 alt="Prime Blocks" 
+                 class="w-full mt-3"/>
         </a>
     </li>
 </ul>

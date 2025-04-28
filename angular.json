@@ -29,11 +29,17 @@
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeflex/primeflex.css"
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+
             ],
             "scripts": [
                "node_modules/prismjs/prism.js",
-                            "node_modules/prismjs/components/prism-typescript.js"
+                "node_modules/prismjs/components/prism-typescript.js",
+                "node_modules/leaflet/dist/leaflet.js"
+
+
             ]
           },
           "configurations": {
@@ -64,6 +70,9 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+          "options": {
+        "proxyConfig": "proxy.conf.json"
+          },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
@@ -104,5 +113,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "92ac11b1-85ee-458b-ae2a-9a3b20ee04d3"
   }
 }
