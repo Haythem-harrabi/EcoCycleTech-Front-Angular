@@ -1,0 +1,21 @@
+<div class="container">
+    <div *ngFor="let rec of reclamations" class="reclamation-card">
+      <h2>{{ rec.titreReclamation }}</h2>
+      
+      <p><strong>Description:</strong> {{ rec.descriptionReclamation }}</p>
+  
+      <p><strong>Date:</strong> {{ rec.dateReclamation | date: 'mediumDate' }}</p>
+  
+      <p>
+        <strong>État:</strong>
+        <span [ngClass]="getEtatClass(rec.etatReclamation)">
+          {{ rec.etatReclamation }}
+        </span>
+      </p>
+  
+      <p *ngIf="rec.user">
+        <strong>Utilisateur ID:</strong> {{ rec.user.idUser }}
+      </p>
+    </div>
+  </div>
+  

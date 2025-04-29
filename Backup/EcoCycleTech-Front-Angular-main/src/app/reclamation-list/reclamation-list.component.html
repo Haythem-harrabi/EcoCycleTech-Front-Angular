@@ -1,0 +1,21 @@
+<div *ngIf="isLoading">Loading...</div>
+
+<div *ngIf="errorMessage" class="error">
+  {{ errorMessage }}
+</div>
+
+<!-- Display reclamations if they are fetched successfully -->
+<div *ngIf="!isLoading && !errorMessage && reclamations.length > 0">
+  <ul>
+    <li *ngFor="let reclamation of reclamations">
+      <a (click)="goToReclamationDetails(reclamation.idReclamation)">
+        {{ reclamation.titreReclamation }}
+      </a>
+    </li>
+  </ul>
+</div>
+
+<!-- Show a message when no reclamations are available -->
+<div *ngIf="!isLoading && !errorMessage && reclamations.length === 0">
+  No reclamations available.
+</div>
