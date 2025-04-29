@@ -487,5 +487,24 @@ declare var bootstrap: any;
         };
       }
 
+      onGenerateTitle(): void {
+        const inputEl = this.fileInput.nativeElement as HTMLInputElement;
+        if (!inputEl.files || inputEl.files.length === 0) {
+          return alert('Choisissez d’abord une image');
+        }
+      
+        const file = inputEl.files[0];
+        this.demandeService.generateTitleFromImage(file)
+          .subscribe({
+            next: (title: string) => {
+              this.demande.title = title;
+            },
+            error: err => {
+              console.error('Erreur génération titre :', err);
+              alert('Erreur génération du titre : ' + (err.message || err));
+            }
+          });
+      }
+
       
   }
