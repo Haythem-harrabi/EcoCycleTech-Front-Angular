@@ -9,6 +9,8 @@ import { concatMap } from 'rxjs/operators';
 import { SubscriptionService } from 'src/app/services/subscription.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { paypal } from 'src/environment/environment-vars';
+import { CloudinaryService } from 'src/app/services/cloudinary.service';
+import Swal from 'sweetalert2';
 
 declare var window: any;
 
@@ -38,8 +40,10 @@ export class PaypalComponent implements OnInit {
   public paymentError = '';
   public paymentId = '';
   public payerId = '';
+
+  public rootFolder= "EcoCycleTech/"
  
-  constructor(private http : HttpClient, private es : EspaceStockageService, private ss : SubscriptionService) { }
+  constructor(private http : HttpClient, private es : EspaceStockageService, private ss : SubscriptionService, private cloudinaryService : CloudinaryService) { }
  
  
   ngOnInit(): void {
@@ -149,7 +153,7 @@ export class PaypalComponent implements OnInit {
     endDate.setMonth(endDate.getMonth() + 1);
     
     //user dependent
-    let user =  new User(1);
+    let user =  new User(1, "testuser");
 
     
     //create space 
@@ -162,6 +166,8 @@ export class PaypalComponent implements OnInit {
       StatutEspace.ACTIVE,              
       [] 
     );
+    
+    this.closePopup();
     
     //Add space before adding subscription
     this.es.AddEspace(espace).pipe(
@@ -190,6 +196,50 @@ export class PaypalComponent implements OnInit {
       }
     );
 
-}
 
-}
+
+ //user dependent
+    let folderPath = this.rootFolder + user.username + "_" + user.idUser
+    console.log ("creating folder : "+ folderPath)
+    this.cloudinaryService.createFolder(folderPath).subscribe( {
+      next: () => {
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Purchase completed successfully!',
+          text: `You can start using your storage space`,
+          confirmButtonColor: '#3085d6',
+          didOpen: () => {
+                                                      const icon = Swal.getIcon();
+                                                      const button = Swal.getConfirmButton();
+                                                      if (icon) {
+                                                        icon.style.scale = "1.4";   
+                                                      }
+                                            
+                                                if (button) {
+                                                  button.style.fontSize = "1.1rem";
+                                                  button.style.padding = "10px 20px";
+                                                  button.style.backgroundColor = "#1da750"
+                                                  button.style.borderColor = "#35cb6c"
+                                                }
+                                                    }
+         
+        });
+      },
+      error: (error) => {
+        console.error('Error creating folder:', error);
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops!',
+          text: 'Something went wrong. Please try again later.',
+          confirmButtonColor: '#d33'
+        });
+      }
+      });
+
+      }
+    
+  }
+
+

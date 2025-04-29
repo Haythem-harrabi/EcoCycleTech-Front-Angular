@@ -24,6 +24,7 @@ import { PlanStockageListComponent } from './GestionPlansStockage/plan-stockage-
 import { TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
+import { DropdownModule } from 'primeng/dropdown';
 
 
 
@@ -57,7 +58,8 @@ import { TagModule } from 'primeng/tag';
     ProgressBarModule,
     TagModule,
     ReactiveFormsModule,
-    AdminLayoutRoutingModule
+    AdminLayoutRoutingModule,
+    DropdownModule
   ]
 })
 export class AdminLayoutModule { }

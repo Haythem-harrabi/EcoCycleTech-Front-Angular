@@ -1,6 +1,29 @@
+<div class="main-container">
+<!-- Storage Information Section -->
+<div class="storage-info p-4 mt-4">
+  <p-card>
+    <div class="storage-title">
+    <h5>Storage Information</h5>
+    </div>
+    <div class="flex justify-content-between">
+      <div class="space-text-info">
+        <p><strong>Occupied Space:</strong> {{ occupiedSpace }} Bytes = {{occupiedSpaceGB}} GB</p>
+        <p><strong>Free Space:</strong> {{ freeSpace }} Bytes = {{freeSpaceGB}} GB</p>
+      </div>
+    </div>
+    <div class="progressbar-div">
+      <canvas baseChart
+        [data]="doughnutChartData"
+        [options]="doughnutChartOptions"
+        [type]="'doughnut'">
+      </canvas>
+    </div>
+  </p-card>
+</div>
+
 <div class="storage-container p-4">
   <!-- Toast for notifications -->
-  <p-toast></p-toast>
+  <p-toast class="p-toast"></p-toast>
   
   <!-- Breadcrumb navigation -->
   <div class="breadcrumb-container mb-3">
@@ -17,7 +40,7 @@
     <div class="center-tools">
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <input pInputText type="text" placeholder="Search files..." [(ngModel)]="searchQuery" (keyup.enter)="filterItems()"/>
+        <input pInputText type="text" placeholder="Search files..." [(ngModel)]="searchQuery" (keyup.enter)="filterItems()" style="width: 28vw"/>
       </span>
     </div>
     
@@ -34,13 +57,14 @@
   
   <!-- File/Folder display area -->
   <p-card styleClass="file-main-content h-full">
+    
     <!-- Loading indicator -->
-    <div *ngIf="loading" class="flex justify-content-center p-5">
+    <div *ngIf="loading" class="loading-container flex justify-content-center p-5">
       <p-progressSpinner></p-progressSpinner>
     </div>
     
     <!-- Empty state -->
-    <div *ngIf="!loading && items.length === 0" class="empty-state text-center p-5">
+    <div *ngIf="!loading && items.length === 0" class="empty-container empty-state text-center p-5" >
       <i class="pi pi-folder-open" style="font-size: 3rem"></i>
       <h3>This folder is empty</h3>
       <p>Upload files or create folders to get started</p>
@@ -55,11 +79,9 @@
                [ngClass]="{'folder-card': item.type === 'folder', 'file-card': item.type === 'file'}">
             <div class="file-icon flex justify-content-center align-items-center mb-2">
               <i *ngIf="item.type === 'folder'" class="pi pi-folder" style="font-size: 3rem"></i>
-              
-              <!-- Image preview for images -->
+               <!-- Image preview for images -->
               <img *ngIf="item.type === 'file' && ['jpg', 'jpeg', 'png', 'gif'].includes(item.format || '')"
                    [src]="item.url" alt="Preview" class="img-preview">
-              
               <!-- File type icons -->
               <i *ngIf="item.type === 'file' && !['jpg', 'jpeg', 'png', 'gif'].includes(item.format || '') && ['pdf'].includes(item.format || '')" 
                  class="pi pi-file-pdf" style="font-size: 3rem"></i>
@@ -69,7 +91,7 @@
                  class="pi pi-file" style="font-size: 3rem"></i>
             </div>
             <div class="file-name text-center text-truncate">
-              {{ item.name }}
+              {{ item.name }}.{{item.format}}
             </div>
             <!-- access icon to folders -->
             <i *ngIf="item.type === 'folder'" class="pi pi-arrow-up-right folder-hover-icon"></i>
@@ -77,25 +99,21 @@
             <div class="file-actions flex justify-content-center mt-2">
               <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger p-button-text"
                        (click)="$event.stopPropagation(); deleteItem(item)"></p-button>
-                      
-                       <div class="download-div">
-                       <a *ngIf="item.type === 'file'"
-                       [href]="getDownloadUrl(item)"
-                       download
-                       class="download-btn p-button p-button-rounded p-button-text"
-                       style="text-decoration: none; color: inherit;"
-                       (click)="$event.stopPropagation()">
-                      <i class="pi pi-download"></i>
-                    </a>
-                    </div>
-                    
+              <div class="download-div">
+                <a *ngIf="item.type === 'file'"
+                   [href]="getDownloadUrl(item)"
+                   download
+                   class="download-btn p-button p-button-rounded p-button-text"
+                   style="text-decoration: none; color: inherit;"
+                   (click)="$event.stopPropagation()">
+                  <i class="pi pi-download"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
     
     <!-- List View -->
     <div *ngIf="!loading && items.length > 0 && viewMode === 'list'" class="list-view">
@@ -119,24 +137,23 @@
               <i *ngIf="item.type === 'file' && ['doc', 'docx'].includes(item.format || '')" class="pi pi-file-word"></i>
               <i *ngIf="item.type === 'file' && !['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'].includes(item.format || '')" class="pi pi-file"></i>
             </td>
-            <td>{{ item.name }}</td>
+            <td>{{ item.name }}.{{item.format}}</td>
             <td>{{ item.type === 'file' ? (item.size | filesize) : '--' }}</td>
             <td>{{ item.created_at | date:'medium' }}</td>
             <td>
               <div class="flex justify-content-between">
                 <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger p-button-text p-button-sm"
                          (click)="$event.stopPropagation(); deleteItem(item)"></p-button>
-                        
-                         <div class="download-div">
-                         <a *ngIf="item.type === 'file'"
-                         [href]="getDownloadUrl(item)"
-                         download
-                         class="download-btn p-button p-button-rounded p-button-text"
-                         style="text-decoration: none; color: inherit;"
-                         (click)="$event.stopPropagation()">
-                        <i class="pi pi-download"></i>
-                      </a>
-                    </div>
+                <div class="download-div">
+                  <a *ngIf="item.type === 'file'"
+                     [href]="getDownloadUrl(item)"
+                     download
+                     class="download-btn p-button p-button-rounded p-button-text"
+                     style="text-decoration: none; color: inherit;"
+                     (click)="$event.stopPropagation()">
+                    <i class="pi pi-download"></i>
+                  </a>
+                </div>
               </div>
             </td>
           </tr>
@@ -144,4 +161,8 @@
       </p-table>
     </div>
   </p-card>
+
+
+</div>
+  
 </div>

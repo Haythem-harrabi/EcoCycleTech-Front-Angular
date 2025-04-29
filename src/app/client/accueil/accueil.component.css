@@ -1,9 +1,10 @@
 .hero-container {
     position: relative;
     width: 100%;
-    height: 92vh;
+    height: 101vh;
     overflow: hidden;
     z-index: 0 !important;
+    margin-top: -98px;
   }
   
   .background-video {
@@ -39,3 +40,4 @@
     margin-top: 1rem;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
   }
+

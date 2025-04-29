@@ -5,19 +5,23 @@ export class PlanStockage {
     titre: string;
     tailleMax: number; 
     prix: number;
+    premium ?: boolean;
     espaces: EspaceStockage[];
+    
   
     constructor(
       idPlan: number = 0,
       titre: string = '',
       tailleMax: number = 0,
       prix: number = 0,
+      premium : boolean ,
       espaces: EspaceStockage[] = []
     ) {
       this.idPlan = idPlan;
       this.titre = titre;
       this.tailleMax = tailleMax;
       this.prix = prix;
+      this.premium= premium
       this.espaces = espaces;
     }
   

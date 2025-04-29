@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subscription } from '../entities/subscription';
+import { EspaceStockage } from '../entities/espaceStockage';
 
 @Injectable({
   providedIn: 'root'
@@ -37,8 +38,12 @@ export class SubscriptionService {
   }
 
 
-  getUserSpace(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/activeEspace/${id}`);
+  getUserSpace(id: number): Observable<EspaceStockage> {
+    return this.http.get<EspaceStockage>(`${this.baseUrl}/activeEspace/${id}`);
   }
 
+
+  getSubscriptionByEspace(id : number):Observable<Subscription> {
+    return this.http.get<Subscription>(`${this.baseUrl}/getSubscriptionByEspace/${id}`);
+  }
 }

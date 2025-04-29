@@ -18,10 +18,14 @@ private baseUrl = 'http://localhost:8090/ecoCycleTech/cloudinary';
       return this.http.post(`${this.baseUrl}/upload`, formData);
     }
   
-    deleteFile(publicId: string): Observable<any> {
-      const params = new HttpParams().set('publicId', publicId);
+    deleteFile(publicId: string, resourceType: string): Observable<any> {
+      const params = new HttpParams()
+        .set('publicId', publicId)
+        .set('type', resourceType);
+      
       return this.http.delete(`${this.baseUrl}/delete`, { params });
     }
+    
   
     createFolder(folderPath: string): Observable<any> {
       const params = new HttpParams().set('folder', folderPath);

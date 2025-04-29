@@ -1,12 +1,25 @@
+
+.space-text-info{
+  white-space: nowrap;
+  font-size: 16px;
+  font-family: "Merriweather", serif !important;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+
 /* espace-stockage.component.css */
 .storage-container {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #f9f9f99c;
 }
 
 .toolbar {
-  background-color: #f8f9fa;
+  background-color: #f9f9f99c;
   border-radius: 4px;
   padding: 0.75rem;
 }
@@ -22,7 +35,10 @@
 }
 ::ng-deep .file-main-content{
   min-height: 67vh;
+  background-color: #ffffff96;
 }
+
+
 
 ::ng-deep .newfolder-btn{
   background-color: #6ac1b8 !important;
@@ -32,6 +48,10 @@
 ::ng-deep .newfolder-btn:hover{
   background-color: #549891 !important;
   border-color: #549891 !important;
+}
+
+::ng-deep .p-toast {
+  z-index: 11000; /* higher than the cloudinary widget */
 }
 
 .breadcrumb-container {
@@ -88,6 +108,7 @@
 .empty-state {
   color: #757575;
   padding: 3rem 1rem;
+  font-size: 18px;
 }
 
 .empty-state i {
@@ -133,3 +154,134 @@ a[download] {
 .folder-card:hover .folder-hover-icon {
   opacity: 1;
 }
+
+
+.main-container{
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+
+}
+
+
+
+
+.storage-info {
+  font-family: 'Poppins', 'Segoe UI', sans-serif; /* Clean modern font */
+  font-size: 1rem; /* Base font size */
+  color: #333; /* Dark grey for text */
+  background-color: #f9f9f99c; /* Light background for contrast */
+  border-radius: 12px; /* Soft rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
+  margin-left: 15px;
+  margin-right: 30px;
+  max-height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.storage-info h5 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #007ad9; /* Prime blue */
+}
+
+.storage-info p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+/* .flex {
+  margin-bottom: 1rem;
+} */
+
+.progressbar-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+canvas {
+  max-width: 250px; /* Adjust the chart size */
+  max-height: 250px;
+}
+
+
+
+
+/* Storage Information title */
+.storage-info h5 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #66aa6a;
+}
+
+.storage-title{
+  text-align: center;
+}
+
+/* Storage Information paragraph details */
+.storage-info p {
+  font-family: 'Merriweather', serif;
+  font-weight: 400;
+}
+
+/* Breadcrumb text */
+.breadcrumb-container .p-breadcrumb {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Toolbar buttons ("Upload", "New Folder") */
+.toolbar p-button button {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* Toolbar search input */
+.toolbar input[type="text"] {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Toolbar select button (Grid/List view) */
+.toolbar p-selectButton {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Card Title inside file-main-content */
+::ng-deep .file-main-content h3 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+}
+
+/* Paragraphs inside empty state */
+::ng-deep .file-main-content p {
+  font-family: 'Merriweather', serif;
+}
+
+/* File/Folder names */
+.file-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
+/* List view table headers */
+.list-view th {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* List view table body (file names, dates, etc.) */
+.list-view td {
+  font-family: 'Merriweather', serif;
+}
+
+/* Download button and trash button in list view */
+.list-view a, .list-view p-button button {
+  font-family: 'Inter', sans-serif;
+}
+

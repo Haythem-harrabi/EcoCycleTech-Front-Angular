@@ -55,8 +55,9 @@
   
       <!-- Plan Card -->
       <div [@slideFade]="animationState" class="plan-card p-p-5 p-shadow-10" *ngIf="plans[currentPlanIndex]">
-        <div class="plan-badge" [ngClass]="{'popular': popular}">
-          {{ popular ? 'Most Popular' : 'Standard' }}
+
+        <div class="plan-badge" [ngClass]="{'popular': plans[currentPlanIndex].premium }">
+          {{  plans[currentPlanIndex].premium ? 'Premium' : 'Standard' }}
         </div>
         
         <h3 class="plan-title">{{ plans[currentPlanIndex].titre }}</h3>
@@ -79,16 +80,18 @@
           <li><i class="pi pi-check"></i> File version history</li>
         </ul>
         
+
         <button pButton 
                 label="Get Started" 
                 icon="pi pi-arrow-right"
                 class="p-button-rounded"
                 [ngClass]="{
-                  'p-button-success': popular, 
-                  'p-button-help': popular
+                  'p-button-success': plans[currentPlanIndex].premium, 
+                  'p-button-help': plans[currentPlanIndex].premium
                 }"
                 (click)="selectPlan(plans[currentPlanIndex])">
         </button>
+        
       </div>
   
       <!-- Right Arrow -->
@@ -108,6 +111,8 @@
             (click)="goToPlan(i)">
       </span>
     </div>
+
+    
 
 
     <div class="paypal-modal-backdrop" *ngIf="showPaypal" (click)="closePaypal()">

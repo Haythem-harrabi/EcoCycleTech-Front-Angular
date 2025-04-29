@@ -1,5 +1,7 @@
 //contenu de chaque dossier dans ecodrive space
 
+import { ExtensionFichier } from "./fichier";
+
 export interface FileItem {
     id: string;
     name: string;
@@ -9,4 +11,5 @@ export interface FileItem {
     size?: number;
     created_at?: Date;
     path: string;
+    extension ?: ExtensionFichier
   }

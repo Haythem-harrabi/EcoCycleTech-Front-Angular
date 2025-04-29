@@ -69,7 +69,7 @@ animationState = 0;
 @ViewChild('plansSection') plansSection!: ElementRef;
 
 plans : PlanStockage[] = []
-popular : boolean = false
+// popular : boolean = false
 
 
 constructor(private ps : PlanStockageService){}

@@ -16,8 +16,13 @@ export class PlanStockageListComponent implements OnInit {
   ngOnInit(): void {
     this.planService.getPlans().subscribe(data => {
       this.plans = data;
+        // Now that the data is available, format the tailleMax field
+    this.plans.forEach(plan => {
+      plan.tailleMax = this.formatBytesToGB(plan.tailleMax);
     });
-  }
+  });
+
+}
 
   DeletePlan(id : number){
 
@@ -73,6 +78,9 @@ export class PlanStockageListComponent implements OnInit {
            this.planService.getPlans().subscribe((resultData: any)=>
               {
                 this.plans = resultData;
+                this.plans.forEach(plan => {
+                  plan.tailleMax = this.formatBytesToGB(plan.tailleMax);
+                });
                
               });
           },
@@ -89,8 +97,14 @@ export class PlanStockageListComponent implements OnInit {
    
 
 
+    
   
 
 
+  }
+
+
+  formatBytesToGB(bytes: number): number {
+    return parseFloat((bytes / (1024 ** 3)).toFixed(2));
   }
 }

@@ -23,7 +23,8 @@ import { EcoDriveAccueilComponent } from './client/GestionStockage/eco-drive-acc
     AppRoutingModule,
     LayoutModule,
     BrowserAnimationsModule,
-    AdminLayoutModule
+    AdminLayoutModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

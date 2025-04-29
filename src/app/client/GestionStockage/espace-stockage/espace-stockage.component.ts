@@ -1,5 +1,5 @@
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ExtensionFichier, Fichier, TypeFichier } from 'src/app/entities/fichier';
 import { CloudinaryService } from 'src/app/services/cloudinary.service';
@@ -11,6 +11,9 @@ import {FileItem} from  'src/app/entities/fileItem'
 import { FolderResponse } from 'src/app/entities/folderResponse';
 import Swal from 'sweetalert2';
 import { cloudinary } from 'src/environment/environment-vars';
+import { EspaceStockageService } from 'src/app/services/espace-stockage.service';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 @Component({
   selector: 'app-espace-stockage',
   templateUrl: './espace-stockage.component.html',
@@ -24,6 +27,7 @@ export class EspaceStockageComponent {
   username = "testuser"
 
 
+
   currentspaceId !: number;
   currentSpace !: EspaceStockage;
 
@@ -31,8 +35,8 @@ export class EspaceStockageComponent {
   uploadPreset = cloudinary.uploadPreset;
   myWidget: any;
   uploadedUrl!: string;
-  rootFolder = 'EcoCycleTech'
-  currentFolder = 'EcoCycleTech';
+  rootFolder = 'EcoCycleTech/'+this.username+ "_" + this.userid;
+  currentFolder = 'EcoCycleTech/'+this.username+ "_" + this.userid;
   viewMode : 'grid' | 'list' = 'grid';
   viewOptions = [
     { icon: 'pi pi-th-large', value: 'grid', label: 'Grid' },
@@ -44,51 +48,116 @@ export class EspaceStockageComponent {
   loading = false;
   searchQuery = '';
   home!: MenuItem;
+
+  occupiedSpace?: number ; 
+  freeSpace?: number ;    
+  totalSpace?: number ;   
+  occupiedSpacePercentage?: number ;
+  totalSpaceGB?: number;
+  occupiedSpaceGB?: number;
+  freeSpaceGB?:number;
+
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+
+
+  doughnutChartData = {
+  labels: ['Occupied Space', 'Free Space'],
+  datasets: [
+    {
+      data: [0, 100], // temporary dummy data
+      backgroundColor: ['#add8e6', '#66BB6A'],
+      hoverBackgroundColor: ['#a0c8d5', '#81C784']
+    }
+  ]
+};
+  
+  doughnutChartOptions: ChartOptions<'doughnut'> = {
+    responsive: true,
+    cutout: '70%', 
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#333'
+        }
+      }
+    },
+    animation: {
+      animateRotate: true,
+      animateScale: true
+    }
+  };
+
+  
+  // Update function after receiving space info
+  updateChart() {
+    this.doughnutChartData.datasets[0].data = [this.occupiedSpace!, this.freeSpace!];
+    if (this.chart) {
+      this.chart.update(); // Force the chart to refresh
+    }
+  }
   
 
   constructor(private messageService: MessageService, private cloudinaryService : CloudinaryService, private fichierService : FichierService, 
-    private subscriptionService : SubscriptionService,  private router: Router
+    private subscriptionService : SubscriptionService,  private router: Router, private espaceService : EspaceStockageService
   ) {}
 
 
   ngOnInit() {
-
-    // this.items = [
-    //   {
-    //     id: 'EcoCycleTech/sample_image',
-    //     name: 'Sample Image',
-    //     type: 'file',
-    //     url: 'https://res.cloudinary.com/demo/image/upload/v1610000000/EcoCycleTech/sample_image.jpg',
-    //     format: 'jpg',
-    //     size: 24567,
-    //     created_at: new Date('2024-04-10T14:30:00Z'),
-    //     path: 'EcoCycleTech/sample_image'
-    //   },
-    //   {
-    //     id: 'EcoCycleTech/sample_pdf',
-    //     name: 'User Guide',
-    //     type: 'file',
-    //     url: 'https://res.cloudinary.com/demo/image/upload/v1610000001/EcoCycleTech/sample_pdf.pdf',
-    //     format: 'pdf',
-    //     size: 83200,
-    //     created_at: new Date('2024-03-25T10:00:00Z'),
-    //     path: 'EcoCycleTech/sample_pdf'
-    //   },
-    //   {
-    //     id: 'EcoCycleTech/Reports',
-    //     name: 'Reports',
-    //     type: 'folder',
-    //     path: 'EcoCycleTech/Reports'
-    //   },
-    //   {
-    //     id: 'EcoCycleTech/Images',
-    //     name: 'Images',
-    //     type: 'folder',
-    //     path: 'EcoCycleTech/Images'
-    //   }
-    // ];
+      
 
 
+
+    this.subscriptionService.getUserSpace(this.userid).subscribe({
+      next: (data) => {
+        console.log("Active Espace:", data);
+        this.currentSpace = data;
+        this.currentspaceId = data.idEspace;
+    
+        // First, get total space
+        this.subscriptionService.getSubscriptionByEspace(this.currentspaceId).subscribe({
+          next: (subData) => {
+            this.totalSpace= subData.planStockage?.tailleMax!
+            this.totalSpaceGB = this.formatBytesToGB(subData.planStockage?.tailleMax!);
+    
+            // After totalSpace is fetched, get occupied space
+            this.espaceService.getOccupiedSpace(this.currentspaceId).subscribe({
+              next: (occupiedData) => {
+                this.occupiedSpace= occupiedData
+                this.occupiedSpaceGB = this.formatBytesToGB(occupiedData);
+                this.freeSpace = this.totalSpace! - this.occupiedSpace!;
+                this.freeSpaceGB=  this.totalSpaceGB! - this.occupiedSpaceGB
+                console.log(`Total: ${this.totalSpace}, Occupied: ${this.occupiedSpace}, Free: ${this.freeSpace}`);
+                // Update chart data
+                this.updateChart();
+              },
+              error: (err) => {
+                console.error('Error fetching occupied space:', err);
+              }
+            });
+    
+          },
+          error: (err) => {
+            console.error('Error fetching subscription plan:', err);
+          }
+        });
+    
+      },
+      error: (error) => {
+        if (error.status === 404) {
+          console.warn('No active espace found for this user.');
+          this.router.navigateByUrl('/EcoDrive');
+        } else {
+          console.error('Error fetching user space:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'An unexpected error occurred!'
+          });
+        }
+      }
+    });
 
 
 
@@ -109,14 +178,99 @@ export class EspaceStockageComponent {
         if (!error && result && result.event === "success") {
           console.log("Done! Here is the file info: ", result.info);
           this.uploadedUrl = result.info.secure_url;
+
+          let extension : any;
+          let filetype : TypeFichier;
+          if (result.info.original_extension != null){
+            extension= result.info.original_extension.toUpperCase()
           
-          const fichier : Fichier = new Fichier(0,result.info.original_filename,result.info.bytes,new Date(),result.info.url,this.currentSpace,result.info.resource_type.toUpperCase() as TypeFichier,result.info.original_extension.toUpperCase() as ExtensionFichier,result.info.public_id);
+          }
+          else{
+            extension=  result.info.path.split('.').pop();
+          }
+          // Now decide the fileType
+switch (extension.toUpperCase()) {
+  case 'PDF':
+  case 'DOCX':
+  case 'TXT':
+    filetype = TypeFichier.DOCUMENT;
+    break;
+
+  case 'PNG':
+  case 'JPG':
+  case 'JPEG':
+    filetype = TypeFichier.IMAGE;
+    break;
+
+  case 'MP4':
+    filetype = TypeFichier.VIDEO;
+    break;
+
+  default:
+    filetype = TypeFichier.UNKNOWN;
+    break;
+}
+console.log("filetype:"+ filetype)
+console.log("extension = " + extension)
+
+          //Adding file in database
+          const fichier : Fichier = new Fichier(0,result.info.original_filename,result.info.bytes,new Date(),result.info.url,this.currentSpace,filetype, extension.toUpperCase() as ExtensionFichier,result.info.public_id);
           this.fichierService.AddFichier(fichier).subscribe({
-            next : (data) => console.log("Fichier created successfully !" + data),
+            next : (data) => {console.log("File created successfully !" + data)
+              setTimeout(() => {
+                this.loadFolderContents(this.currentFolder);
+              }, 1500);
+              },
             error: (err) => {
               console.error("Error creating fichier:", err);
             }
-          })
+          });
+
+          //fetching & verifying sensitive data
+          const originalFilename = result.info.original_filename;
+
+          this.fichierService.fetchFileAsBlob(this.uploadedUrl).subscribe(blob => {
+            console.log('File blob fetched:', blob);
+        
+            const formData = new FormData();
+            formData.append('file', blob, originalFilename);
+        
+            this.fichierService.analyzeFile(formData).subscribe({
+              next: (response) => {
+                console.log('Analysis result:', response);
+                this.closeUploadWidget()
+                this.messageService.add({
+                  severity: response.sensitiveDataDetected ? 'warn' : 'success',
+                  summary: response.sensitiveDataDetected ? 'Sensitive Data Detected in file : '+ response.filename : 'No Sensitive Data',
+                  detail: response.details,
+                  life: 6000
+                });
+              },
+              error: (err) => {
+                console.error('Error analyzing file:', err);
+                this.closeUploadWidget()
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Analysis Failed',
+                  detail: 'Could not analyze the file.',
+                  life: 6000
+                });
+              }
+            });
+          }, error => {
+            console.error('Error fetching file from Cloudinary:', error);
+          });
+
+
+
+          let modifiedSpace :EspaceStockage = this.currentSpace
+          modifiedSpace.usedTaille+= result.info.bytes;
+          this.espaceService.UpdateEspace(this.currentSpace.idEspace,modifiedSpace).subscribe(
+            () => {console.log("Updated")}
+          )
+
+
+          
           
 
         }
@@ -124,16 +278,7 @@ export class EspaceStockageComponent {
     );
 
 
-    this.subscriptionService.getUserSpace(this.userid).subscribe({
-      next: (data) => {
-        console.log("Active Espace:", data);
-        this.currentSpace = data;
-        this.currentspaceId = data.idEspace;
-      },
-      error: (err) => {
-        console.error("Error fetching user space:", err);
-      }
-    });
+    
     // Initialize breadcrumb
     this.updateBreadcrumb(this.rootFolder);
     
@@ -144,6 +289,10 @@ export class EspaceStockageComponent {
   openUploadWidget() {
     this.myWidget.update({ folder: this.currentFolder });
     this.myWidget.open();
+  }
+
+  closeUploadWidget() {
+    this.myWidget.close();
   }
 
 
@@ -186,7 +335,8 @@ export class EspaceStockageComponent {
             format: file.format,
             size: file.bytes,
             created_at: new Date(file.created_at),
-            path: file.public_id
+            path: file.public_id,
+            extension : data.extension
           });}
         )
       });
@@ -291,6 +441,27 @@ export class EspaceStockageComponent {
   }
 
   deleteItem(item: FileItem) {
+    console.log(item.id);
+    console.log(item.extension);
+    let resourcetype : string;
+    switch (item.extension?.toString()) {
+      case "DOCX":
+      case "PDF":
+      case "TXT":
+        resourcetype = "raw";
+        break;
+      case "PNG":
+      case "JPG":
+      case "JPEG":
+        resourcetype = "image";
+        break;
+      default:
+        resourcetype = "image";
+        break;
+    }
+    
+    console.log("Resource type to delete:", resourcetype);
+    
 
     Swal.fire({
           title: "You are about to delete "+ item.name+"."+item.format+" . Continue ?",
@@ -320,7 +491,7 @@ export class EspaceStockageComponent {
           if (result.isConfirmed) {
 
             if (item.type === 'file') {
-              this.cloudinaryService.deleteFile(item.id).subscribe({
+              this.cloudinaryService.deleteFile(item.id, resourcetype).subscribe({
                 next: () => {
                   this.messageService.add({
                     severity: 'success',
@@ -413,6 +584,14 @@ export class EspaceStockageComponent {
     return item.url!; // fallback
   }
 
+
+  formatBytesToGB(bytes: number): number {
+    return parseFloat((bytes / (1024 ** 3)).toFixed(2) );
+  }
+
+  convertGBtoBytes(gb: number): number {
+    return gb * Math.pow(1024, 3);
+  }
 
 
 }

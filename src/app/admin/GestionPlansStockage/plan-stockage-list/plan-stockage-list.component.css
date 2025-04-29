@@ -7,22 +7,24 @@
   }
 
   :host ::ng-deep .p-card.p-component {
-    background-image: url('../../../../assets/img/notfound-bg.jpg'); 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    /* background-image: url('../../../../assets/img/notfound-bg.jpg');  */
+    /* background-size: cover; */
+    /* background-position: center; */
+    /* background-repeat: no-repeat; */
+    background-color: rgba(194, 247, 194, 0.934);
     position: relative;
     overflow: hidden;
-    height: 45vh;
-    width: 65vw;
+    height: 55vh;
+    width: 25vw;
   
   
   }
 
   .plan-container{
-    display: flex;
-    justify-content: center;
+    max-width: fit-content;
   }
+  
+
   
   
   :host ::ng-deep .p-card:hover {
@@ -42,6 +44,9 @@
   
   .plans-container {
     padding: 8rem 0 4rem 0rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(25vw, 1fr));
+    gap: 15px;
   }
   
   .plan-container {

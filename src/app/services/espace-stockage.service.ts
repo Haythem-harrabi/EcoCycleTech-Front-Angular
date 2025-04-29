@@ -46,4 +46,8 @@ export class EspaceStockageService {
     unblockSpace(id: number): Observable<EspaceStockage> {
       return this.http.put<EspaceStockage>(`${this.baseUrl}/unblockEspace/${id}`, {});
     }
+
+    getOccupiedSpace(id : number): Observable<number> {
+      return this.http.get<number>(`${this.baseUrl}/getOccupiedSpace/${id}`, {});
+    }
 }

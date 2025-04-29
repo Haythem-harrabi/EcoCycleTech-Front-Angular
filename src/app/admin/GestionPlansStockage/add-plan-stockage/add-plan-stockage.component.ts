@@ -23,14 +23,21 @@ export class AddPlanStockageComponent  {
   id !:number;
   espaces: EspaceStockage[] = [];
   loadingSpaces = false;
+  PlanSize : number=1;
+
+  premiumOptions = [
+    { label: 'Standard', value: false },
+    { label: 'Premium', value: true }
+  ];
 
 
 
   constructor(private fb: FormBuilder, private ps : PlanStockageService, private act : ActivatedRoute, private route : Router, private es : EspaceStockageService) {
     this.planForm = this.fb.group({
       titre: ['', [Validators.required, Validators.minLength(3)]],
-      tailleMax: [null, [Validators.required, Validators.min(1.00)]],
-      prix: [null, [Validators.required, Validators.min(0)]]
+      tailleMax: [null, [Validators.required, Validators.min(1.00),Validators.max(100)]],
+      prix: [null, [Validators.required, Validators.min(0)]],
+      premium: [null, Validators.required] 
     });
   }
  
@@ -39,12 +46,19 @@ export class AddPlanStockageComponent  {
     this.id= this.act.snapshot.params["id"] ;
 
    this.ps.getPlanById(this.id).subscribe(
-    (plan) => this.planForm.patchValue(plan));
+    (plan) => {plan.tailleMax = this.formatBytesToGB(plan.tailleMax)
+      this.planForm.patchValue(plan);
+      this.PlanSize = plan.tailleMax
+    });
   if (this.id){
     this.editMode=true;
     this.loadAssociatedSpaces(this.id)
   }}
   
+
+ formatGBtoBytes(gb: number): number {
+    return gb * Math.pow(1024, 3);
+  }
 
   get f() {
     return this.planForm.controls;
@@ -59,6 +73,7 @@ export class AddPlanStockageComponent  {
 
     console.log(this.planForm.value)
     const formData = this.planForm.value;
+    formData.tailleMax = this.formatGBtoBytes(formData.tailleMax );
 
     if (this.editMode){
       Swal.fire({
@@ -222,8 +237,13 @@ export class AddPlanStockageComponent  {
      this.loadingSpaces = true;
     this.es.getEspacesByPlan(planId).subscribe({
        next: (spaces) => {
+        
          this.espaces = spaces;
          this.loadingSpaces = false;
+         this.espaces.forEach(espace => {
+          espace.usedTaille = this.formatBytesToGB(espace.usedTaille)
+          
+         });
        },
        error: () => this.loadingSpaces = false
      });
@@ -303,7 +323,9 @@ export class AddPlanStockageComponent  {
            
           
 
-
+             formatBytesToGB(bytes: number): number {
+              return parseFloat((bytes / (1024 ** 3)).toFixed(2));
+            }
 
 
 

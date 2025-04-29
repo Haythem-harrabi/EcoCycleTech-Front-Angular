@@ -32,6 +32,7 @@
         <small *ngIf="f['tailleMax'].invalid && (f['tailleMax'].dirty || f['tailleMax'].touched)" class="p-error">
           <span *ngIf="f['tailleMax'].errors?.['required']">Size is required</span>
           <span *ngIf="f['tailleMax'].errors?.['min']">Must be greater than 0</span>
+          <span *ngIf="f['tailleMax'].errors?.['max']">Must be 100gb or lower</span>
         </small>
       </div>
 
@@ -58,6 +59,26 @@
         </small>
        
       </div>
+
+      <!-- Premium Selection -->
+<div class="inputdiv premium-select p-field p-col-12 p-md-6">
+  <div class="p-float-label">
+    <p-dropdown 
+      id="premium"
+      formControlName="premium"
+      [options]="premiumOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Select type"
+      class="dropdown"
+      [ngClass]="{ 'ng-invalid ng-dirty': f['premium'].invalid && (f['premium'].dirty || f['premium'].touched) }">
+    </p-dropdown>
+    <label for="premium">Type*</label>
+  </div>
+  <small *ngIf="f['premium'].invalid && (f['premium'].dirty || f['premium'].touched)" class="p-error">
+    Please select a type
+  </small>
+</div>
       
 
 
@@ -96,9 +117,9 @@
       <tr>
         <td>{{ espace.user?.nom }} {{ espace.user?.prenom }}</td>
         <td>
-          <p-progressBar [value]="(espace.usedSpace / planForm.value.tailleMax) * 100" 
+          <p-progressBar [value]="(espace.usedTaille / this.PlanSize) * 100" 
                          [showValue]="false"></p-progressBar>
-          {{ espace.usedSpace | number:'1.2-2' }} GB / {{ planForm.value.tailleMax | number:'1.2-2' }} GB
+          {{ espace.usedTaille | number:'1.2-2' }} GB / {{ this.PlanSize | number:'1.2-2' }} GB
         </td>
         <td>
           <p-tag [severity]="getStatusSeverity(espace.statut)" 

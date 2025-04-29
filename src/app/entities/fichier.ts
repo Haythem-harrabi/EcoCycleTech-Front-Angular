@@ -5,7 +5,8 @@ export enum TypeFichier{
     IMAGE,
     VIDEO,
     DOCUMENT,
-    AUDIO   
+    AUDIO  ,
+    UNKNOWN
 }
 export enum ExtensionFichier{
   PDF,

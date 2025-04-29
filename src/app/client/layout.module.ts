@@ -32,7 +32,8 @@ import { SelectButtonModule }
     from 'primeng/selectbutton';
 
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { ProgressBarModule } from 'primeng/progressbar';
+import { NgChartsModule } from 'ng2-charts';
 
 
 
@@ -68,7 +69,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
      TableModule,
      NgxFilesizeModule,
      SelectButtonModule,
-     ProgressSpinnerModule
+     ProgressSpinnerModule,
+     ProgressBarModule,
+     NgChartsModule
 
   ]
 })
