@@ -46,4 +46,17 @@ export class SubscriptionService {
   getSubscriptionByEspace(id : number):Observable<Subscription> {
     return this.http.get<Subscription>(`${this.baseUrl}/getSubscriptionByEspace/${id}`);
   }
+
+
+  getSubscriptionsLast7Days() {
+    return this.http.get<any[]>(`${this.baseUrl}/subscriptionslast7days`);
+  }
+
+  getPlanSubscriptionCounts() {
+    return this.http.get<any[]>(`${this.baseUrl}/plans-count`);
+  }
+
+  getBestPlansSubscriptions() {
+    return this.http.get<any[]>(`${this.baseUrl}/bestplans`);
+  }
 }

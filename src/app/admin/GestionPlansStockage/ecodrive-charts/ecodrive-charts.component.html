@@ -1,0 +1,58 @@
+<div class="charts-container">
+
+    <div class="left-section">
+    <div class="chart-wrapper first">
+        <h2>Best selling Plans</h2>
+    <div class="first-chart">
+        
+        <canvas baseChart
+        [data]="{ labels: barChartLabels, datasets: barChartData }"
+        [options]="barChartOptions"
+        [type]="barChartType">
+</canvas>
+    </div>
+</div>
+</div>
+  
+<div class="right-section">
+<div class="chart-wrapper second">
+    <div class="second-chart">
+      <h2>Most Subscribed Plans</h2>
+      <canvas baseChart
+        [data]="{
+          labels: pieChartLabels,
+          datasets: [{ data: pieChartData,
+            backgroundColor: [
+      '#66BB6A', 
+      '#43A047', 
+      '#388E3C', 
+      '#2E7D32', 
+      '#1B5E20' 
+    ],
+    hoverOffset:4
+
+           }]
+        }"
+        [type]="'pie'">
+      </canvas>
+    </div>
+</div>
+
+
+<div class="chart-wrapper third">
+<div class="third-chart">
+    <h2>Subscriptions in Last 7 Days</h2>
+    <canvas baseChart
+      [data]="{
+        labels: lineChartLabels,
+        datasets: lineChartData,
+      }"
+      [type]="'line'">
+    </canvas>
+  </div>
+</div>
+
+</div>
+
+  </div>
+  

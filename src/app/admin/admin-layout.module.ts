@@ -25,6 +25,8 @@ import { TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
+import { EcodriveChartsComponent } from './GestionPlansStockage/ecodrive-charts/ecodrive-charts.component';
+import { NgChartsModule } from 'ng2-charts';
 
 
 
@@ -38,7 +40,8 @@ import { DropdownModule } from 'primeng/dropdown';
     AppMenuitemComponent,
     AdminLayoutComponent,
     AddPlanStockageComponent,
-    PlanStockageListComponent
+    PlanStockageListComponent,
+    EcodriveChartsComponent
   ],
   imports: [
     CommonModule,
@@ -59,7 +62,8 @@ import { DropdownModule } from 'primeng/dropdown';
     TagModule,
     ReactiveFormsModule,
     AdminLayoutRoutingModule,
-    DropdownModule
+    DropdownModule,
+    NgChartsModule
   ]
 })
 export class AdminLayoutModule { }
