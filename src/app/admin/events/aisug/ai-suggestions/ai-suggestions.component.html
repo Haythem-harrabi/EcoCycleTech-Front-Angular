@@ -1,0 +1,26 @@
+<div class="cohere-container">
+  <h2>Tunisian Eco-Event Generator</h2>
+  <p class="api-note">Powered by Cohere AI</p>
+
+  <button (click)="getSuggestions()" 
+          [disabled]="isLoading || cooldown > 0"
+          class="generate-btn">
+    {{ isLoading ? 'Generating...' : 'Get Event Idea' }}
+  </button>
+
+  <div *ngIf="cooldown > 0" class="cooldown-message">
+    ⏳ Please wait {{ cooldown }} seconds before next request
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <div *ngIf="suggestionText" class="suggestion-card">
+    <h3>Suggested Event</h3>
+    <pre>{{ suggestionText }}</pre>
+    <button (click)="useSuggestion()" class="use-btn">
+      Back to all events!
+    </button>
+  </div>
+</div>

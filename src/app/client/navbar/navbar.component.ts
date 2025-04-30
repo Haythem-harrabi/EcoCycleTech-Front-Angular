@@ -1,11 +1,40 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { SubscriptionService } from 'src/app/services/subscription.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+// modified
+export class NavbarComponent implements OnInit {
+hasSpace !: boolean;
+  currentuserid: number = 1;
+
+constructor(private subscriptionService : SubscriptionService){
+
+}
+
+
+ngOnInit(){
+  this.subscriptionService.getUserSpace(this.currentuserid).subscribe(
+    (data) => {
+     
+      console.log('Espace found:', data);
+      this.hasSpace=true
+    },
+    (error) => {
+      if (error.status === 404) {
+        console.log('No espace found for this user.');
+       this.hasSpace=false
+      } else {
+        console.error('An error occurred:', error);
+        this.hasSpace=false
+      }
+    }
+  )
+}
+
 
 
 

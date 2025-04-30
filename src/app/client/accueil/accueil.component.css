@@ -7,189 +7,45 @@
 
 /* Hero section - full viewport height */
 .hero-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Video background - centered and covering */
-.background-video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
-  z-index: 1;
-}
-
-/* Text overlay - centered vertically */
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.381);
-  z-index: 2;
-  padding: 20px;
-}
-
-.overlay-content {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.slogan {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: bold;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
-  margin-bottom: 1rem;
-}
-
-.subtext {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Add to styles.css */
-.floating-camera-btn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 15px 25px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(46, 204, 113, 0.3);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
-
-.floating-camera-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 25px rgba(46, 204, 113, 0.4);
-}
-
-.floating-camera-btn i {
-  font-size: 20px;
-}
-
-
-/* Compact Map Section - OLD (you can remove this) */
-.compact-map-section {
-  position: relative;
-  padding: 1rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin: 2rem auto;
-  max-width: 800px;
-  z-index: 3;
-}
-
-.compact-map {
-  height: 300px;
-  width: 100%;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-.map-controls {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.5rem;
-}
-
-.alert-sm {
-  padding: 0.5rem;
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Loading state */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255,255,255,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  border-radius: 8px;
-}
-
-/* NEW: Map and Pickup Container */
-.map-pickup-container {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 2rem auto;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  z-index: 3;
-}
-
-.map-section {
-  flex: 2;
-  min-height: 500px;
-}
-
-.pickup-section {
-  flex: 1;
-  min-width: 300px;
-}
-
-.map {
-  height: 100%;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .hero-container {
-    height: 70vh;
-  }
-  
-  .map-pickup-container {
-    flex-direction: column;
-    margin: 1rem;
-    width: calc(100% - 2rem);
-  }
-  
-  .map-section, .pickup-section {
+    position: relative;
     width: 100%;
+    height: 101vh;
+    overflow: hidden;
+    z-index: 0 !important;
+    margin-top: -98px;
   }
   
-  .map {
-    height: 300px;
+  .background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0 !important;
   }
   
-  .map-controls {
-    flex-direction: column;
-    align-items: center;
+  .overlay {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    padding: 20px;
+    top: 40%;
+    background-color: rgba(0, 0, 0, 0.381);
+   
   }
-}
+  
+  .slogan {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  }
+  
+  .subtext {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  }
+

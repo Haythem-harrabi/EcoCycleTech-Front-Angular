@@ -35,6 +35,7 @@
 
             ],
             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
                "node_modules/prismjs/prism.js",
                 "node_modules/prismjs/components/prism-typescript.js",
                 "node_modules/leaflet/dist/leaflet.js"
@@ -79,7 +80,8 @@
               "browserTarget": "EcoCycleTech-Front:build:production"
             },
             "development": {
-              "browserTarget": "EcoCycleTech-Front:build:development"
+              "browserTarget": "EcoCycleTech-Front:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -115,6 +117,6 @@
     }
   },
   "cli": {
-    "analytics": "92ac11b1-85ee-458b-ae2a-9a3b20ee04d3"
+    "analytics": "a395066c-0d4f-4eab-8428-f5a7faa99688"
   }
 }

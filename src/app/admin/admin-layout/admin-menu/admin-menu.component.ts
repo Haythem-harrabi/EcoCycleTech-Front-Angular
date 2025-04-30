@@ -21,7 +21,7 @@ export class AdminMenuComponent implements OnInit {
               ]
           },
           {
-              label: 'UI Components',
+              label: 'Manage',
               items: [
                   { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
                   { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
@@ -39,7 +39,20 @@ export class AdminMenuComponent implements OnInit {
                   { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
                   { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
                   { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] },
-                  { label: 'MyDashBoard', icon: 'pi pi-fw pi-id-card', routerLink: ['/mydashboard'] }
+                  { label: 'MyDashBoard', icon: 'pi pi-fw pi-id-card', routerLink: ['/mydashboard'] },
+                  { label: 'Events', icon: 'pi pi-fw pi-calendar', routerLink: ['/admin/events'] },
+                  { label: 'Tickets', icon: 'pi pi-fw pi-ticket', routerLink: ['/admin/tickets'] },
+                { label: 'Eco-Drive', icon: 'pi pi-fw pi-database',
+                items: [
+                    // modified
+                    { label: 'Overview', icon: 'pi pi-fw pi-server', routerLink: ['/admin/Plans'] },
+                    { label: 'Add storage plan', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/admin/addPlan'] },
+                ] },
+                  { label: 'Repairing operations', icon: 'pi pi-fw pi-check-square', routerLink: ['##'] },
+                  { label: 'Recycling operations', icon: 'pi pi-fw pi-bookmark', routerLink: ['##'] },
+                  { label: 'Events', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['##'] },
+                  { label: 'Eco-Drive', icon: 'pi pi-fw pi-mobile', routerLink: ['##'], class: 'rotated-icon' },
+                  { label: 'Pickup stations', icon: 'pi pi-fw pi-table', routerLink: ['##'] },
               ]
           },
           {
@@ -148,17 +161,6 @@ export class AdminMenuComponent implements OnInit {
                               ]
                           },
                       ]
-                  }
-              ]
-          },
-          {
-              label: 'Get Started',
-              items: [
-                  {
-                      label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']
-                  },
-                  {
-                      label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
                   }
               ]
           }

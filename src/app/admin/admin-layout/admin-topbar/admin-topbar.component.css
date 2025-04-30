@@ -1,0 +1,22 @@
+#CompanyName{
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family:"Oswald", sans-serif !important;
+    margin-left: 12px;
+}
+#logo{
+    WIDTH: 85PX;
+    HEIGHT: 65PX;
+    margin-right: 0 !important;
+}
+
+.layout-topbar-logo{
+    margin-right: 20px;
+}
+.layout-topbar{
+    height:95px ;
+    padding-left: 4rem !important;
+    padding-right: 4rem !important;
+    background-color: aliceblue ;
+}
