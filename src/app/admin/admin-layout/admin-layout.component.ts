@@ -60,6 +60,10 @@ export class AdminLayoutComponent implements OnInit ,OnDestroy {
 
   ngOnInit(): void {
     document.body.classList.add('admin-layout');
+
+    //  console.log(this.layoutService.state)
+     console.log('LayoutService loaded:', this.layoutService);
+  
   }
 
   hideMenu() {

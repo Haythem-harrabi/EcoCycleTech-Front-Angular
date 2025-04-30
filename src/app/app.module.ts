@@ -6,12 +6,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LayoutModule } from './client/layout/layout.module';
+import { LayoutModule } from './client/layout.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccueilComponent } from './client/accueil/accueil.component';
 import { AddPlanStockageComponent } from './admin/GestionPlansStockage/add-plan-stockage/add-plan-stockage.component';
 import { PlanStockageListComponent } from './admin/GestionPlansStockage/plan-stockage-list/plan-stockage-list.component';
-import { AdminLayoutModule } from './admin/admin-layout/admin-layout.module';
 import { EventListComponent } from './admin/events/eventcomponents/event-list/event-list.component';
 import { EventFormComponent } from './admin/events/eventcomponents/event-form/event-form.component';
 import { HistoryComponent } from './admin/events/eventcomponents/history/history/history.component';
@@ -27,6 +26,9 @@ import { TicketServiceService } from './admin/events/service/ticket-service.serv
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { AdminLayoutModule } from './admin/admin-layout.module';
+import { NotfoundComponent } from './shared/notfound/notfound.component';
+import { EcoDriveAccueilComponent } from './client/GestionStockage/eco-drive-accueil/eco-drive-accueil.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ import { MessageModule } from 'primeng/message';
     TicketFormComponent,
     AISuggestionsComponent,
     
+    NotfoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +60,7 @@ import { MessageModule } from 'primeng/message';
     CardModule,
     ButtonModule,
     MessageModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

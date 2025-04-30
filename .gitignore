@@ -43,3 +43,5 @@ Thumbs.db
 
 # Ignore environment files
 src/app/admin/events/models/environment.ts
+#Secret Keys
+/src/environment/environment-vars.ts

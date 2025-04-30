@@ -1,0 +1,75 @@
+<div class="paypal-payment-container p-fluid p-4 position-relative">
+    <button  style="width: auto;"
+      class="p-button p-button-rounded p-button-text p-button-danger close-button"
+      (click)="closePopup()"
+      type="button"
+      aria-label="Close">
+      <i class="pi pi-times" style="font-size: 1.5rem;"></i>
+    </button>
+  
+  <div class="payment-form" *ngIf="!showPaypalButtons">
+    <h2 class="checkout-text p-text-secondary"> <i class="pi pi-credit-card p-mr-2"></i>Checkout</h2>
+
+    <div class="form-group p-field">
+      <label for="amount" class="p-text-bold">Amount:</label>
+      <input 
+        type="text" 
+        id="amount" 
+        name="amount" 
+        [(ngModel)]="paymentAmount" 
+        placeholder="Enter amount"
+        class="form-control p-inputtext"
+        disabled>
+    </div>
+
+    <div class="form-group p-field">
+      <label for="currency" class="p-text-bold">Currency:</label>
+      <select 
+        id="currency" 
+        name="currency" 
+        class="form-control p-inputtext">
+        <option selected value="USD">USD</option>
+        <option value="TND">TND</option>
+      </select>
+    </div>
+
+    <div class="form-group p-field">
+      <label for="description" class="p-text-bold">Description:</label>
+      <input 
+        type="text" 
+        id="description" 
+        name="description" 
+        [(ngModel)]="description" 
+        class="form-control p-inputtext"
+        disabled>
+    </div>
+
+    <button (click)="startPayment()" class="p-button p-component p-button-primary">
+      <span class="p-button-label">Proceed to Payment</span>
+    </button>
+  </div>
+
+
+
+
+  <div class="paypal-buttons-container p-card p-p-4 p-mt-3 p-shadow-3" *ngIf="showPaypalButtons">
+  <h3 class="complete-text p-text-secondary p-mb-3">Complete your payment</h3>
+
+  <p class=" amount-text p-text-bold p-mb-3">Total amount: {{paymentAmount}} TND</p>
+
+  <div class="paypal-buttons p-my-3">
+    <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+  </div>
+
+  <div *ngIf="paymentStatus" class="success-msg p-message p-message-success p-mt-3">
+    {{paymentStatus}}
+  </div>
+
+  <div *ngIf="paymentError" class="p-message p-message-error p-mt-3">
+    {{paymentError}}
+  </div>
+
+  <button (click)="showPaypalButtons = false" class="p-button p-button-secondary p-mt-4">
+    <span class="p-button-label">Go Back</span>
+  </button>
+</div>

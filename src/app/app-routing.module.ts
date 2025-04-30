@@ -9,6 +9,7 @@ import { EventFormComponent } from './admin/events/eventcomponents/event-form/ev
 import { TicketListComponent } from './admin/events/ticketcomponent/ticket-list/ticket-list/ticket-list.component';
 import { TicketFormComponent } from'./admin/events/ticketcomponent/ticket-form/ticket-form/ticket-form.component';
 import { AISuggestionsComponent } from './admin/events/aisug/ai-suggestions/ai-suggestions.component';
+import { NotfoundComponent } from './shared/notfound/notfound.component';
 const routes: Routes = [
   {
     path: '', component: LayoutComponent,
@@ -29,9 +30,21 @@ const routes: Routes = [
     { path: 'tickets', component: TicketListComponent },
     { path: 'newticket', component: TicketFormComponent },
     { path: 'ai-suggestions', component: AISuggestionsComponent }
-  ]
+ ] },
+  {
+    path: '', loadChildren: () => import('./client/layout.module').then(m => m.LayoutModule)
+    
 },
-];
+{
+  path: 'admin',
+  loadChildren: () => import('./admin/admin-layout.module').then(m => m.AdminLayoutModule)
+},
+{
+  path: '**', component: NotfoundComponent,
+},
+  ]
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
