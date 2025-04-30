@@ -83,10 +83,10 @@
                     transform: rotate(90deg);
                 }
             }
-
+// modified
             &.active-route {
                 font-weight: 700;
-                color: var(--primary-color);
+                color: green;
             }
 
             &:hover {

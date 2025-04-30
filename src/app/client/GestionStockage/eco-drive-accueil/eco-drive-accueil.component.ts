@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { PlanStockage } from 'src/app/entities/planStockage';
 import { PlanStockageService } from 'src/app/services/plan-stockage.service';
+import Typed from 'typed.js';
 
 @Component({
   selector: 'app-eco-drive-accueil',
@@ -72,6 +73,12 @@ plans : PlanStockage[] = []
 // popular : boolean = false
 
 
+// modified
+typed!: Typed;
+@ViewChild('typedElement', { static: true }) typedElement!: ElementRef;
+
+
+
 constructor(private ps : PlanStockageService){}
 ngOnInit(): void {
   this.ps.getPlans().subscribe(
@@ -79,6 +86,16 @@ ngOnInit(): void {
       console.log("plans : " + this.plans)
     }
   )
+
+  const options = {
+    strings: ['Secure', 'Eco-friendly', 'Easy'],
+    typeSpeed: 100,
+    backSpeed: 35,
+    backDelay: 1500,
+    loop: true
+  };
+
+  this.typed = new Typed(this.typedElement.nativeElement, options);
 }
 
 prevPlan() {

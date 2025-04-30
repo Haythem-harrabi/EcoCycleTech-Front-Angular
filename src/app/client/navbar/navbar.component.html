@@ -114,8 +114,9 @@
                 <div
                     class="dropdown-menu surface-overlay lg:shadow-2 lg:absolute w-full top-100 px-6 py-0 lg:py-6 h-10rem lg:h-30rem z-1 hidden">
                     <div class="content">
-                        <div class="content-element"> <span>Buy a storage plan</span></div>
-                        <div class="content-element"> <span>View my space</span></div>
+                        <!-- modified -->
+                        <div class="content-element" routerLink="/EcoDrive"> <span>Buy a storage plan</span></div>
+                        <div class="content-element" *ngIf="hasSpace" routerLink="/space"> <span>View my space</span></div>
                     </div>
                 </div>
             </li>

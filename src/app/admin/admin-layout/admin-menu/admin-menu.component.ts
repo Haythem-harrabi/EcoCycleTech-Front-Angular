@@ -25,8 +25,9 @@ export class AdminMenuComponent implements OnInit {
               items: [
                 { label: 'Eco-Drive', icon: 'pi pi-fw pi-database',
                 items: [
-                    { label: 'Overview', icon: 'pi pi-fw pi-server' },
-                    { label: 'Add storage plan', icon: 'pi pi-fw pi-plus-circle' },
+                    // modified
+                    { label: 'Overview', icon: 'pi pi-fw pi-server', routerLink: ['/admin/Plans'] },
+                    { label: 'Add storage plan', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/admin/addPlan'] },
                 ] },
                   { label: 'Repairing operations', icon: 'pi pi-fw pi-check-square', routerLink: ['##'] },
                   { label: 'Recycling operations', icon: 'pi pi-fw pi-bookmark', routerLink: ['##'] },

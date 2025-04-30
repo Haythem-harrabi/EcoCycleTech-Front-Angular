@@ -95,12 +95,18 @@
   .chart-wrapper.first{
     height: 78vh;
     width: 43vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .first-chart{
     height: 60vh;
-    display: flex
-;
-    justify-content: center;
-    align-items: center;
+    
+  }
+
+  /* modified */
+  h2{
+    font-family: 'Inter', sans-serif;
+    margin-top: 35px !important;
   }
