@@ -1,6 +1,9 @@
-
-
-  {
+{
+    "/PointCollect": {
+        "target": "http://localhost:8090",
+        "secure": false
+    }
+,
     "/openai-api": {
         "target": "https://api.openai.com/v1",
         "secure": false,
@@ -10,11 +13,4 @@
         },
         "logLevel": "debug"
   }
-}
-
-{
-    "/PointCollect": {
-        "target": "http://localhost:8090",
-        "secure": false
-    }
 }
