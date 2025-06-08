@@ -1,0 +1,239 @@
+<div class="point-container">
+  <!-- Add Button -->
+  <button class="action-btn add-btn" (click)="openAddModal()">
+    + Add Collection Point
+  </button>
+
+  <!-- Search -->
+  <div style="margin: 20px 0;">
+    <input type="text" class="form-input" placeholder="Search..." 
+           [(ngModel)]="searchQuery" (input)="applyFilters()" />
+  </div>
+
+  <!-- Loading and Error Messages -->
+  <div *ngIf="isLoading" class="loading">Loading collection points...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- Points Table -->
+  <table *ngIf="!isLoading" class="point-table">
+    <thead>
+      <tr>
+        <th (click)="sortTable('adressePointCollecte')">
+          Address {{ getSortIcon('adressePointCollecte') }}
+        </th>
+        <th (click)="sortTable('numTelephonePointCollecte')">
+          Phone {{ getSortIcon('numTelephonePointCollecte') }}
+        </th>
+        <th (click)="sortTable('heureOuverturePointCollecte')">
+          Opening Hours {{ getSortIcon('heureOuverturePointCollecte') }}
+        </th>
+        <th (click)="sortTable('capacitePointCollecte')">
+          Capacity {{ getSortIcon('capacitePointCollecte') }}
+        </th>
+        <th (click)="sortTable('disponibilitePointCollecte')">
+          Status {{ getSortIcon('disponibilitePointCollecte') }}
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let point of filteredPoints">
+        <td>{{ point.adressePointCollecte }}</td>
+        <td>{{ point.numTelephonePointCollecte }}</td>
+        <td>{{ point.heureOuverturePointCollecte }} - {{ point.heureFermeturePointCollecte }}</td>
+        <td>{{ point.capacitePointCollecte }}</td>
+        <td>{{ point.disponibilitePointCollecte }}</td>
+        <td>
+          <!-- Edit Button -->
+          <button class="action-btn edit-btn" 
+                  (click)="openEditModal(point)"
+                  title="Edit">
+            ✏️
+          </button>
+          
+          <!-- Delete Button -->
+          <button class="action-btn delete-btn" 
+                  (click)="openDeleteModal(point.idPointCollecte!)"
+                  title="Delete">
+            🗑️
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Add/Edit Modal -->
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">{{ isEditMode ? 'Edit' : 'Add' }} Collection Point</h3>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <form #form="ngForm" (ngSubmit)="saveOrUpdate(form)">
+        <!-- Map -->
+        <div class="form-group">
+          <label class="form-label">Location (click on map to select)</label>
+          <div id="map"></div>
+          <input class="form-input" [(ngModel)]="selectedLocationName" name="location" readonly>
+          <div *ngIf="wasSubmitted && !point.latitude" class="error-message">
+            Please select a location on the map
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <input class="form-input" name="adressePointCollecte" type="text"
+                 [(ngModel)]="point.adressePointCollecte" #addressField="ngModel"
+                 required minlength="5" maxlength="1000">
+          <div *ngIf="(addressField.invalid && (addressField.dirty || addressField.touched)) || wasSubmitted" 
+               class="error-message">
+            <div *ngIf="addressField.errors?.['required']">Address is required</div>
+            <div *ngIf="addressField.errors?.['minlength']">Minimum 5 characters</div>
+            <div *ngIf="addressField.errors?.['maxlength']">Maximum 1000 characters</div>
+          </div>
+        </div>
+
+        <!-- Phone & Email -->
+        <div style="display: flex; gap: 15px;">
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Phone</label>
+            <input class="form-input" name="numTelephonePointCollecte" type="tel"
+                   [(ngModel)]="point.numTelephonePointCollecte" #phoneField="ngModel"
+                   required pattern="^[0-9]{8}$">
+            <div *ngIf="(phoneField.invalid && (phoneField.dirty || phoneField.touched)) || wasSubmitted" 
+                 class="error-message">
+              <div *ngIf="phoneField.errors?.['required']">Phone is required</div>
+              <div *ngIf="phoneField.errors?.['pattern']">8 digits required</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Email</label>
+            <input class="form-input" name="emailPointCollecte" type="email"
+                   [(ngModel)]="point.emailPointCollecte" #emailField="ngModel"
+                   required>
+            <div *ngIf="(emailField.invalid && (emailField.dirty || emailField.touched)) || wasSubmitted" 
+                 class="error-message">
+              <div *ngIf="emailField.errors?.['required']">Email is required</div>
+              <div *ngIf="emailField.errors?.['email']">Valid email required</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Opening Hours -->
+        <div style="display: flex; gap: 15px;">
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Opening Time</label>
+            <input class="form-input" name="heureOuverturePointCollecte" type="time"
+                   [(ngModel)]="point.heureOuverturePointCollecte" #openField="ngModel"
+                   required>
+            <div *ngIf="(openField.invalid && (openField.dirty || openField.touched)) || wasSubmitted" 
+                 class="error-message">
+              <div *ngIf="openField.errors?.['required']">Opening time is required</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Closing Time</label>
+            <input class="form-input" name="heureFermeturePointCollecte" type="time"
+                   [(ngModel)]="point.heureFermeturePointCollecte" #closeField="ngModel"
+                   required>
+            <div *ngIf="(closeField.invalid && (closeField.dirty || closeField.touched)) || wasSubmitted" 
+                 class="error-message">
+              <div *ngIf="closeField.errors?.['required']">Closing time is required</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Capacity & Status -->
+        <div style="display: flex; gap: 15px;">
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Capacity</label>
+            <input class="form-input" name="capacitePointCollecte" type="number" min="1"
+                   [(ngModel)]="point.capacitePointCollecte" #capacityField="ngModel"
+                   required>
+            <div *ngIf="(capacityField.invalid && (capacityField.dirty || capacityField.touched)) || wasSubmitted" 
+                 class="error-message">
+              <div *ngIf="capacityField.errors?.['required']">Capacity is required</div>
+              <div *ngIf="capacityField.errors?.['min']">Minimum capacity is 1</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Status</label>
+            <select class="form-input" name="disponibilitePointCollecte"
+                    [(ngModel)]="point.disponibilitePointCollecte" #statusField="ngModel"
+                    required>
+              <option value="DISPONIBLE">Available</option>
+              <option value="SATUREE">Saturated</option>
+              <option value="INDISPONIBLE">Unavailable</option>
+            </select>
+            <div *ngIf="(statusField.invalid && (statusField.dirty || statusField.touched)) || wasSubmitted" 
+                 class="error-message">
+              <div *ngIf="statusField.errors?.['required']">Status is required</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coordinates -->
+        <div style="display: flex; gap: 15px;">
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Latitude</label>
+            <input class="form-input" name="latitude" type="number" step="0.000001"
+                   [(ngModel)]="point.latitude" #latField="ngModel"
+                   required readonly>
+          </div>
+
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Longitude</label>
+            <input class="form-input" name="longitude" type="number" step="0.000001"
+                   [(ngModel)]="point.longitude" #lngField="ngModel"
+                   required readonly>
+          </div>
+        </div>
+
+        <!-- Available Days -->
+        <div class="form-group">
+          <label class="form-label">Available Days</label>
+          <div class="days-container">
+            <div *ngFor="let day of daysOfWeek" class="day-checkbox">
+              <input type="checkbox" [id]="day" [value]="day"
+                     [checked]="point.availableDays.includes(day)"
+                     (change)="updateDaySelection(day, $any($event.target).checked)">
+              <label [for]="day">{{ day | titlecase }}</label>
+            </div>
+          </div>
+          <div *ngIf="wasSubmitted && point.availableDays.length === 0" class="error-message">
+            At least one day must be selected
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-footer">
+          <button type="button" class="action-btn secondary-btn" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="action-btn primary-btn" [disabled]="isLoading">
+            {{ isEditMode ? 'Update' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showDeleteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirm Deletion</h3>
+        <button class="close-btn" (click)="closeDeleteModal()">&times;</button>
+      </div>
+      <div style="padding: 20px;">
+        Are you sure you want to delete this collection point?
+      </div>
+      <div class="form-footer">
+        <button type="button" class="action-btn secondary-btn" (click)="closeDeleteModal()">Cancel</button>
+        <button type="button" class="action-btn delete-btn" (click)="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

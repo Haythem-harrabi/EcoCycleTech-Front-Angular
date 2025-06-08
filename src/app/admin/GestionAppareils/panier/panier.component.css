@@ -1,0 +1,9 @@
+/* src/app/panier/panier.component.css */
+.table img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+  
+  .btn-outline-danger:hover {
+    color: white;
+  }

@@ -1,0 +1,147 @@
+<div class="eco-container">
+  <!-- En-tête -->
+  <div class="eco-header">
+    <div class="eco-header-content">
+      <h2 class="eco-title">
+        <i class="bi bi-headset"></i> Support des Réclamations
+      </h2>
+    </div>
+  </div>
+
+  <!-- Tableau -->
+  <div class="eco-table-container">
+    <table class="eco-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Responsable</th>
+          <th>Dates</th>
+          <th>Statut</th>
+          <th>Réclamation</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let supportReclamation of supportReclamations">
+          <td>{{ supportReclamation.idSupportReclamation }}</td>
+          <td>
+            <div class="eco-responsable">
+              <span class="eco-responsable-name">{{ supportReclamation.nomResponsable }}</span>
+              <span class="eco-responsable-id">ID: {{ supportReclamation.idResponsable }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="eco-dates">
+              <div class="eco-date-ouverte">
+                <i class="bi bi-calendar-event"></i>
+                {{ supportReclamation.dateOuvertureSupport | date:'dd/MM/yy' }}
+              </div>
+              <div *ngIf="supportReclamation.dateClotureSupport" class="eco-date-cloture">
+                <i class="bi bi-calendar-check"></i>
+                {{ supportReclamation.dateClotureSupport | date:'dd/MM/yy' }}
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="eco-status" 
+      [ngClass]="{
+        'eco-open': !supportReclamation.dateClotureSupport, 
+        'eco-closed': supportReclamation.dateClotureSupport
+      }">
+  {{ supportReclamation.dateClotureSupport ? 'Clôturé' : 'Ouvert' }}
+</span>
+          </td>
+          <td>
+            <span class="eco-reclamation-id">
+              #{{ supportReclamation.reclamation?.idReclamation || 'N/A' }}
+            </span>
+          </td>
+          <td class="eco-actions">
+            <button (click)="openEditForm(supportReclamation)" class="eco-edit-btn">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button (click)="deleteSupportReclamation(supportReclamation.idSupportReclamation!)" class="eco-delete-btn">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Formulaire d'édition -->
+  <div *ngIf="showEditForm" class="eco-form-overlay">
+    <div class="eco-form-card">
+      <div class="eco-form-header">
+        <h3>
+          <i class="bi bi-headset"></i>
+          {{ selectedSupportReclamation?.idSupportReclamation ? 'Modifier' : 'Créer' }} Support
+        </h3>
+        <button (click)="closeEditForm()" class="eco-close-btn">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      
+      <form>
+        <div class="eco-form-group">
+          <label>Responsable</label>
+          <div class="eco-form-row">
+            <input type="number" 
+                   class="eco-input"
+                   [(ngModel)]="selectedSupportReclamation!.idResponsable"
+                   name="idResponsable"
+                   placeholder="ID Responsable"
+                   required>
+            <input type="text"
+                   class="eco-input"
+                   [(ngModel)]="selectedSupportReclamation!.nomResponsable"
+                   name="nomResponsable"
+                   placeholder="Nom Responsable"
+                   required>
+          </div>
+        </div>
+
+        <div class="eco-form-group">
+          <label>Dates</label>
+          <div class="eco-form-row">
+            <input type="date"
+                   class="eco-input"
+                   [(ngModel)]="selectedSupportReclamation!.dateOuvertureSupport"
+                   name="dateOuvertureSupport"
+                   required>
+            <input type="date"
+                   class="eco-input"
+                   [(ngModel)]="selectedSupportReclamation!.dateClotureSupport"
+                   name="dateClotureSupport"
+                   placeholder="Date de clôture">
+          </div>
+        </div>
+
+        <div class="eco-form-group">
+          <label>Réclamation associée</label>
+          <select class="eco-input"
+                  [(ngModel)]="selectedSupportReclamation!.reclamation"
+                  name="reclamation"
+                  required>
+            <option *ngFor="let reclamation of reclamations" [ngValue]="{ idReclamation: reclamation.idReclamation }">
+              #{{ reclamation.idReclamation }} - {{ reclamation.titreReclamation }}
+            </option>
+          </select>
+        </div>
+
+        <div class="eco-form-actions">
+          <button type="button" 
+                  class="eco-secondary-btn"
+                  (click)="closeEditForm()">
+            Annuler
+          </button>
+          <button type="button"
+                  class="eco-primary-btn"
+                  (click)="saveSupportReclamation()">
+            {{ selectedSupportReclamation?.idSupportReclamation ? 'Mettre à jour' : 'Créer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

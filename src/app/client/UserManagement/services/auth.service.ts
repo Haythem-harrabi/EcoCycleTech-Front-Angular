@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap, catchError, map } from 'rxjs/operators';
@@ -24,13 +24,14 @@ export class AuthService {
 
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
+    private ngZone:NgZone,
     private socialAuthService: SocialAuthService
   ) {
     this.startTokenRefreshTimer();
     this.loadUserFromStorage();
-    
+
     // Subscribe to social auth state changes
     this.socialAuthService.authState.subscribe((user) => {
       if (user) {
@@ -45,7 +46,7 @@ export class AuthService {
     this.currentUserSubject.next(user);               // réveil du navbar
   }
 
-  
+
   notifyEmailVerified()    { this._emailVerified$.next(true); }
   hasUnverifiedMail(): boolean {
     return localStorage.getItem('emailNotVerified')=== 'true';
@@ -87,6 +88,7 @@ export class AuthService {
       return null;
     }
   }
+
 /*
    processSocialLogin(user: SocialUser): void {
     // Send the token to your backend for verification and JWT generation
@@ -115,7 +117,7 @@ export class AuthService {
       } else {
         endpoint = `${this.apiUrl}/auth/oauth2/login`; // fallback
       }
-    
+
       // Send the token to your backend
       this.http.post<any>(endpoint, {
         provider: user.provider.toLowerCase(),
@@ -132,7 +134,7 @@ export class AuthService {
         }
       });
     }
-  
+
   initializeGoogleSignIn(buttonId: string): void {
     // Make sure Google libraries are loaded
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
@@ -143,7 +145,7 @@ export class AuthService {
       console.error(`Button element with ID ${buttonId} not found`);
       return;
     }
-    
+
       google.accounts.id.initialize({
         client_id: '278407912957-ja8f7vuh07kn8u9br218sds1p4fe10tb.apps.googleusercontent.com', // Replace with your actual client ID
         callback: this.handleGoogleCredentialResponse.bind(this),
@@ -154,11 +156,11 @@ export class AuthService {
       // Render the button
       google.accounts.id.renderButton(
         document.getElementById(buttonId),
-        { 
-          theme: 'outline', 
+        {
+          theme: 'outline',
           size: 'large',
           text: 'signin_with',
-          width: 240 
+          width: 240
         }
       );
       console.log("google sign-in button rendered");
@@ -187,7 +189,7 @@ export class AuthService {
   }
 
 
-  //hedha baathtou khater njareb fi solution okhra 
+  //hedha baathtou khater njareb fi solution okhra
   // Google login - using the SocialAuthService
   loginWithGoogle(): void {
     // The button is rendered by Google's SDK, so this is just a fallback
@@ -243,14 +245,14 @@ export class AuthService {
           console.log('Invalid authentication response:', response);
           throw new Error('Invalid authentication response: Missing token');
         }
-        
+
         // Enhanced logging for debugging
         console.log('Login successful - User data:', {
           id: response.id,
           email: response.email,
           role: response.role
         });
-        
+
         this.handleAuthSuccess(response);
       }),
       catchError(error => {
@@ -261,7 +263,7 @@ export class AuthService {
           url: error.url,
           error: error.error
         });
-        
+
         // Rethrow with more context
         if (error instanceof HttpErrorResponse) {
           if (error.status === 401) {
@@ -273,8 +275,8 @@ export class AuthService {
       if (errorMsg.includes('inactive')) {
         throw new Error('Your account is inactive. Please contact support.');
       }
-      
-            
+
+
           throw new Error('Invalid email or password');
           } else if (error.status === 0) {
             throw new Error('Unable to connect to server');
@@ -298,18 +300,18 @@ export class AuthService {
   register(userData: any): Observable<any> {
     const formData = new FormData();
     console.log('Registering user with API URL:', `${this.apiUrl}/auth/register`);
-    
+
     Object.keys(userData).forEach(key => {
       if (key !== 'photoDeProfil' && key !== 'recaptchaToken' || userData[key] === null) {
         formData.append(key, userData[key]);
       }
     });
-    
+
     if (userData.photoDeProfil) {
       formData.append('photoDeProfil', userData.photoDeProfil, userData.photoDeProfil.name);
     }
-    
-    
+
+
     return this.http.post<any>(`${this.apiUrl}/auth/register`, formData).pipe(
       //tap(response => {
       //  if (response.token) {
@@ -332,7 +334,7 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
-  
+
   // Step 1: Request password reset (send OTP)
   forgotPassword(email: string): Observable<any> {
     const headers = new HttpHeaders().set('Accept', 'text/plain');
@@ -362,15 +364,15 @@ export class AuthService {
       })
     );
   }
-  
-  
+
+
   // Method to validate token on app startup
   validateToken(): Observable<boolean> {
     const token = this.getToken();
     if (!token) {
       return of(false);
     }
-  
+
     return this.http.get<any>(`${this.apiUrl}/auth/validate`).pipe(
       map(response => {
         if (response.valid) {
@@ -443,21 +445,25 @@ export class AuthService {
     const redirectUrl = sessionStorage.getItem('redirectUrl');
     if (redirectUrl) {
       sessionStorage.removeItem('redirectUrl');
-      this.router.navigateByUrl(redirectUrl);
+      this.ngZone.run(()=>{
+        this.router.navigateByUrl(redirectUrl);
+
+      });
     } else {
       this.redirectBasedOnRole(this.currentUserSubject.value?.role);
     }
   }
 
-  // Redirect user based on role
    redirectBasedOnRole(role: string): void {
+    this.ngZone.run(()=>
+    {
     if (role === 'ADMIN') {
       this.router.navigate(['/admin']);
     } else {
       this.router.navigate(['/']);
-    }
+    }});
   }
-  
+
   storeRedirectUrl(url: string): void {
     if (!url.includes('/login') && !url.includes('/verify-email')) {
       sessionStorage.setItem('redirectUrl', url);
@@ -485,7 +491,7 @@ export class AuthService {
       return null;
     }
   }
-  
+
   private clearAuthData(): void {
     localStorage.removeItem(this.AUTH_TOKEN_KEY);
     localStorage.removeItem(this.USER_DATA_KEY);
@@ -515,7 +521,7 @@ export class AuthService {
       })
     );
   }
-  
+
   // Get user ID
   getUserId(): number | null {
     const userData = localStorage.getItem(this.USER_DATA_KEY);
@@ -541,25 +547,23 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem(this.AUTH_TOKEN_KEY);
   }
-  
 
+  deleteOwnAccount(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/auth/users/${id}`);
+  }
   // User logout
   logout(): void {
-    // Call the backend logout endpoint if you have one
-    // this.http.post(`${this.apiUrl}/auth/logout`, {}).subscribe();
+
     this.socialAuthService.signOut().catch(() => {
       console.log('Social provider already signed out');
     });
     this.stopTokenRefreshTimer();
     this.clearAuthData();
-
-    
-    // Update behavior subject
-    //this.currentUserSubject.next(null);
-    
-    // Redirect to login page
+this.ngZone.run(()=>{
     this.router.navigate(['/login']);
-  }
+  });
+}
+
 }
 
 // Response interface for login

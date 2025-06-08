@@ -131,5 +131,10 @@ export class AdminLayoutComponent implements OnInit ,OnDestroy {
       document.body.classList.remove('admin-layout');
       
   }
+
+
+  
+  
+
   
 }

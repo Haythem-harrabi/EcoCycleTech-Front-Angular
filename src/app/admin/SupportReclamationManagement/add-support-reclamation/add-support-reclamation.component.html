@@ -1,0 +1,75 @@
+<div class="wrapper">
+  <div class="form-container">
+    <h2>Create Support Reclamation</h2>
+
+    <form (ngSubmit)="submitForm()" #supportForm="ngForm" class="support-form">
+
+      <div class="form-group">
+        <label for="idResponsable">ID Responsable:</label>
+        <input
+          type="number"
+          id="idResponsable"
+          name="idResponsable"
+          [(ngModel)]="supportReclamation.idResponsable"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="nomResponsable">Nom Responsable:</label>
+        <input
+          type="text"
+          id="nomResponsable"
+          name="nomResponsable"
+          [(ngModel)]="supportReclamation.nomResponsable"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dateOuvertureSupport">Date Ouverture:</label>
+        <input
+          type="date"
+          id="dateOuvertureSupport"
+          name="dateOuvertureSupport"
+          [(ngModel)]="supportReclamation.dateOuvertureSupport"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dateClotureSupport">Date Clôture:</label>
+        <input
+          type="date"
+          id="dateClotureSupport"
+          name="dateClotureSupport"
+          [(ngModel)]="supportReclamation.dateClotureSupport"
+          required
+        />
+      </div>
+
+      <div class="form-group" *ngIf="supportReclamation.reclamation">
+        <label for="idReclamation">Réclamation:</label>
+        <select
+          id="idReclamation"
+          name="idReclamation"
+          [(ngModel)]="supportReclamation.reclamation.idReclamation"
+          required
+        >
+          <option value="" disabled>Select a Reclamation</option>
+          <option *ngFor="let rec of reclamations" [value]="rec.idReclamation">
+            {{ rec.titreReclamation }} (ID: {{ rec.idReclamation }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">Submit</button>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        <p>{{ errorMessage }}</p>
+      </div>
+    </form>
+  </div>
+</div>

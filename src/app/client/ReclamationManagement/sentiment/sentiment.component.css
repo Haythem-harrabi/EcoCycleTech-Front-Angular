@@ -1,0 +1,66 @@
+.sentiment-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.sentiment-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.progress {
+  height: 25px;
+  border-radius: 4px;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+/* Badge colors */
+.sentiment-badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.sentiment-badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #212529;
+}
+
+.sentiment-badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .border-end {
+    border-right: none !important;
+    padding-right: 0 !important;
+    margin-bottom: 1.5rem;
+  }
+  .ps-3 {
+    padding-left: 0 !important;
+  }
+  .star-red {
+    color: red !important;
+  }
+  .star-yellow {
+    color: #a29410 !important; /* Une teinte de jaune plus claire */
+  }
+}
+
+
+
+.info-box {
+  transition: transform 0.3s ease;
+}
+.info-box:hover {
+  transform: translateY(-5px);
+  background-color: #f8f9fa; /* slightly lighter on hover */
+}

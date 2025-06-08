@@ -1,0 +1,99 @@
+<div class="payment-success-container">
+  <mat-card>
+    <mat-card-header class="success-header">
+      <mat-card-title>
+        <i class="fas fa-check-circle success-icon"></i>
+        Paiement réussi
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Génération de votre facture...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="errorMessage" class="error-state">
+        <div class="alert alert-danger">
+          <i class="fas fa-exclamation-triangle"></i>
+          {{ errorMessage }}
+        </div>
+        <button mat-raised-button color="primary" (click)="navigateHome()">
+          Retour à l'accueil
+        </button>
+      </div>
+
+      <!-- Success State -->
+      <div *ngIf="!isLoading && !errorMessage && facture" class="success-content">
+        <div class="row">
+          <div class="col-md-7 reservation-details">
+            <h3>Détails de la facture</h3>
+            <mat-list>
+              <mat-list-item>
+                <span matListItemTitle>Référence</span>
+                <span>{{ facture.reference || 'N/A' }}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <span matListItemTitle>Client</span>
+                <span>{{ reservation.user?.nom }} {{ reservation.user?.prenom }}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <span matListItemTitle>Date</span>
+                <span>{{ reservation.date | date:'medium' }}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <span matListItemTitle>Total</span>
+                <span class="price">{{ reservation.total | currency:'TND':'symbol':'1.2-2' }}</span>
+              </mat-list-item>
+              <mat-list-item>
+                <span matListItemTitle>Statut</span>
+                <span class="status">{{ facture.status || 'PAID' }}</span>
+              </mat-list-item>
+            </mat-list>
+
+            <div class="items-list">
+              <h4>Appareils réservés:</h4>
+              <mat-chip-listbox>
+                <mat-chip-option *ngFor="let item of reservation.panier">
+                  {{ item.nom }} ({{ item.prix | currency:'TND':'symbol':'1.2-2' }})
+                </mat-chip-option>
+              </mat-chip-listbox>
+            </div>
+
+            <div class="invoice-actions">
+              <button mat-raised-button color="primary" (click)="viewInvoice()">
+                <i class="fas fa-file-pdf"></i> Voir la facture
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-5 qr-section">
+            <h3>Votre facture numérique</h3>
+            <div class="qr-code-wrapper">
+              <qrcode [qrdata]="qrCodeData" 
+                     [width]="220"
+                     [errorCorrectionLevel]="'M'"
+                     [margin]="5"></qrcode>
+              <div class="qr-actions">
+                <button mat-raised-button 
+                        color="primary"
+                        (click)="downloadQRCode()"
+                        class="action-btn">
+                  <i class="fas fa-download"></i> QR Code
+                </button>
+                <button mat-raised-button 
+                        color="accent"
+                        (click)="viewInvoice()"
+                        class="action-btn">
+                  <i class="fas fa-external-link-alt"></i> Ouvrir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

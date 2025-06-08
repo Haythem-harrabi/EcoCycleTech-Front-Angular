@@ -1,0 +1,284 @@
+.update-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+  }
+  
+  .form-card {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #34495e;
+  }
+  
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #dcdde1;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+  }
+  
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+  }
+  
+  .error {
+    margin-top: 0.3rem;
+    color: #e74c3c;
+    font-size: 0.85rem;
+  }
+  
+  .loading-message,
+  .error-message {
+    text-align: center;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+  
+  .loading-message {
+    background-color: #fdf6e3;
+    color: #c79500;
+  }
+  
+  .error-message {
+    background-color: #fdecea;
+    color: #c0392b;
+  }
+  
+  .button-group {
+    margin-top: 1.5rem;
+  }
+  
+  button {
+    font-size: 1.1rem;
+    padding: 0.75rem;
+    border-radius: 8px !important;
+  }
+  :root {
+    --eco-primary: #2e7d32;
+    --eco-secondary: #81c784;
+    --eco-light: #f1f8e9;
+    --eco-dark: #1b5e20;
+    --eco-error: #d32f2f;
+  }
+  
+  /* Conteneur principal */
+  .update-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f9f5;
+    padding: 2rem;
+  }
+  
+  /* Carte de formulaire */
+  .eco-form-card {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.1);
+    padding: 2rem;
+  }
+  
+  /* En-tête */
+  .eco-form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .eco-form-title {
+    color: var(--eco-primary);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .eco-form-subtitle {
+    color: #4c8c4a;
+    font-size: 0.95rem;
+  }
+  
+  /* États */
+  .eco-loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: #4c8c4a;
+  }
+  
+  .eco-spinner {
+    width: 50px !important;
+    height: 50px !important;
+    margin-bottom: 1rem;
+  }
+  
+  .eco-error-message {
+    background: #f8d7da;
+    color: var(--eco-error);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* Champs de formulaire */
+  .eco-form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .eco-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+  
+  .eco-required {
+    color: var(--eco-error);
+    font-weight: bold;
+  }
+  
+  .eco-form-input,
+  .eco-form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #c8e6c9;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f8fbf8;
+    transition: all 0.3s ease;
+  }
+  
+  .eco-form-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .eco-form-input:focus,
+  .eco-form-textarea:focus {
+    border-color: var(--eco-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+  }
+  
+  .eco-input-error {
+    border-color: var(--eco-error) !important;
+    background-color: #ffebee;
+  }
+  
+  .eco-error-text {
+    color: var(--eco-error);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* Boutons */
+  .eco-button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .eco-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .eco-btn-primary {
+    background-color: #388e3c !important;
+    color: white !important;
+  }
+  
+  .eco-btn-secondary {
+    background-color: white !important;
+    color: #388e3c !important;
+    border: 2px solid #388e3c !important;
+  }
+  
+  .eco-btn-primary:hover:not([disabled]) {
+    background-color: var(--eco-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(46, 125, 50, 0.2);
+  }
+  
+ 
+  
+  .eco-btn-secondary:hover {
+    background-color: #f1f8e9;
+  }
+  
+  .eco-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .update-container {
+      padding: 1rem;
+    }
+    
+    .eco-form-card {
+      padding: 1.5rem;
+    }
+    
+    .eco-button-group {
+      flex-direction: column;
+    }
+  }
+
+  .required-asterisk {
+    color: #d32f2f; /* Same red as error messages */
+    font-weight: bold;
+    margin-left: 3px;
+  }

@@ -1,0 +1,22 @@
+<div>
+  <h2>Get Recommendations</h2>
+  <input [(ngModel)]="query" placeholder="Enter a keyword (e.g., frigidaire)" />
+  <button (click)="fetchRecommendations()">Get Recommendations</button>
+
+  <div *ngIf="recommendations && recommendations.length > 0">
+    <h3>Recommendations:</h3>
+    <ul>
+      <li *ngFor="let item of recommendations">
+        <strong>{{ item.name }}</strong>: {{ item.description }}
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="recommendations && recommendations.length === 0">
+    <p>No recommendations found.</p>
+  </div>
+
+  <div *ngIf="error">
+    <p style="color: red;">{{ error }}</p>
+  </div>
+</div>

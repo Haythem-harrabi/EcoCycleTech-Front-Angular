@@ -8,7 +8,9 @@ export interface User {
     isActive: boolean;
     isBanned: boolean;
     createdAt: Date;
+    DateNaissance?:Date;
     lastLogin: Date;
     role: string;
     age?: number;
+   
   }

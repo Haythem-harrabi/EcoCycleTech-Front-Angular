@@ -25,8 +25,11 @@ export class AuthInterceptor implements HttpInterceptor {
     '/api/auth/resend-verification', // For resending verification emails
     '/api/auth/forgot-password', // For password reset
     '/api/auth/reset-password', // For resetting password
-    '/api/chat/ask'
-
+    '/api/chat/ask',
+    '/api/appareils',
+    '/api/reservations',
+    '/api/reclamations',
+    'http://localhost:5000'
   ];
 
   constructor(
@@ -85,23 +88,23 @@ export class AuthInterceptor implements HttpInterceptor {
   private handle401Error(
     request: HttpRequest<any>, next: HttpHandler
   ): Observable<HttpEvent<any>> {
-  
+
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
-  
+
       // (tu pourrais tenter un refresh token ici)
-  
+
       this.authService.logout();
       this.router.navigate(
         ['/login'],
         { queryParams: { returnUrl: this.router.url } }
       );
-  
+
       //  ⬇️  renvoie un observable "vide" mais typé
       return of<HttpEvent<any>>();
     }
-  
+
     return this.refreshTokenSubject.pipe(
       filter(token => token != null),
       take(1),
@@ -110,7 +113,7 @@ export class AuthInterceptor implements HttpInterceptor {
       )
     );
   }
-  
+
 
   private handle403Error(): void {
     const currentUser = this.authService.getCurrentUser();

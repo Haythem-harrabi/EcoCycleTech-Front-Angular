@@ -1,0 +1,159 @@
+/* Fullscreen centering setup */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f9f5;
+  padding: 20px;
+}
+
+/* Container styles */
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 500px;
+  margin: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect for container */
+.container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.form-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2e7d32;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Form group */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Label */
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* Input fields */
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #f8fbf8;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #81c784;
+  box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.2);
+  background-color: white;
+}
+
+/* Textarea */
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Error messages */
+.error-message {
+  color: #d32f2f;
+  font-size: 13px;
+  margin-top: 6px;
+  padding-left: 5px;
+}
+
+/* Button */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #2e7d32;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-btn:hover:enabled {
+  background-color: #1b5e20;
+  transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .container {
+      padding: 25px;
+      margin: 15px;
+  }
+  
+  .form-title {
+      font-size: 22px;
+  }
+}
+
+/* Tagline for eco */
+.eco-tagline {
+  text-align: center;
+  color: #4c8c4a;
+  margin-bottom: 25px;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Required asterisk */
+.required-asterisk {
+  color: #d32f2f; /* Same red as error messages */
+  font-weight: bold;
+  margin-left: 3px;
+}

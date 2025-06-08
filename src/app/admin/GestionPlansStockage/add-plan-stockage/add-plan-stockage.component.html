@@ -1,1 +1,157 @@
-<p>add-plan-stockage works!</p>
+<div class="plan-form-wrapper">
+  <div class="plan-form-container animated fadeInUp">
+  <h2 *ngIf="!this.editMode" class="p-text-center p-mb-4">Create New Storage Plan</h2>
+  <h2 *ngIf="this.editMode" class="p-text-center p-mb-4">Update Storage Plan {{this.id}}</h2>
+
+  <form [formGroup]="planForm" (ngSubmit)="onSubmit()">
+    <div class="p-grid p-formgrid">
+
+      <!-- Title -->
+      <div class="inputdiv p-field p-col-12 p-md-6">
+        <div class="p-float-label">
+       
+        <input pInputText id="title" formControlName="titre"
+               [ngClass]="{ 'ng-invalid ng-dirty': f['titre'].invalid && (f['titre'].dirty || f['titre'].touched) }">
+        <label for="title" style="font-size: 17px;">Title*</label>
+        </div>
+        
+        <small *ngIf="f['titre'].invalid && (f['titre'].dirty || f['titre'].touched)" class="p-error">
+          <span *ngIf="f['titre'].errors?.['required']">Title is required</span>
+          <span *ngIf="f['titre'].errors?.['minlength']">Minimum 3 characters required</span>
+        </small>
+      </div>
+
+      <!-- Max Size -->
+      <div class="inputdiv p-field p-col-12 p-md-6">
+        <div class="p-float-label">
+        
+        <p-inputNumber id="maxSize" formControlName="tailleMax" [min]="0" [step]="0.01" mode="decimal"
+                       [ngClass]="{ 'ng-invalid ng-dirty': f['tailleMax'].invalid && (f['tailleMax'].dirty || f['tailleMax'].touched) }"></p-inputNumber>
+        <label for="maxSize">Maximum Size (GB)*</label>
+      </div>
+        <small *ngIf="f['tailleMax'].invalid && (f['tailleMax'].dirty || f['tailleMax'].touched)" class="p-error">
+          <span *ngIf="f['tailleMax'].errors?.['required']">Size is required</span>
+          <span *ngIf="f['tailleMax'].errors?.['min']">Must be greater than 0</span>
+          <span *ngIf="f['tailleMax'].errors?.['max']">Must be 100gb or lower</span>
+        </small>
+      </div>
+
+      <!-- Price -->
+      <div class="inputdiv p-field p-col-12 p-md-6">
+        <div class="p-float-label">
+          <p-inputNumber
+            inputId="price"
+            formControlName="prix"
+            [min]=""
+            [step]="0.01"
+            mode="currency"
+            currency="TND"
+            locale="en-TN"
+            currencyDisplay="code"
+            [ngClass]="{ 'ng-invalid ng-dirty': f['prix'].invalid && (f['prix'].dirty || f['prix'].touched) }">
+          </p-inputNumber>
+          <label for="price">Price (TND)*</label>
+          
+        </div>
+        <small *ngIf="f['prix'].invalid && (f['prix'].dirty || f['prix'].touched)" class="p-error">
+          <span *ngIf="f['prix'].errors?.['required']">Price is required</span>
+          <span *ngIf="f['prix'].errors?.['min']">Must be a positive value</span>
+        </small>
+       
+      </div>
+
+      <!-- Premium Selection -->
+<div class="inputdiv premium-select p-field p-col-12 p-md-6">
+  <div class="p-float-label">
+    <p-dropdown 
+      id="premium"
+      formControlName="premium"
+      [options]="premiumOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Select type"
+      class="dropdown"
+      [ngClass]="{ 'ng-invalid ng-dirty': f['premium'].invalid && (f['premium'].dirty || f['premium'].touched) }">
+    </p-dropdown>
+    <label for="premium">Type*</label>
+  </div>
+  <small *ngIf="f['premium'].invalid && (f['premium'].dirty || f['premium'].touched)" class="p-error">
+    Please select a type
+  </small>
+</div>
+      
+
+
+    </div>
+
+    <div class="btn-div p-d-flex p-jc-end p-mt-4">
+      <button *ngIf="!this.editMode" pButton type="submit" label="Save" icon="pi pi-save" class="p-button-success" [disabled]="planForm.invalid" > </button>
+      <button *ngIf="this.editMode" pButton type="submit" label="Update" icon="pi pi-save" class="p-button-success" [disabled]="planForm.invalid" > </button>
+    </div>
+  </form>
+</div>
+
+
+
+<!-- Storage Spaces Section - Only visible in edit mode -->
+<div *ngIf="editMode" class="storage-spaces-container p-mt-5 animated fadeIn">
+  <div class="p-d-flex p-ai-center p-jc-between p-mb-4">
+    <h3>Associated Storage Spaces</h3>
+    <span class="p-badge p-mr-2">{{ espaces.length || 0 }} spaces</span>
+  </div>
+
+  <p-table [value]="espaces" [rows]="5" [paginator]="true" 
+           styleClass="p-datatable-striped p-datatable-gridlines"
+           [loading]="loadingSpaces">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Owner</th>
+        <th>Used Space</th>
+        <th>Status</th>
+        <th>Created On</th>
+        <th>Expires On</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-espace>
+      <tr>
+        <td>{{ espace.user?.nom }} {{ espace.user?.prenom }}</td>
+        <td>
+          <p-progressBar [value]="(espace.usedTaille / this.PlanSize) * 100" 
+                         [showValue]="false"></p-progressBar>
+          {{ espace.usedTaille | number:'1.2-2' }} GB / {{ this.PlanSize | number:'1.2-2' }} GB
+        </td>
+        <td>
+          <p-tag [severity]="getStatusSeverity(espace.statut)" 
+                  [value]="espace.statut"
+                    [icon]="getStatusIcon(espace.statut)">
+            </p-tag>
+        </td>
+        <td>{{ espace.dateCreation | date:'mediumDate' }}</td>
+        <td>{{ espace.dateExpiration | date:'mediumDate' }}</td>
+        <td>
+          <button pButton icon="pi pi-lock" 
+                  class="block-btn p-button-rounded p-button-danger p-button-sm p-mr-2" 
+                  [disabled]="espace.statut=='Blocked'"
+                  (click)="blockSpace(espace.idEspace)"
+                  pTooltip="Block this space" tooltipPosition="top"></button>
+          <button pButton icon="pi pi-unlock" 
+                  class="p-button-rounded p-button-info p-button-sm" 
+                  [disabled]="espace.statut!=='Blocked'"
+                  (click)="UnblockSpace(espace.idEspace)"
+                  pTooltip="Unblock" tooltipPosition="top"></button> 
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="p-text-center">No storage spaces found for this plan</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+</div>
+
+
+
+

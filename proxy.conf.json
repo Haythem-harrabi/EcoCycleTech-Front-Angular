@@ -4,5 +4,13 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
+  },
+  "/weather-api": {
+    "target": "https://api.openweathermap.org",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/weather-api": ""
+    }
   }
 }

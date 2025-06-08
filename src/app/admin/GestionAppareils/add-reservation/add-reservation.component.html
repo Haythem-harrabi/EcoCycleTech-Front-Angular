@@ -1,0 +1,77 @@
+<div style="background-color: white;">
+<main class="col-md-10 offset-md-2 p-4" style="margin-left: 16.66667%; padding-top: 20px;">
+  <div class="max-w-2xl mx-auto p-4">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white">
+        {{ isEditMode ? 'Edit Reservation' : 'New Reservation' }}
+      </div>
+
+      <div class="card-body p-4">
+        <!-- Error message -->
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+
+        <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+
+          <!-- Date field -->
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" formControlName="date" class="form-control"
+            [min]="minDate"
+            [ngClass]="{ 'is-invalid': reservationForm.get('date')?.invalid && reservationForm.get('date')?.touched }">
+
+            <div *ngIf="reservationForm.get('date')?.invalid && reservationForm.get('date')?.touched" class="invalid-feedback">
+              Valid date is required
+            </div>
+          </div>
+
+          <!-- Selected devices -->
+         <!-- Selected devices section - updated to show dropdown for editing -->
+<div formArrayName="appareils">
+  <div *ngFor="let appareil of appareilsArray.controls; let i = index" [formGroupName]="i" class="mb-3 p-3 border rounded">
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label">Device</label>
+        <select formControlName="idAppareil" class="form-control" (change)="onAppareilChange($event, i)">
+          <option value="">Select a device</option>
+          <option *ngFor="let app of allAppareils" [value]="app.idAppareil" [selected]="app.idAppareil === appareil.get('idAppareil')?.value">
+            {{ app.nom }} - {{ app.prix | currency:'TND' }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Price</label>
+        <input type="number" formControlName="prix" class="form-control" readonly>
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <button type="button" class="btn btn-danger" (click)="removeAppareil(i)">
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add new device button -->
+<div class="mb-3">
+  <button type="button" class="btn btn-primary" (click)="addNewAppareil()">
+    Add Another Device
+  </button>
+</div>
+          <!-- Total -->
+          <div class="mb-4 p-3 bg-light rounded">
+            <h4 class="h5 mb-0">Total: {{ reservationForm.get('total')?.value | currency:'TND' }}</h4>
+          </div>
+
+          <!-- Submit button -->
+          <button type="submit" [disabled]="isLoading || reservationForm.invalid" class="btn btn-success w-100">
+            <span *ngIf="!isLoading">{{ isEditMode ? 'Update Reservation' : 'Confirm Reservation' }}</span>
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+</div>

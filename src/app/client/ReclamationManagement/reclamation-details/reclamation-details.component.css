@@ -1,0 +1,59 @@
+.loading-message, .error-message {
+    text-align: center;
+    font-size: 16px;
+    color: #999;
+    margin: 20px;
+  }
+  
+  .card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    padding: 20px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .card-header {
+    background-color: #4CAF50;  /* Green background */
+    color: white;
+    padding: 15px;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+  }
+  
+  .card-body {
+    padding: 15px;
+  }
+  
+  .card-body p {
+    margin: 10px 0;
+  }
+  
+  .card-body p strong {
+    font-weight: bold;
+  }
+  
+  .card-body span {
+    font-weight: bold;
+  }
+  
+  /* Status color classes */
+  .status-pending {
+    color: #FF9800; /* Orange for Pending */
+  }
+  
+  .status-completed {
+    color: #4CAF50; /* Green for Completed */
+  }
+  
+  .status-in-progress {
+    color: #2196F3; /* Blue for In Progress */
+  }
+  
+  .status-cancelled {
+    color: #F44336; /* Red for Cancelled */
+  }
+  

@@ -1,0 +1,319 @@
+<section class="events-section view-transition">
+  
+<div class="events-container">
+
+  
+  <!-- Hero Banner Start -->
+  <div class="hero-banner" *ngIf="isClient">
+    <div class="overlay">
+      <h1>Events</h1>
+      <p>Welcome to our events page</p>
+    </div>
+  </div>
+  <!-- Hero Banner End -->
+  
+  <!-- Loading Indicator Start -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading events...</p>
+  </div>
+  <!-- Loading Indicator End -->
+
+  <!-- Error Message Start -->
+  <div class="error-container" *ngIf="error">
+    <div class="error-message">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+    </div>
+  </div>
+  <!-- Error Message End -->
+  
+
+  <!-- Events List Section Start -->
+  <section class="events-section" *ngIf="!loading && !error">
+    <div class="container">
+      
+      <!-- Section Title Container Start -->
+      <div class="section-title-container" >
+        <button class="nav-arrow left-arrow" (click)="changeView('previous')" *ngIf=" isClient  && currentView !== 'Previous Events'">
+          <i class="pi pi-angle-left"></i>
+        </button>
+        <h2 class="section-title">{{ currentView }}</h2>
+        <button class="nav-arrow right-arrow" (click)="changeView('next')" *ngIf=" isClient  && currentView !== 'Live Events'">
+          <i class="pi pi-angle-right"></i>
+        </button>
+      </div>
+      <!-- Section Title Container End -->
+      <div class="title-with-button">
+        <button *ngIf="isAdmin && currentView === 'All Events'" 
+                class="add-event-btn"
+                (click)="navigateToNewEvent()">
+          <i class="pi pi-plus"></i> Add New Event
+        </button> 
+        <button pButton 
+        icon="pi pi-robot" 
+        label="AI Event Assistant"
+        (click)="navigateToAIAssistant()"
+        class="p-button-help" *ngIf=" isAdmin"></button>
+      </div>
+      <!-- Sort Options Start -->
+      <div class="sort-options" *ngIf="currentView === 'All Events'">
+        <select [(ngModel)]="selectedSort" (change)="onSortChange()" class="sort-select">
+          <option value="oldest">Oldest First</option>
+          <option value="newest">Newest First</option>
+        </select>
+      </div>
+      <!-- Sort Options End -->
+ <!-- Search by Name Only -->
+ <div class="search-bar" *ngIf="currentView === 'All Events'" >
+  <i class="pi pi-search"></i>
+  <input 
+    type="text" 
+    [(ngModel)]="searchQuery" 
+    (input)="filterByName()" 
+    placeholder="Search by event name..."
+    class="search-input"
+  >
+</div>    
+ <!-- Search by Name Only End -->
+
+      <!-- Featured Event Container Start -->
+      <div class="featured-event-container">
+        <!-- Navigation Arrows -->
+        <button class="nav-arrow left-arrow" 
+                (click)="prevEvent()" 
+                [disabled]="currentEventIndex === 0"
+                *ngIf="currentView === 'Previous Events' || currentView === 'Upcoming Events' && evenements.length > 1">
+          <i class="pi pi-angle-left"></i>
+        </button>
+        <button class="nav-arrow right-arrow" 
+                (click)="nextEvent()" 
+                [disabled]="currentEventIndex === 2 || currentEventIndex >= evenements.length - 1"
+                *ngIf="currentView === 'Previous Events' || currentView === 'Upcoming Events' && evenements.length > 1">
+          <i class="pi pi-angle-right"></i>
+        </button>
+
+        <!-- Featured Event Start -->
+        <div class="featured-event" *ngIf="evenements.length > 0 && currentView !== 'All Events' && currentView !== 'Live Events' && isClient">
+          <div class="featured-image">
+            <img *ngIf="currentView==='Upcoming Events'" src="assets/img/events/soon.jpg "[alt]="evenements[currentEventIndex].nomEvenement">
+            <img *ngIf="currentView==='Previous Events'" src="assets/img/events/previous.jpg "[alt]="evenements[currentEventIndex].nomEvenement">
+          </div>
+          <div class="featured-content">
+            <h3>{{ evenements[currentEventIndex].nomEvenement }}</h3>
+            <div class="event-details">
+              <div class="detail">
+                <i class="pi pi-calendar"></i>
+                <span>{{ evenements[currentEventIndex].dateEvenement | date:'mediumDate' }} 
+                  at {{ getAdjustedTime(evenements[currentEventIndex].dateEvenement) }}</span>
+              </div>
+              <div class="detail">
+                <i class="pi pi-map-marker"></i>
+                <span>{{ evenements[currentEventIndex].localisationEvenement}} , {{evenements[currentEventIndex].provenanceEvenement}}</span>
+              </div>
+              <div class="detail">
+                <i class="pi pi-tag"></i>
+                <span>TND {{ evenements[currentEventIndex].prixEvenement | number:'1.2-2' }}</span>
+              </div>
+                     <!-- Add weather display here -->
+
+              <div class="detail" *ngIf="weatherData[evenements[currentEventIndex].idEvenement] as weather">
+                <i class="pi pi-cloud"></i>
+                <span>
+                  {{ weather.temp }} {{ weather.icon }}
+                </span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button *ngIf="currentView === 'Upcoming Events'" class="register-btn" 
+              [class.registration-closed]="!isRegistrationOpen(evenements[currentEventIndex]) || evenements[currentEventIndex].nbrPlacesEvenement ===0"
+              [disabled]="!isRegistrationOpen(evenements[currentEventIndex]) || evenements[currentEventIndex].nbrPlacesEvenement ===0"   (click)="registerForEvent(evenements[currentEventIndex])">
+              {{  evenements[currentEventIndex].nbrPlacesEvenement === 0 ? 'Sold Out' : isRegistrationOpen(evenements[currentEventIndex]) ? 'Register Now' : 'Time\'s up' }} </button>
+              <button class="details-btn" (click)="toggleEventDetails(evenements[currentEventIndex].idEvenement)">
+                {{ eventDetailsVisibility[evenements[currentEventIndex].idEvenement] ? 'Details' : 'Details' }}
+              </button>
+              <button class="directions-btn" (click)="openGoogleMaps(evenements[currentEventIndex].localisationEvenement)" *ngIf="currentView === 'Upcoming Events'">
+                <i class="pi pi-map-marker"></i> Maps
+              </button>
+              <ng-container *ngIf="isPastEvent(evenements[currentEventIndex])">
+                <button *ngIf="evenements[currentEventIndex].aftermovie" 
+                        class="aftermovie-btn" 
+                        (click)="openAftermovie(evenements[currentEventIndex].aftermovie)">
+                  Aftermovie
+                </button>
+                <button *ngIf="!evenements[currentEventIndex].aftermovie" 
+                        class="no-aftermovie-btn" 
+                        disabled >
+                  No Aftermovie
+                </button>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <!-- Featured Event End -->
+      </div>
+      <!-- Featured Event Container End -->
+
+      <!-- Deadline Card - Now placed AFTER the featured event -->
+      <div class="deadline-container" *ngIf="currentView === 'Upcoming Events' && evenements.length > 0" >
+        <div class="deadline-card" [class.urgent]="isDeadlineUrgent(evenements[currentEventIndex])" >
+          <div class="deadline-header"> Registration Deadline</div>
+          <div class="deadline-date">
+            {{ getDeadline(evenements[currentEventIndex].dateEvenement) | date:'mediumDate' }} 
+            at 18:00
+          </div>
+          <div class="countdown">
+            <span *ngIf="getTimeRemaining(getDeadline(evenements[currentEventIndex].dateEvenement)).days > 0">
+              {{ getTimeRemaining(getDeadline(evenements[currentEventIndex].dateEvenement)).days }}d
+            </span>
+            {{ getTimeRemaining(getDeadline(evenements[currentEventIndex].dateEvenement)).hours }}h
+            {{ getTimeRemaining(getDeadline(evenements[currentEventIndex].dateEvenement)).minutes }}m
+          </div>
+          <div class="deadline-header" *ngIf="evenements[currentEventIndex].nbrPlacesEvenement <10 && evenements[currentEventIndex].nbrPlacesEvenement >0">
+            Hurry up! Only few places left!
+          </div>
+        </div>
+      </div>
+      <div class="details-box" *ngIf="eventDetailsVisibility[evenements[currentEventIndex].idEvenement]&& (currentView === 'Previous Events' || currentView === 'Upcoming Events')"  >
+        <div [innerHTML]="getEventDetailsText(evenements[currentEventIndex])"></div>
+        <button class="close-details" (click)="toggleEventDetails(evenements[currentEventIndex].idEvenement)">
+          <i class="pi pi-times"></i>
+        </button>       
+    </div> 
+
+    </div>
+
+    <!-- All Events List View Start -->
+    <div *ngIf="currentView === 'All Events' && filteredEvents.length > 0 " class="all-events-list">
+      <div class="event-card" *ngFor="let event of filteredEvents">
+         <!-- No Events Message -->
+        <div class="event-image">
+          <img src="assets/img/events/event.jpg" [alt]="event.nomEvenement">
+        </div>
+        <div class="event-content">
+          <h4>{{ event.nomEvenement }}</h4>
+          <div class="event-details">
+            <div class="detail">
+              <i class="pi pi-calendar"></i>
+              <span>{{ event.dateEvenement | date:'mediumDate' }} at {{ getAdjustedTime(event.dateEvenement) }}</span>
+            </div>
+            <div class="detail">
+              <i class="pi pi-map-marker"></i>
+              <span>{{ event.localisationEvenement }} , {{event.provenanceEvenement}}</span>
+            </div>
+            <div class="detail">
+              <i class="pi pi-tag"></i>
+              <span>TND {{ event.prixEvenement | number:'1.2-2' }}</span>
+            </div>
+            <!-- Add weather display here -->
+    <div class="detail" *ngIf="weatherData[event.idEvenement] as weather">
+      <i class="pi pi-cloud"></i>
+      <span>
+        {{ weather.temp }} {{ weather.icon }}
+      </span>
+    </div>
+  </div>
+  <div class="card-actions">
+    <!-- Details button (for clients) -->
+    <button class="details-btn" (click)="toggleEventDetails(event.idEvenement)" *ngIf="isClient">
+      {{ eventDetailsVisibility[event.idEvenement] ? 'Hide Details' : 'View Details' }}
+    </button>
+
+    <!-- Live Event Indicator (shows for all users) -->
+    <button *ngIf="isLiveEvent(event)" class="live-btn" [class.blink]="shouldBlink">
+      LIVE
+    </button>
+
+    <!-- Admin buttons (always show for admin, regardless of live status) -->
+    <ng-container *ngIf="isAdmin">
+      <button class="update-btn" (click)="editEvent(event)">
+        <i class="pi pi-pencil"></i>
+      </button>
+      <button class="delete-btn" (click)="deleteEvenement(event.idEvenement)">
+        <i class="pi pi-trash"></i>
+      </button>
+    </ng-container>
+
+    <!-- Aftermovie buttons (only for past events and clients) -->
+    <ng-container *ngIf="isPastEvent(event) && isClient && !isLiveEvent(event)">
+      <button *ngIf="event.aftermovie" class="aftermovie-btn" (click)="openAftermovie(event.aftermovie)">
+        Aftermovie
+      </button>
+      <button *ngIf="!event.aftermovie" class="no-aftermovie-btn" disabled>
+        No Aftermovie
+      </button>
+    </ng-container>
+  </div>
+
+  <!-- Details box (keep your existing code) -->
+  <div class="details-box" *ngIf="eventDetailsVisibility[event.idEvenement] && isClient">
+    <div [innerHTML]="getEventDetailsText(event)"></div>
+            <button class="close-details" (click)="toggleEventDetails(event.idEvenement)">
+              <i class="pi pi-times"></i>
+            </button>
+  </div>
+ </div>   
+ </div>
+</div>
+    
+    <!-- All Events List View End -->
+
+    <!-- Live Events List View Start -->
+    <div *ngIf="currentView === 'Live Events' && evenements.length > 0 " class="all-events-list">
+      <div class="event-card" *ngFor="let event of evenements">
+        <div class="event-image">
+          <img src="assets/img/events/live.jpg" [alt]="event.nomEvenement">
+        </div>
+        <div class="event-content">
+          <h4>{{ event.nomEvenement }}</h4>
+          <div class="event-details">
+            <div class="detail">
+              <i class="pi pi-calendar"></i>
+              <span>{{ event.dateEvenement | date:'mediumDate' }} at {{ getAdjustedTime(event.dateEvenement) }}</span>
+            </div>
+            <div class="detail">
+              <i class="pi pi-map-marker"></i>
+              <span>{{ event.localisationEvenement }} , {{event.provenanceEvenement}}</span>
+            </div>
+            <div class="detail">
+              <i class="pi pi-tag"></i>
+              <span>TND {{ event.prixEvenement | number:'1.2-2' }}</span>
+            </div>
+                   <!-- Add weather display here -->
+    <div class="detail" *ngIf="weatherData[event.idEvenement] as weather">
+      <i class="pi pi-cloud"></i>
+      <span>
+        {{ weather.temp }} {{ weather.icon }}
+      </span>
+    </div>
+          </div>
+          <div class="card-actions">
+            <button class="details-btn" (click)="toggleEventDetails(event.idEvenement)">
+              {{ eventDetailsVisibility[event.idEvenement] ? 'Hide Details' : 'View Details' }}
+            </button>         
+             <button class="live-btn" [class.blink]="shouldBlink">
+              LIVE
+            </button>
+          </div>
+           <!-- Details Box -->
+      <div class="details-box" *ngIf="eventDetailsVisibility[event.idEvenement]">
+        <div [innerHTML]="getEventDetailsText(event)"></div>
+        <button class="close-details" (click)="toggleEventDetails(event.idEvenement)">
+          <i class="pi pi-times"></i>
+        </button>      
+      </div>
+      </div>
+      </div>
+    </div>
+    <!-- Live Events List View End -->
+  </section>
+  <!-- Events List Section End -->
+</div>
+<div class="no-events" *ngIf="!loading && !error && ((currentView === 'Previous Events' || currentView === 'Upcoming Events') && evenements.length === 0)">
+  <p>No events found. Check back later or contact the admin</p>
+</div>
+<div class="no-events" *ngIf="!loading && !error && currentView === 'All Events' && filteredEvents.length === 0">
+  <p>No events found matching your search. Try a different search term or check back later.</p>
+</div>
+<!-- Events Container End -->
+</section>

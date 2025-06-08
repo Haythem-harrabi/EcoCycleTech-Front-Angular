@@ -1,0 +1,41 @@
+<main class="col-md-10 offset-md-2 p-4" style="margin-left: 16.66667%; padding-top: 20px;">
+  <h1>Liste des Reservations</h1>
+  <button routerLink="/admin/AddReservation" class="btn btn-primary mb-3">
+    Ajouter une Reservation
+  </button>
+
+  <!-- Sorting Button -->
+  <button (click)="toggleSort()" class="btn btn-light mb-3">
+    <i [ngClass]="isAscending ? 'fas fa-sort-up' : 'fas fa-sort-down'"></i>
+    Trier par date
+  </button>
+
+  <div class="card-stack">
+    <div *ngFor="let reservation of listReservations" class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">{{ reservation.total | currency:'TND' }}</h5>
+        <p class="card-text"><strong>Statut:</strong> {{ reservation.statut }}</p>
+        <p class="card-text"><strong>Date:</strong> {{ reservation.date | date:'mediumDate' }}</p>
+        <p class="card-text">
+          <strong>Client:</strong> 
+          {{ reservation.user?.prenom }} {{ reservation.user?.nom }}
+          <span *ngIf="reservation.user?.email">({{ reservation.user?.email }})</span>
+        </p>
+      </div>
+      <div class="card-footer">
+        <button *ngIf="isClient" class="btn btn-primary me-2" 
+                (click)="payer(reservation.idReservation, reservation.total)">
+          Payer
+        </button>
+        <button class="btn btn-sm btn-outline-danger" 
+                (click)="supprimer(reservation.idReservation)">
+          Supprimer
+        </button>
+        <button class="btn btn-sm btn-outline-primary me-1"
+                [routerLink]="['/admin/AddReservation', reservation.idReservation]">
+          Modifier
+        </button>
+      </div>
+    </div>
+  </div>
+</main>

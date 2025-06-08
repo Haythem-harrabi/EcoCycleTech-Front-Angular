@@ -1,0 +1,95 @@
+<div class="camera-popup-overlay">
+  <div class="camera-popup">
+    <!-- Popup Header -->
+    <div class="popup-header">
+      <div class="header-content">
+        <i class="fas fa-robot ai-icon"></i>
+        <h3>Smart Recycling Scanner</h3>
+      </div>
+      <button class="close-btn" (click)="onClose()">
+    close
+      </button>
+    </div>
+
+    <!-- Camera Controls -->
+    <div class="popup-controls">
+      <button class="control-btn power" 
+              (click)="toggleCamera()" 
+              [disabled]="isLoading"
+              [ngClass]="{'active': cameraActive}">
+        <i class="fas" [ngClass]="{'fa-power-off': !cameraActive, 'fa-stop': cameraActive}"></i>
+        {{ cameraActive ? 'STOP' : 'START' }}
+      </button>
+      
+      <button class="control-btn scan" 
+              (click)="toggleDetection()" 
+              [disabled]="!cameraActive"
+              [ngClass]="{'active': detectionActive, 'scanning': scanActive}">
+        <i class="fas fa-barcode"></i>
+        {{ detectionActive ? 'SCANNING' : 'SCAN' }}
+      </button>
+    </div>
+
+    <!-- Camera View Area -->
+    <div class="camera-view" [ngClass]="{'pulse': pulseActive}">
+      <!-- Live Feed -->
+      <div *ngIf="cameraActive && currentFrame" class="video-feed">
+        <img [src]="currentFrame" alt="Live Feed">
+        <div class="scan-overlay" [ngClass]="{'active': scanActive}"></div>
+        
+        <div class="detection-badge" [ngClass]="{'active': detectionActive}">
+          <i class="fas" [ngClass]="{'fa-eye': detectionActive, 'fa-eye-slash': !detectionActive}"></i>
+          {{ detectionActive ? 'AI ACTIVE' : 'AI STANDBY' }}
+        </div>
+      </div>
+      
+      <!-- Loading State -->
+      <div *ngIf="cameraActive && !currentFrame" class="loading-state">
+        <div class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+        <p>Initializing camera feed...</p>
+      </div>
+      
+      <!-- Offline State -->
+      <div *ngIf="!cameraActive" class="placeholder">
+        <div class="placeholder-icon">
+          <i class="fas fa-camera"></i>
+          <div class="pulse-ring"></div>
+        </div>
+        <p>Camera is currently offline</p>
+        <button class="start-btn" (click)="toggleCamera()">
+          <i class="fas fa-power-off"></i> Activate Scanner
+        </button>
+      </div>
+    </div>
+
+    <!-- Detection Results Panel -->
+    <div class="detection-panel" *ngIf="detectionActive && cameraActive">
+      <div class="panel-header">
+        <i class="fas fa-microchip"></i>
+        <h4>AI Analysis</h4>
+      </div>
+      <div class="detection-info">
+        <p>Our AI is identifying recyclable materials in real-time. Detected objects will appear below.</p>
+        
+        <div class="detected-items">
+          <div class="item" *ngFor="let obj of detectedObjects">
+            <span class="item-label">{{obj.label}}</span>
+            <div class="confidence-bar">
+              <div class="fill" [style.width.%]="obj.confidence * 100"></div>
+              <span class="percentage">{{(obj.confidence * 100).toFixed(0)}}%</span>
+            </div>
+          </div>
+          
+          <div class="empty-state" *ngIf="!detectedObjects.length">
+            <i class="fas fa-search"></i>
+            <p>Scanning for recyclable items...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

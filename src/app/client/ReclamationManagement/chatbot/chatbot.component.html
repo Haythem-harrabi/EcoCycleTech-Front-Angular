@@ -1,0 +1,34 @@
+<div class="chat-container">
+    <div class="chat-header">
+      <h3>EcoCycleTech Chatbot</h3>
+    </div>
+  
+    <div class="chat-box">
+      <div class="messages">
+        <div *ngFor="let message of messages" class="message" [ngClass]="{'user-message': message === userMessage, 'bot-message': message !== userMessage}">
+          {{ message }}
+        </div>
+      </div>
+  
+      <div *ngIf="isLoading" class="loading-indicator">
+        <span>...</span> <span>ecoCycleTechBot is typing...</span>
+      </div>
+    </div>
+  
+    <div class="chat-input">
+      <input [(ngModel)]="userMessage" placeholder="Tapez votre message..." (keydown.enter)="sendMessage()" />
+      <button (click)="sendMessage()" [disabled]="isLoading">Envoyer</button>
+    </div>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      <p>{{ errorMessage }}</p>
+    </div>
+    <!-- Chat Popup -->
+<div class="chat-popup" *ngIf="showChat">
+  <div class="chat-popup-inner">
+    <iframe src="http://localhost:4200/assistant" frameborder="0"></iframe>
+    <button class="close-btn" (click)="toggleChat()">×</button>
+  </div>
+</div>
+
+  </div>

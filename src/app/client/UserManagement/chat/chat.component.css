@@ -24,7 +24,7 @@
 /* Chat Toggle Button */
 .chat-toggle-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 100px;
   right: 20px;
   z-index: 1100;
   width: 60px;

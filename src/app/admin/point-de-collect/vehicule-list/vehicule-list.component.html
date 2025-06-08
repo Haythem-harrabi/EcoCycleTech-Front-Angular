@@ -1,0 +1,155 @@
+<div class="vehicule-container">
+    <!-- Add Button -->
+    <button class="action-btn add-btn" (click)="openAddModal()">
+      + Ajouter un véhicule
+    </button>
+  
+    <!-- Search -->
+    <div style="margin: 20px 0;">
+      <input type="text" class="form-input" placeholder="Rechercher..." 
+             [(ngModel)]="searchQuery" (input)="applyFilters()" />
+    </div>
+  
+    <!-- Table -->
+    <table class="vehicule-table">
+      <thead>
+        <tr>
+          <th (click)="sortTable('marqueVehicule')">
+            Marque {{ getSortIcon('marqueVehicule') }}
+          </th>
+          <th (click)="sortTable('modeleVehicule')">
+            Modèle {{ getSortIcon('modeleVehicule') }}
+          </th>
+          <th (click)="sortTable('nomChauffeur')">
+            Chauffeur {{ getSortIcon('nomChauffeur') }}
+          </th>
+          <th (click)="sortTable('numTelephoneChauffeur')">
+            Téléphone {{ getSortIcon('numTelephoneChauffeur') }}
+          </th>
+          <th (click)="sortTable('capaciteVehicule')">
+            Capacité {{ getSortIcon('capaciteVehicule') }}
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicule of filteredVehicules">
+          <td>{{ vehicule.marqueVehicule }}</td>
+          <td>{{ vehicule.modeleVehicule }}</td>
+          <td>{{ vehicule.nomChauffeur }}</td>
+          <td>{{ vehicule.numTelephoneChauffeur }}</td>
+          <td>{{ vehicule.capaciteVehicule }} kg</td>
+          <td>
+            <!-- Edit Button -->
+            <button class="action-btn edit-btn" 
+                    (click)="openEditModal(vehicule)"
+                    title="Modifier">
+              ✏️
+            </button>
+            
+            <!-- Delete Button -->
+            <button class="action-btn delete-btn" 
+                    (click)="openDeleteModal(vehicule.idVehicule)"
+                    title="Supprimer">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Add/Edit Modal -->
+  <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">{{ isEditMode ? 'Modifier' : 'Ajouter' }} un Véhicule</h3>
+        <button class="close-btn" (click)="closeModal()">&times;</button>
+      </div>
+      <form #form="ngForm" (ngSubmit)="saveOrUpdate(form)">
+        <div class="form-group">
+          <label class="form-label">Marque</label>
+          <input class="form-input" name="marqueVehicule" type="text"
+                 [(ngModel)]="vehicule.marqueVehicule" #marqueField="ngModel"
+                 required minlength="2">
+          <div *ngIf="(marqueField.invalid && (marqueField.dirty || marqueField.touched)) || wasSubmitted" 
+               class="error-message">
+            <div *ngIf="marqueField.errors?.['required']">La marque est obligatoire</div>
+            <div *ngIf="marqueField.errors?.['minlength']">Minimum 2 caractères</div>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label class="form-label">Modèle</label>
+          <input class="form-input" name="modeleVehicule" type="text"
+                 [(ngModel)]="vehicule.modeleVehicule" #modeleField="ngModel"
+                 required minlength="2">
+          <div *ngIf="(modeleField.invalid && (modeleField.dirty || modeleField.touched)) || wasSubmitted" 
+               class="error-message">
+            <div *ngIf="modeleField.errors?.['required']">Le modèle est obligatoire</div>
+            <div *ngIf="modeleField.errors?.['minlength']">Minimum 2 caractères</div>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label class="form-label">Nom du Chauffeur</label>
+          <input class="form-input" name="nomChauffeur" type="text"
+                 [(ngModel)]="vehicule.nomChauffeur" #nomField="ngModel"
+                 required minlength="3">
+          <div *ngIf="(nomField.invalid && (nomField.dirty || nomField.touched)) || wasSubmitted" 
+               class="error-message">
+            <div *ngIf="nomField.errors?.['required']">Le nom est obligatoire</div>
+            <div *ngIf="nomField.errors?.['minlength']">Minimum 3 caractères</div>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label class="form-label">Téléphone</label>
+          <input class="form-input" name="numTelephoneChauffeur" type="number"
+                 [(ngModel)]="vehicule.numTelephoneChauffeur" #telField="ngModel"
+                 required min="10000000" max="99999999">
+          <div *ngIf="(telField.invalid && (telField.dirty || telField.touched)) || wasSubmitted" 
+               class="error-message">
+            <div *ngIf="telField.errors?.['required']">Le téléphone est obligatoire</div>
+            <div *ngIf="telField.errors?.['min'] || telField.errors?.['max']">8 chiffres requis</div>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label class="form-label">Capacité (kg)</label>
+          <input class="form-input" name="capaciteVehicule" type="number"
+                 [(ngModel)]="vehicule.capaciteVehicule" #capField="ngModel"
+                 required min="1">
+          <div *ngIf="(capField.invalid && (capField.dirty || capField.touched)) || wasSubmitted" 
+               class="error-message">
+            <div *ngIf="capField.errors?.['required']">La capacité est obligatoire</div>
+            <div *ngIf="capField.errors?.['min']">Doit être supérieure à 0</div>
+          </div>
+        </div>
+  
+        <div class="form-footer">
+          <button type="button" class="action-btn secondary-btn" (click)="closeModal()">Annuler</button>
+          <button type="submit" class="action-btn primary-btn">
+            {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="showDeleteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirmation</h3>
+        <button class="close-btn" (click)="closeDeleteModal()">&times;</button>
+      </div>
+      <div style="padding: 20px;">
+        Êtes-vous sûr de vouloir supprimer ce véhicule ?
+      </div>
+      <div class="form-footer">
+        <button type="button" class="action-btn secondary-btn" (click)="closeDeleteModal()">Annuler</button>
+        <button type="button" class="action-btn delete-btn" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>

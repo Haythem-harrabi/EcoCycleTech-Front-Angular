@@ -1,30 +1,128 @@
 /* ================ Styles Globaux Améliorés ================ */
-.navbar {
-  background-color: aliceblue;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  position: relative;
-  z-index: 1000;
+
+
+.surface-overlay{
+  background-color: rgb(237, 247, 255) !important;
+  opacity: 0.7;
 }
 
-#CompanyName {
-  font-weight: bold;
+.surface-overlay:hover{
+opacity: 1;
+transition: opacity 0.3s ease-in-out;
+}
+
+#CompanyName{
+  font-weight: 800;
   font-size: 1.8em;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: "Oswald", sans-serif;
+  font-family:"Oswald", sans-serif;
   margin-left: 12px;
-  color: #2c3e50;
+}
+#logo{
+  WIDTH: 85PX;
+  HEIGHT: 65PX;
+}
+.logodiv:hover{
+  cursor: pointer;
+}
+.dropdown-menu:not(.products-menu){
+  width: auto !important;
+  height: auto !important;
+  padding: 1.5rem 0rem !important;
+  display: flex;
+  justify-content: center;
+  min-width: 200px;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
 }
 
-#logo {
-  width: 85px;
-  height: 65px;
-  transition: transform 0.3s ease;
+/* Each clickable item in the dropdown */
+.content-element {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  text-align: center;
+  
 }
 
-#logo:hover {
-  transform: scale(1.05);
+.content-element:hover {
+  background-color: rgb(221, 230, 237) !important ;
 }
+
+.content-element span {
+  font-weight: 500;
+  color: #333;
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+
+.nav-element{
+  margin-right: 45px;
+}
+
+.nav-element:hover{
+  border-bottom: 2px solid green;
+  background-color: rgb(227, 237, 244);
+  transition: background-color 0.5s ease-in-out;
+}
+
+.active{
+  border-bottom: 2px solid black;
+  background-color: rgb(225, 233, 239);
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 9999 !important;
+  border-radius: 2px; 
+}
+
+.navbar {
+  position: relative;
+  z-index: 1000 !important; 
+}
+
+
+.dropdown-menu.scalein {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dropdown-menu.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s; /* Delay visibility change */
+}
+
+.nav-element span{
+  font-size: 16px;
+}
+
+.layout-topbar-logo{
+  text-decoration: none;
+  color : inherit
+}
+
+.ul-container{
+  display: flex;
+  align-items:center;
+  justify-content: center;
+}
+.main-nav-list{
+  height: 75%;
+}
+
+
 
 /* ================ Menu Principal ================ */
 #nav-2 {
@@ -38,25 +136,6 @@
   }
 }
 
-.nav-element {
-  margin-right: 45px;
-  position: relative;
-}
-
-.nav-element:hover {
-  border-bottom: 2px solid #3498db;
-}
-
-.nav-element.active {
-  border-bottom: 2px solid #3498db;
-  background-color: rgba(221, 230, 237, 0.4);
-}
-
-.nav-element span {
-  font-size: 16px;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
 
 #nav-2 ul {
   display: flex;
@@ -320,22 +399,35 @@
   transform: scale(1.1);
 }
 
+
+
+
+
+
+
+
+
+
 /* ================ Responsive ================ */
 @media (max-width: 992px) {
   .user-name, .login-text {
       display: none;
   }
-  
+
   .user-trigger, .login-btn {
       padding: 8px;
   }
-  
+
   .user-dropdown-panel {
       width: 250px;
       right: -10px;
   }
-  
+
   .nav-element {
       margin-right: 20px;
   }
+}
+
+a{
+  text-decoration: none !important;
 }

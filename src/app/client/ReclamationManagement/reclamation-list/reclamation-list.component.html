@@ -1,0 +1,63 @@
+<div class="container mt-4 eco-container">
+  <!-- En-tête -->
+  <div class="eco-header">
+    <h2 class="eco-title">
+      <i class="bi bi-recycle eco-icon"></i> Liste des Réclamations
+    </h2>
+  </div>
+
+  <!-- États -->
+  <div *ngIf="isLoading" class="eco-loading">
+    <div class="eco-spinner"></div>
+    <span>Chargement des données...</span>
+  </div>
+
+  <div *ngIf="errorMessage" class="eco-error">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Contrôle -->
+  <div class="eco-controls">
+    <button class="eco-btn eco-filter-btn" (click)="sortByState()">
+      <i class="bi bi-funnel"></i> Trier par état
+    </button>
+  </div>
+
+  <!-- Liste -->
+  <div *ngIf="!isLoading && !errorMessage && reclamations.length > 0">
+    <div class="eco-list">
+      <div *ngFor="let reclamation of reclamations" 
+           class="eco-item"
+           (click)="goToReclamationDetails(reclamation.idReclamation)">
+        
+        <div class="eco-item-content">
+          <i class="bi bi-file-earmark eco-doc-icon"></i>
+          <div class="eco-item-text">
+            <h3 class="eco-item-title">{{ reclamation.titreReclamation }}</h3>
+            <small class="eco-item-date">
+              <i class="bi bi-calendar"></i> {{ reclamation.dateCreation | date:'dd/MM/yyyy' }}
+            </small>
+          </div>
+        </div>
+        
+        <span class="eco-status" 
+              [ngClass]="{
+                'eco-waiting': reclamation.etatReclamation === 'EN_ATTENTE',
+                'eco-processed': reclamation.etatReclamation === 'TRAITEE',
+                'eco-rejected': reclamation.etatReclamation === 'REJETEE',
+                'eco-unassigned': reclamation.etatReclamation === 'NONAFFECTEE',
+                'eco-urgent': reclamation.etatReclamation === 'URGENT'
+              }">
+          {{ reclamation.etatReclamation }}
+        </span>
+      </div>
+    </div>
+
+  
+  <!-- Vide -->
+  <div *ngIf="!isLoading && !errorMessage && reclamations.length === 0" class="eco-empty">
+    <i class="bi bi-inbox eco-empty-icon"></i>
+    <h4>Aucune réclamation trouvée</h4>
+  </div>
+</div>

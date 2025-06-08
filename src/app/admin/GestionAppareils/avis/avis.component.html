@@ -1,0 +1,22 @@
+<!-- avis.component.html -->
+<div class="container mt-4">
+  <h2>Liste des Avis</h2>
+
+  <div *ngIf="avisList.length === 0">
+    <p>Aucun avis pour le moment.</p>
+  </div>
+
+  <div *ngFor="let avis of avisList" class="card my-3">
+    <div class="card-body">
+      <h5 class="card-title">{{ avis.user?.firstName }}</h5>
+      <p class="card-text">{{ avis.contenu }}</p>
+      <p class="card-text">
+        <strong>Appareil :</strong> {{ avis.appareil?.nom || 'Aucun appareil sélectionné' }}
+      </p>
+       <button class="btn btn-warning" [routerLink]="['/AddAvis', avis.idAvis]">Modifier</button>
+      <button class="btn btn-danger" (click)="deleteAvis(avis.idAvis!)">Supprimer</button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary mt-3" [routerLink]="['/AddAvis']">Ajouter un avis</button>
+</div>

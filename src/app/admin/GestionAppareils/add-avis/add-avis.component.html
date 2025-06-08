@@ -1,0 +1,57 @@
+<div style="background-color: white;">
+<div class="container mt-5">
+  <div class="card shadow rounded">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">{{ isEditMode ? 'Modifier l\'avis' : 'Ajouter un avis' }}</h4>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="AvisForm" (ngSubmit)="saveAvis()">
+
+        <!-- Contenu -->
+        <div class="mb-3">
+          <label for="contenu" class="form-label">Contenu</label>
+          <textarea
+            id="contenu"
+            formControlName="contenu"
+            class="form-control"
+            rows="4"
+            placeholder="Rédigez votre avis ici..."
+          ></textarea>
+        </div>
+
+        <!-- Appareil Dropdown -->
+        <div class="mb-3">
+          <label for="appareil" class="form-label">Appareil</label>
+          <select id="appareil" formControlName="appareil" class="form-select">
+            <option value="">-- Sélectionner un appareil --</option>
+            <option *ngFor="let app of appareils" [ngValue]="app">{{ app.nom }}</option>
+          </select>
+        </div>
+        <div *ngIf="AvisForm.get('appareil')?.value" class="alert alert-info">
+          Vous laissez un avis pour : <strong>{{ AvisForm.get('appareil')?.value.nom }}</strong>
+        </div>
+
+        <div class="form-group">
+          <label for="rating">Rating</label>
+          <div class="stars">
+            <span *ngFor="let star of [1, 2, 3, 4, 5]" (click)="setRating(star)" [ngClass]="{'selected': AvisForm.get('rating')?.value >= star}">
+              ★
+            </span>
+          </div>
+          <input type="hidden" formControlName="rating" />
+        </div>
+
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success" [disabled]="AvisForm.invalid">
+            {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">Réinitialiser</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,250 @@
+/* Variables ecoCycleTech */
+:root {
+  --eco-primary: #2e7d32;
+  --eco-secondary: #81c784;
+  --eco-light: #f1f8e9;
+  --eco-dark: #1b5e20;
+  --eco-error: #d32f2f;
+}
+
+/* Structure */
+.eco-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.eco-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.eco-title {
+  color: var(--eco-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Boutons */
+.eco-primary-btn {
+  background-color: var(--eco-primary);
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.eco-primary-btn:hover {
+  background-color: var(--eco-dark);
+}
+
+.eco-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.eco-export-btn, .eco-edit-btn, .eco-delete-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.eco-export-btn {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.eco-edit-btn {
+  background-color: var(--eco-light);
+  color: var(--eco-dark);
+}
+
+.eco-delete-btn {
+  background-color: #ffebee;
+  color: var(--eco-error);
+}
+
+/* Tableau */
+.eco-table-container {
+  overflow-x: auto;
+  margin-top: 1.5rem;
+}
+
+.eco-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.eco-table th {
+  background-color: var(--eco-light);
+  color: var(--eco-dark);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.eco-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+}
+
+.eco-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.eco-description {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badges d'état */
+.eco-status {
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.eco-en_attente {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.eco-traitee {
+  background: var(--eco-light);
+  color: var(--eco-dark);
+}
+
+.eco-rejetee {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.eco-nonaffectee {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.eco-urgent {
+  background: #ffebee;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* États */
+.eco-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  justify-content: center;
+}
+
+.eco-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--eco-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: eco-spin 1s linear infinite;
+}
+
+.eco-error {
+  background: #ffebee;
+  color: var(--eco-error);
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.eco-empty {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.eco-empty i {
+  font-size: 2.5rem;
+  color: #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+@keyframes eco-spin {
+  to { transform: rotate(360deg); }
+}
+
+.eco-header {
+  margin-bottom: 2rem;
+}
+
+.eco-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.eco-header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Nouveau bouton Support */
+.eco-support-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eco-support-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Adaptation responsive */
+@media (max-width: 768px) {
+  .eco-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .eco-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

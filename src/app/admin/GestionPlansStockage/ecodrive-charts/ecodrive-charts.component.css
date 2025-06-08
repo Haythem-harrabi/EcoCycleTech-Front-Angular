@@ -1,0 +1,111 @@
+
+
+.charts-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 30px;
+  }
+  
+  .left-section, .right-section {
+    /* flex: 1; */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f4f6f9a2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+.chart-wrapper.second{
+    max-width: 500px;
+}
+ 
+  .first-chart, .third-chart {
+    width: 100%;
+    max-width: 800px;
+    background-color: rgb(250, 253, 255); /* Adjust the max width as needed */
+  }
+
+  .second-chart{
+    
+    background-color: aliceblue;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 350px !important; /* Adjust height of the charts */
+  }
+  
+  .second-chart {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .third-chart {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+  }
+  
+  .chart-wrapper h2 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 1200px) {
+    .charts-container {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .left-section, .right-section {
+      flex: unset;
+    }
+  }
+  
+  .left-section{
+    width: 70%;
+    display: flex;
+    align-items: center;
+  }
+  .right-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .chart-wrapper.first{
+    height: 78vh;
+    width: 43vw;
+  }
+
+  .first-chart{
+    height: 60vh;
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+  }
+   /* modified */
+  h2{
+    font-family: 'Inter', sans-serif;
+    margin-top: 35px !important;
+  }

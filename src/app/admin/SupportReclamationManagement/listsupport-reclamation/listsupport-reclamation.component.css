@@ -1,0 +1,408 @@
+/* Variables ecoCycleTech */
+:root {
+  --eco-primary: #2e7d32;
+  --eco-secondary: #81c784;
+  --eco-light: #f1f8e9;
+  --eco-dark: #1b5e20;
+  --eco-error: #d32f2f;
+}
+
+/* Structure Générale */
+.eco-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.eco-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.eco-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.eco-header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.eco-title {
+  color: var(--eco-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Boutons */
+.eco-primary-btn, .eco-secondary-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.eco-primary-btn {
+  background-color: var(--eco-primary);
+  color: white;
+  border: none;
+}
+
+.eco-primary-btn:hover {
+  background-color: var(--eco-dark);
+  transform: translateY(-2px);
+}
+
+.eco-secondary-btn {
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+}
+
+.eco-secondary-btn:hover {
+  background-color: #bdbdbd;
+  transform: translateY(-2px);
+}
+
+/* Boutons Action Circulaires */
+.eco-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.eco-export-btn, .eco-edit-btn, .eco-delete-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.eco-export-btn {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.eco-edit-btn {
+  background-color: var(--eco-light);
+  color: var(--eco-dark);
+}
+
+.eco-delete-btn {
+  background-color: #ffebee;
+  color: var(--eco-error);
+}
+
+/* Tableau */
+.eco-table-container {
+  overflow-x: auto;
+  margin-top: 1.5rem;
+}
+
+.eco-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.eco-table th {
+  background-color: var(--eco-light);
+  color: var(--eco-dark);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.eco-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+}
+
+.eco-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Gestion des longues descriptions */
+.eco-description {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badges d'état */
+.eco-status {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  display: inline-block;
+}
+
+.eco-en_attente {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.eco-traitee {
+  background: var(--eco-light);
+  color: var(--eco-dark);
+}
+
+.eco-rejetee {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.eco-nonaffectee {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.eco-urgent {
+  background: #ffebee;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* États Open/Closed */
+.eco-open {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
+}
+
+.eco-closed {
+  color: #c62828;
+  background-color: #ffebee;
+  border: 1px solid #ef9a9a;
+}
+
+/* Dates */
+.eco-date-ouverte, .eco-date-cloture {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eco-date-ouverte {
+  background-color: #e8f5e9;
+  color: var(--eco-dark);
+}
+
+.eco-date-cloture {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+/* Loading, Empty & Error States */
+.eco-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+.eco-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--eco-primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: eco-spin 1s linear infinite;
+}
+
+@keyframes eco-spin {
+  to { transform: rotate(360deg); }
+}
+
+.eco-error {
+  background: #ffebee;
+  color: var(--eco-error);
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.eco-empty {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.eco-empty i {
+  font-size: 2.5rem;
+  color: #e0e0e0;
+  margin-bottom: 1rem;
+}
+
+/* Overlay de formulaire */
+.eco-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: eco-fade-in 0.3s ease;
+  padding: 1rem;
+}
+
+@keyframes eco-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Carte de formulaire */
+.eco-form-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  animation: eco-scale-in 0.3s ease;
+}
+
+@keyframes eco-scale-in {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Header de formulaire */
+.eco-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.eco-form-header h3, .eco-form-title {
+  color: var(--eco-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+}
+
+/* Bouton Fermer */
+.eco-close-btn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.eco-close-btn:hover {
+  color: var(--eco-error);
+}
+
+/* Groupes de formulaire */
+.eco-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.eco-form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--eco-dark);
+}
+
+/* Inputs et Selects */
+.eco-form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.eco-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.eco-input:focus {
+  border-color: var(--eco-primary);
+  outline: none;
+}
+
+/* Actions du formulaire */
+.eco-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Bouton support */
+.eco-support-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eco-support-btn:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .eco-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .eco-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

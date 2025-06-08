@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to the Virtual Tour</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    h1 {
+      color: #00796b;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      animation: fadeIn 1s ease-out;
+    }
+
+    iframe {
+      width: 70%;
+      height: 60%;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome! Explore Our Space Below</h1>
+
+  <iframe 
+    src="https://my.matterport.com/show?m=PK7bx8TSReQ" 
+    allowfullscreen 
+    allow="xr-spatial-tracking">
+  </iframe>
+
+</body>
+</html>

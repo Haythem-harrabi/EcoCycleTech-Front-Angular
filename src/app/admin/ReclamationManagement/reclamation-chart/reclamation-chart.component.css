@@ -1,0 +1,17 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+}
+
+canvas {
+  width: 100% !important;
+  height: 400px;
+}

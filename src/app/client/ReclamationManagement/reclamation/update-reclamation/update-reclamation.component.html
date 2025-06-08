@@ -1,0 +1,102 @@
+<div class="update-container">
+  <div class="eco-form-card">
+    <!-- Header with icon -->
+    <div class="eco-form-header">
+      <h2 class="eco-form-title">
+        <i class="pi pi-recycle" style="color: #2e7d32;"></i> Update Your Complaint
+      </h2>
+      <p class="eco-form-subtitle">Help us improve our recycling service</p>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="eco-loading-state">
+      <p-progressSpinner 
+        styleClass="eco-spinner" 
+        strokeWidth="4"
+        fill="#f8f9fa"
+        animationDuration=".5s">
+      </p-progressSpinner>
+      <p>Loading complaint details...</p>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="eco-error-message">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Form -->
+    <div *ngIf="reclamation">
+      <form #updateForm="ngForm" (ngSubmit)="updateReclamation(updateForm)" class="eco-form-content">
+        <!-- Title -->
+        <div class="eco-form-group">
+          <label for="title" class="eco-form-label">
+            Title <span class="required-asterisk">*</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            pInputText
+            [(ngModel)]="reclamation.titreReclamation"
+            name="titreReclamation"
+            required
+            #title="ngModel"
+            class="eco-form-input"
+            placeholder="Ex: Issue with my recycled product"
+            [class.eco-input-error]="title.invalid && (title.dirty || title.touched)"
+          />
+          <div *ngIf="title.invalid && (title.dirty || title.touched)" class="eco-error-text" style="color: #e74c3c;">
+            <i class="pi pi-info-circle" style="color: #e74c3c;"></i> Title is required
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="eco-form-group">
+          <label for="description" class="eco-form-label">
+            Description <span class="required-asterisk">*</span>
+          </label>
+          <textarea
+            id="description"
+            pInputTextarea
+            [(ngModel)]="reclamation.descriptionReclamation"
+            name="descriptionReclamation"
+            required
+            #description="ngModel"
+            rows="5"
+            class="eco-form-textarea"
+            placeholder="Please describe your complaint in detail..."
+            [class.eco-input-error]="description.invalid && (description.dirty || description.touched)"
+          ></textarea>
+          <div *ngIf="description.invalid && (description.dirty || description.touched)" class="eco-error-text" style="color: #e74c3c;">
+            <i class="pi pi-info-circle" style="color: #e74c3c;"></i> Description is required
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="eco-button-group">
+          <button
+            pButton
+            pRipple
+            type="submit"
+            class="eco-btn eco-btn-primary"
+            [disabled]="!updateForm.valid || isLoading"
+          >
+            <i class="pi pi-check"></i>
+            <span>{{ isLoading ? 'Saving...' : 'Update Complaint' }}</span>
+          </button>
+          
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="eco-btn eco-btn-secondary"
+            (click)="cancel()"
+          >
+            <i class="pi pi-times"></i>
+            <span>Cancel</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

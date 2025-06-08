@@ -1,1 +1,45 @@
-<p>plan-stockage-list works!</p>
+
+<app-ecodrive-charts></app-ecodrive-charts>
+
+<div class="plans-container p-grid p-m-4">
+  <div class="plan-container p-col-12 p-md-4" *ngFor="let plan of plans">
+    <p-card subheader="Storage Plan">
+      <div class="p-d-flex p-flex-column p-ai-center p-jc-between card-content">
+        <h1 class="p-mb-2">
+          <i class="icon pi pi-database" style="font-size: 45px;"></i>
+          {{ plan.titre }}
+        </h1>
+        <p>
+          <i class="icon pi pi-server " style="font-size: 30px"></i>
+          <strong>Max Size :   </strong> {{ plan.tailleMax }} GB
+        </p>
+        <p>
+          <i class="icon pi pi-dollar" style="font-size: 30px"></i>
+          <strong>Price:   </strong> {{ plan.prix }} TND
+        </p>
+      </div>
+
+
+      <ng-template pTemplate="footer">
+        <div class="button-group-footer">
+          <button pButton type="button" label="Manage"
+            icon="pi pi-cog"
+            class="p-button-info p-button-sm action-button"
+            [routerLink]="['/admin/addPlan', plan.idPlan]">
+          </button>
+
+          <button
+            pButton
+            type="button"
+            label="Delete"
+            icon="pi pi-trash"
+            class="p-button-danger p-button-sm action-button"
+            style="margin-left: 1rem;"
+            (click)="DeletePlan(plan.idPlan)">
+          </button>
+        </div>
+      </ng-template>
+
+    </p-card>
+  </div>
+</div>

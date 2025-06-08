@@ -1,0 +1,105 @@
+<div class="eco-update-container">
+  <div class="eco-form-card">
+    <!-- En-tête -->
+    <div class="eco-form-header">
+     
+      <h2 class="eco-form-title">Mettre à jour une réclamation</h2>
+      <span class="eco-emoji">♻️</span>
+    </div>
+
+    <!-- États de chargement/erreur -->
+    <div *ngIf="isLoading" class="eco-loading-state">
+      <div class="spinner-border text-success" role="status"></div>
+      <p>Chargement en cours...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="eco-error-state">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Formulaire -->
+    <form *ngIf="reclamation && !isLoading" #updateForm="ngForm" (ngSubmit)="updateReclamation(updateForm)" class="eco-form">
+      <!-- Groupe de champs - Alignement vertical strict -->
+      <div class="eco-form-group">
+        <label for="titre">Titre</label>
+        <input
+          type="text"
+          id="titre"
+          class="eco-input"
+          [(ngModel)]="reclamation.titreReclamation"
+          name="titreReclamation"
+          required
+          #titre="ngModel"
+          placeholder="Ex : Problème de livraison"
+        >
+        <div *ngIf="titre.invalid && (titre.dirty || titre.touched)" class="eco-error">
+          <small>⚠️ Ce champ est obligatoire</small>
+        </div>
+      </div>
+
+      <div class="eco-form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          class="eco-input eco-textarea"
+          [(ngModel)]="reclamation.descriptionReclamation"
+          name="descriptionReclamation"
+          required
+          #description="ngModel"
+          rows="4"
+          placeholder="Décrivez votre réclamation..."
+        ></textarea>
+        <div *ngIf="description.invalid && (description.dirty || description.touched)" class="eco-error">
+          <small>⚠️ Veuillez saisir une description</small>
+        </div>
+      </div>
+
+      <div class="eco-form-group">
+        <label for="etat">État</label>
+        <select
+          id="etat"
+          class="eco-input"
+          [(ngModel)]="reclamation.etatReclamation"
+          name="etatReclamation"
+          required
+          #etat="ngModel"
+        >
+          <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+        <div *ngIf="etat.invalid && (etat.dirty || etat.touched)" class="eco-error">
+          <small>⚠️ Sélectionnez un état</small>
+        </div>
+      </div>
+
+      <div class="eco-form-group">
+        <label for="dateCreation">Date de création</label>
+        <input
+          type="date"
+          id="dateCreation"
+          class="eco-input"
+          [value]="reclamation.dateCreation | date:'yyyy-MM-dd'"
+          disabled
+        >
+      </div>
+
+      <!-- Bouton centré avec espacement cohérent -->
+      <div class="eco-button-group">
+        <button
+          type="button"
+          class="eco-cancel-btn"
+          (click)="cancel()"
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          class="eco-submit-btn"
+          [disabled]="!updateForm.valid || isLoading"
+        >
+          {{ isLoading ? 'Enregistrement...' : 'Mettre à jour' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,188 @@
+/* Variables */
+:root {
+  --eco-green: #2e7d32;
+  --eco-light-green: #e8f5e9;
+  --eco-dark-green: #1b5e20;
+  --eco-gray: #f8f9fa;
+}
+
+/* Conteneur */
+.eco-container {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* En-tête */
+.eco-header {
+  margin-bottom: 25px;
+}
+
+.eco-title {
+  color: var(--eco-green);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eco-icon {
+  color: var(--eco-green);
+  font-size: 1.3rem;
+}
+
+/* États */
+.eco-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: var(--eco-light-green);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.eco-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--eco-green);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.eco-error {
+  background: #ffebee;
+  color: #d32f2f;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Bouton */
+.eco-btn {
+  padding: 8px 15px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.eco-filter-btn {
+  background: white;
+  border: 1px solid var(--eco-green);
+  color: var(--eco-green);
+}
+
+.eco-filter-btn:hover {
+  background: var(--eco-light-green);
+}
+
+/* Liste */
+.eco-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eco-item {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.eco-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--eco-green);
+}
+
+.eco-item-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.eco-doc-icon {
+  color: var(--eco-green);
+  font-size: 1.4rem;
+}
+
+.eco-item-title {
+  margin: 0;
+  color: #333;
+}
+
+.eco-item-date {
+  color: #757575;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Statuts */
+.eco-status {
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.eco-waiting {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.eco-processed {
+  background: var(--eco-light-green);
+  color: var(--eco-dark-green);
+}
+
+.eco-rejected {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.eco-unassigned {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.eco-urgent {
+  background: #ffebee;
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* Vide */
+.eco-empty {
+  text-align: center;
+  padding: 30px;
+  color: #757575;
+}
+
+.eco-empty-icon {
+  font-size: 2.5rem;
+  color: #e0e0e0;
+  margin-bottom: 15px;
+}
+
+/* Pagination */
+.eco-pagination {
+  margin-top: 30px;
+}

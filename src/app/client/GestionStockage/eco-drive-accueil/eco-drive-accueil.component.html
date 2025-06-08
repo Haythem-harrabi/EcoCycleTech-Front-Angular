@@ -1,0 +1,123 @@
+<!-- eco-drive-accueil.component.html -->
+<div class="eco-drive-container">
+
+    <!-- Video Background Section -->
+    <div class="video-hero">
+      <video autoplay [muted]="true" loop class="background-video">
+        <source src="assets/vids/EcoDrive-bg.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+      
+      <div class="video-overlay"></div>
+      
+      <div class="welcome-content" @fadeUp >
+        <h1>EcoDrive</h1>
+        <p class="slogan">
+          Your sustainable cloud storage solution<br>
+          <span #typedElement style="font-weight: 700; font-size: 25"></span> file hosting for EcoCycleTech clients
+        </p>
+        <div class="action-buttons">
+          <p-button 
+            label="Get Started" 
+            icon="pi pi-play" 
+            styleClass="p-button-rounded p-button-lg"
+            [style]="{'background': 'rgba(255,255,255,0.2)', 'border': '1px solid white'}"
+            (click)="scrollToPlans()">
+          </p-button>
+          <p-button 
+            label="Learn More" 
+            icon="pi pi-info-circle" 
+            styleClass="p-button-rounded p-button-lg p-ml-3 p-button-text"
+            [style]="{'color': 'white'}">
+          </p-button>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Add this right after your video-hero div -->
+<div #plansSection class="plans-section p-py-6 p-px-2">
+    <div class="section-header p-text-center p-mb-5">
+      <h2 class="section-title">Choose Your Storage Plan</h2>
+      <p class="section-subtitle">Eco-friendly storage solutions tailored to your needs</p>
+    </div>
+  
+    <div class="carousel-container p-d-flex p-ai-center p-jc-center p-mb-4">
+      <!-- Left Arrow -->
+      <button pButton 
+              icon="pi pi-chevron-left" 
+              class="p-button-rounded p-button-outlined nav-arrow"
+              (click)="prevPlan()"
+              [disabled]="currentPlanIndex === 0">
+      </button>
+  
+      <!-- Plan Card -->
+      <div [@slideFade]="animationState" class="plan-card p-p-5 p-shadow-10" *ngIf="plans[currentPlanIndex]">
+
+        <div class="plan-badge" [ngClass]="{'popular': plans[currentPlanIndex].premium }">
+          {{  plans[currentPlanIndex].premium ? 'Premium' : 'Standard' }}
+        </div>
+        
+        <h3 class="plan-title">{{ plans[currentPlanIndex].titre }}</h3>
+        
+        <div class="storage-display p-my-4">
+          <i class="pi pi-database"></i>
+          <span class="storage-size">{{ plans[currentPlanIndex].tailleMax }}</span>
+          <span class="storage-unit">GB</span>
+        </div>
+        
+        <div class="price p-my-4">
+          {{ plans[currentPlanIndex].prix | currency:'TND':'symbol':'1.2-2' }}
+          <span class="period">/ month</span>
+        </div>
+        
+        <ul class="features-list p-my-4">
+          <li><i class="pi pi-check"></i> Secure encrypted storage</li>
+          <li><i class="pi pi-check"></i> 99.9% uptime guarantee</li>
+          <li><i class="pi pi-check"></i> Eco-friendly data centers</li>
+          <li><i class="pi pi-check"></i> File version history</li>
+        </ul>
+        
+
+        <button pButton 
+                label="Get Started" 
+                icon="pi pi-arrow-right"
+                class="p-button-rounded"
+                [ngClass]="{
+                  'p-button-success': plans[currentPlanIndex].premium, 
+                  'p-button-help': plans[currentPlanIndex].premium
+                }"
+                (click)="selectPlan(plans[currentPlanIndex])">
+        </button>
+        
+      </div>
+  
+      <!-- Right Arrow -->
+      <button pButton 
+              icon="pi pi-chevron-right" 
+              class="p-button-rounded p-button-outlined nav-arrow"
+              (click)="nextPlan()"
+              [disabled]="currentPlanIndex === plans.length - 1">
+      </button>
+    </div>
+  
+    <!-- Indicators -->
+    <div class="indicators p-d-flex p-jc-center">
+      <span *ngFor="let plan of plans; let i = index" 
+            class="indicator-dot"
+            [ngClass]="{'active': currentPlanIndex === i}"
+            (click)="goToPlan(i)">
+      </span>
+    </div>
+
+    
+
+
+    <div class="paypal-modal-backdrop" *ngIf="showPaypal" (click)="closePaypal()">
+      <div class="paypal-modal-content" (click)="$event.stopPropagation()"  @popupAnimation>
+        <app-paypal (refreshParent)="onRefresh()" [selectedPlan]="selectedPlan" (close)="closePaypal()"></app-paypal>
+      </div>
+    </div>
+  </div>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface ChatResponse {
+  error: any;
   response: string;
 }
 @Injectable({

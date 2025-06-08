@@ -1,0 +1,98 @@
+<div class="calendar-container">
+  <!-- Header Banner -->
+  <div class="hero-banner">
+    <div class="overlay">
+      <h1>Event Calendar</h1>
+      <p>Browse our events by month</p>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading events...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div class="error-container" *ngIf="error">
+    <div class="error-message">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Main Calendar Content -->
+  <div class="calendar-content" *ngIf="!loading && !error">
+    <div class="container">
+      <!-- Month and Year Selectors -->
+      <div class="date-selector">
+        <div class="selector-control">
+          <label for="month-select">Month:</label>
+          <select id="month-select" [(ngModel)]="selectedMonth" (change)="onMonthChange()" class="month-dropdown">
+            <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
+          </select>
+        </div>
+        <div class="selector-control">
+          <label for="year-select">Year:</label>
+          <select id="year-select" [(ngModel)]="selectedYear" (change)="onYearChange()" class="year-dropdown">
+            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Calendar Grid -->
+      <div class="calendar-grid">
+        <!-- Weekday Headers -->
+        <div class="weekday-header" *ngFor="let day of weekdays">{{ day }}</div>
+        
+        <!-- Empty cells for preceding days -->
+        <div class="day-cell empty" *ngFor="let _ of [].constructor(firstDayOfMonth); let i = index"></div>
+        
+        <!-- Day cells with events -->
+        <div class="day-cell" *ngFor="let day of daysInMonth" [class.has-event]="hasEventOnDay(day)">
+          <div class="day-number">{{ day }}</div>
+          <div class="day-events" *ngIf="hasEventOnDay(day)">
+            <div class="event-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events for Selected Month -->
+      <div class="month-events">
+        <h2 class="section-title">Events in {{ months[selectedMonth] }} {{ selectedYear }}</h2>
+        
+        <div class="events-list" *ngIf="filteredEvents.length > 0">
+          <div class="event-card" *ngFor="let event of filteredEvents">
+            <div class="event-date">
+              <div class="date-day">{{ getEventDay(event) }}</div>
+              <div class="date-month">{{ getEventMonthShort(event) }}</div>
+            </div>
+            <div class="event-details">
+              <h3>{{ event.nomEvenement }}</h3>
+              <div class="event-info">
+                <div class="info-item">
+                  <i class="pi pi-map-marker"></i>
+                  <span>{{ event.localisationEvenement }}</span>
+                </div>
+                <div class="info-item">
+                  <i class="pi pi-clock"></i>
+                  <span>{{ getEventTime(event) }}</span>
+                </div>
+                <div class="info-item">
+                  <i class="pi pi-ticket"></i>
+                  <span>TND {{ event.prixEvenement | number:'1.2-2' }}</span>
+                </div>
+              </div>
+              
+             
+            </div>
+          </div>
+        </div>
+        
+        <div class="no-events" *ngIf="filteredEvents.length === 0">
+          <p>No events scheduled for {{ months[selectedMonth] }} {{ selectedYear }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

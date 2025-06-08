@@ -17,8 +17,21 @@ export class AdminMenuComponent implements OnInit {
           {
               label: 'Home',
               items: [
-                  { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/admin'] }
+                  { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/admin'] },
+
+
               ]
+          },
+          {
+            label:'Device Management',
+            items:[
+              { label: 'Reservations', icon: 'pi pi-fw pi-calendar', routerLink: ['Reservations'] },
+              { label: 'Appareils', icon: 'pi pi-fw pi-desktop', routerLink: ['Appareils'] },
+              { label: 'Avis', icon: 'pi pi-fw pi-desktop', routerLink: ['Avis']},
+              { label: 'events', icon: 'pi pi-fw pi-desktop', routerLink: ['events']},
+
+
+            ]
           },
           {
               label: 'User Management',
@@ -27,6 +40,57 @@ export class AdminMenuComponent implements OnInit {
                   { label: 'User Statistics', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/admin/user-statistics'] }
               ]
           },
+          {
+            label: 'EcoDrive',
+            items: [
+                { label: 'Overview', icon: 'pi pi-fw pi-database', routerLink: ['/admin/Plans'] },
+                { label: 'Add storage plan', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/admin/addPlan'] }
+            ]
+        },
+          {
+            label: 'Event Management',
+            items: [
+              { label: 'Events', icon: 'pi pi-fw pi-calendar', routerLink: ['/admin/events'] },
+              { label: 'Tickets', icon: 'pi pi-fw pi-ticket', routerLink: ['/admin/tickets'] }
+            ]
+        },
+        {
+          label: 'Reclamation Management',
+          items: [
+            { label: 'Reclamation', icon: 'pi pi-fw pi-id-card', routerLink: ['/admin/list/reclamation'] },
+          { label: 'Support Reclamation', icon: 'pi pi-fw pi-id-card', routerLink: ['/admin/listSupportReclamation'] },
+          { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/admin/chart'] }
+
+          ]
+      },
+      {
+        label: 'Demande Recycle Management',
+        items: [
+          { label: 'Demande List', icon: 'pi pi-fw pi-list', routerLink: ['listdemanderecycle'] },
+
+        ]
+    },
+    {
+        label: 'Vehicle & Collection Management',
+        items: [
+          {
+            label: 'Collection Points',
+            icon: 'pi pi-fw pi-map-marker',
+            routerLink: ['/admin/pointsdecollecte']
+          },
+          {
+            label: 'Vehicles',
+            icon: 'pi pi-fw pi-truck',
+            routerLink: ['/admin/VehiculeList']
+          },
+          {
+            label: 'Collection List',
+            icon: 'pi pi-fw pi-calendar-plus',
+            routerLink: ['/admin/CollectionList']
+          }
+        ]
+      },
+
           {
               label: 'UI Components',
               items: [

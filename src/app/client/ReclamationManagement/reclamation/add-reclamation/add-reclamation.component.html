@@ -1,0 +1,42 @@
+<div class="container">
+  <h2 class="form-title">Submit a Complaint</h2>
+  <p class="eco-tagline">
+    <i class="bi bi-recycle me-1"></i> Help us make recycling better - your feedback matters!
+  </p>
+
+  <form #reclamationForm="ngForm" (ngSubmit)="addReclamation(reclamationForm)" class="eco-form">
+    <div class="form-group">
+      <label for="title" class="form-label">Title <span class="required-asterisk">*</span></label>
+      <input type="text" id="title" class="form-input" [(ngModel)]="reclamation.titreReclamation"
+        name="titreReclamation" required #title="ngModel" placeholder="Example: Issue with my recycled product" />
+      <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-message">
+        <div *ngIf="title.errors?.['required']">Title is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="form-label">Description <span class="required-asterisk">*</span></label>
+      <textarea id="description" class="form-textarea" [(ngModel)]="reclamation.descriptionReclamation"
+        name="descriptionReclamation" required #description="ngModel"
+        placeholder="Please describe your complaint in detail..."></textarea>
+      <div *ngIf="description.invalid && (description.dirty || description.touched)" class="error-message">
+        <div *ngIf="description.errors?.['required']">Description is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <re-captcha 
+  siteKey="6LeXCR4rAAAAAFAfky-TRLGFw_ValUTecYnSUvSn" 
+  (resolved)="onCaptchaResolved($event)" 
+  required>
+</re-captcha>
+    </div>
+
+
+    <button type="submit" class="submit-btn" [disabled]="!reclamationForm.valid || isLoading">
+      <span *ngIf="isLoading" class="spinner"></span>
+      <i class="bi bi-send-fill me-2"></i>
+      {{ isLoading ? 'Submitting...' : 'Submit Complaint' }}
+    </button>
+  </form>
+</div>

@@ -1,0 +1,182 @@
+/* General Styles */
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card Styles */
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: none;
+  background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+}
+
+.card-header h4 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.card-body {
+  padding: 2rem;
+  background-color: #f8fafc;
+}
+
+/* Form Elements */
+.form-label {
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control, .form-select {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #3a7bd5;
+  box-shadow: 0 0 0 3px rgba(58, 123, 213, 0.2);
+  outline: none;
+}
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Rating Stars */
+.stars {
+  display: flex;
+  margin: 1rem 0;
+}
+
+.stars span {
+  font-size: 2rem;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+  margin-right: 0.5rem;
+}
+
+.stars span:hover {
+  transform: scale(1.1);
+}
+
+.stars span.selected {
+  color: #fbbf24;
+}
+
+/* Alert Box */
+.alert {
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #3a7bd5;
+  background-color: #ebf8ff;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+  color: white;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .stars span {
+    font-size: 1.5rem;
+  }
+}
+
+/* Form Validation States */
+.ng-invalid.ng-touched:not(form) {
+  border-color: #f87171 !important;
+}
+
+.ng-valid.ng-touched:not(form) {
+  border-color: #4ade80 !important;
+}
+
+/* Animation for form elements */
+.form-group {
+  animation: slideUp 0.5s ease;
+  animation-fill-mode: backwards;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Delay animations for each form group */
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group:nth-child(3) { animation-delay: 0.3s; }
+.form-group:nth-child(4) { animation-delay: 0.4s; }

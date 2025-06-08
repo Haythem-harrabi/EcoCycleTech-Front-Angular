@@ -54,7 +54,7 @@ export class UserProfileComponent implements OnInit {
       this.fetchProfile(u.email);          // <-- e-mail
     });
   }
-  
+
    private fetchProfile(email: string): void {
     this.loading = true;
 
@@ -68,7 +68,7 @@ export class UserProfileComponent implements OnInit {
 
   private fillForm(userData: any) {
     this.user = userData;                            // avatar + nom
-  
+
     const formValues = {
       nom         : userData.nom         ?? '',
       prenom      : userData.prenom      ?? '',
@@ -77,16 +77,16 @@ export class UserProfileComponent implements OnInit {
       numTelephone: userData.numTelephone?? '',
       adresse     : userData.adresse     ?? ''
     };
-  
+
     this.profileForm.patchValue(formValues);
     this.originalFormValues = { ...formValues };
-  
+
     if (userData.photoDeProfil) {
       this.imagePreview = 'data:image/jpeg;base64,' + userData.photoDeProfil;
     }
   }
 
-  
+
 
   onFileSelect(event: any): void {
     if (event.target.files && event.target.files.length) {
@@ -97,15 +97,15 @@ export class UserProfileComponent implements OnInit {
           this.showError('Please select an image file');
           return;
         }
-        
+
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
           this.showError('Image size should be less than 5MB');
           return;
         }
-        
+
         this.uploadedImage = file;
-        
+
         // Create preview
         const reader = new FileReader();
         reader.onload = () => {
@@ -121,15 +121,15 @@ export class UserProfileComponent implements OnInit {
       this.showError('No changes were made to save');
       return;
     }
-  
+
     const id = this.user.id;                       // ⭐ récupéré du DTO
     if (!id) { this.showError('Utilisateur inconnu'); return; }
-  
+
     this.isSubmitting = true;
-  
+
     const formData = new FormData();
     const current  = this.profileForm.getRawValue();
-  
+
     Object.keys(current).forEach(k => {
       if (current[k] !== this.originalFormValues[k]) {
         formData.append(k, current[k]);
@@ -138,7 +138,7 @@ export class UserProfileComponent implements OnInit {
     if (this.uploadedImage) {
       formData.append('photoDeProfil', this.uploadedImage, this.uploadedImage.name);
     }
-  
+
     this.http.put(`/api/auth/update/${id}`, formData)
              .pipe(finalize(() => (this.isSubmitting = false)))
              .subscribe({
@@ -151,12 +151,31 @@ export class UserProfileComponent implements OnInit {
                error: () => this.showError('Failed to update profile')
              });
   }
-  
+  deleteAccount(): void {
+    const confirmDelete = confirm("Are you sure you want to permanently delete your account?");
+    if (!confirmDelete) return;
+
+    const id = this.user.id;
+    if (!id) {
+      this.showError('User ID is missing');
+      return;
+    }
+
+    this.authService.deleteOwnAccount(id).subscribe({
+      next: () => {
+        alert("Your account has been deleted.");
+        this.authService.logout(); // Will clear local storage + redirect
+      },
+      error: () => {
+        this.showError("Failed to delete your account. Please try again later.");
+      }
+    });
+  }
 
   // Vérifier si le formulaire a été modifié
   isFormChanged(): boolean {
     const currentValues = this.profileForm.value;
-    return Object.keys(currentValues).some(key => 
+    return Object.keys(currentValues).some(key =>
       currentValues[key] !== this.originalFormValues[key]
     );
   }
@@ -170,7 +189,7 @@ export class UserProfileComponent implements OnInit {
       this.router.navigate(['/home']); // 🔥 Redirection vers Home après 5 sec
     }, 5000);
     //redirect to home page
-     
+
   }
 
   private showError(message: string): void {

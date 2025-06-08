@@ -1,7 +1,7 @@
 <div class="layout-topbar">
-    <a class="layout-topbar-logo" routerLink="">
-        <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
-        <span>SAKAI</span>
+    <a class="layout-topbar-logo" routerLink="/admin">
+        <img id="logo" src="../../../assets/img/logo.png" alt="EcoCycleTech Logo">
+        <span>EcoCycleTech</span>
     </a>
 
     <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
@@ -24,6 +24,10 @@
         <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
             <i class="pi pi-cog"></i>
             <span>Settings</span>
+        </button>
+        <button (click)="logout($event)"  class="logout-btn panel-item" aria-label="Sign out">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Sign Out</span>
         </button>
     </div>
 </div>

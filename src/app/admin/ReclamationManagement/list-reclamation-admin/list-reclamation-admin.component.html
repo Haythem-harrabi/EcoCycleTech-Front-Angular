@@ -1,0 +1,85 @@
+<div class="eco-container">
+  <!-- Improved header with right-aligned buttons -->
+  <div class="eco-header">
+    <div class="eco-header-content">
+      <h2 class="eco-title">
+        <i class="bi bi-recycle"></i> Claims Management
+      </h2>
+      <div class="eco-header-actions">
+        <button (click)="goToCreateSupportReclamation()" class="eco-primary-btn">
+          <i class="bi bi-plus-circle"></i> New Claim
+        </button>
+        <!-- New button added here -->
+        <button (click)="goToCreateSupportReclamation()" class="eco-support-btn">
+          <i class="bi bi-headset"></i> Technical Support
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status indicators -->
+  <div *ngIf="isLoading" class="eco-loading">
+    <div class="eco-spinner"></div>
+    <span>Loading...</span>
+  </div>
+
+  <div *ngIf="errorMessage" class="eco-error">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="!isLoading && reclamations.length > 0" class="eco-table-container">
+    <table class="eco-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rec of reclamations">
+          <td>{{ rec.idReclamation }}</td>
+          <td>{{ rec.titreReclamation }}</td>
+          <td class="eco-description">{{ rec.descriptionReclamation }}</td>
+          <td>
+            <span class="eco-status" [ngClass]="'eco-' + rec.etatReclamation.toLowerCase()">
+              {{ rec.etatReclamation }}
+            </span>
+          </td>
+          <td>{{ rec.dateReclamation | date:'dd/MM/yy' }}</td>
+          <td class="eco-actions">
+            <button (click)="speakDescription(rec.descriptionReclamation)" class="eco-export-btn" title="Écouter la description">
+              <i class="bi bi-volume-up"></i>
+            </button>
+            <button (click)="exportReclamationAsPDF(rec)" class="eco-export-btn">
+              <i class="bi bi-file-earmark-pdf"></i>
+            </button>
+            <button (click)="updateReclamation(rec.idReclamation)" class="eco-edit-btn">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button (click)="deleteReclamation(rec.idReclamation)" class="eco-delete-btn">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Pagination Controls -->
+    <div class="eco-pagination">
+      <button (click)="prevPage()" [disabled]="currentPage === 1" class="eco-pagination-btn">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="eco-pagination-btn">Next</button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && reclamations.length === 0" class="eco-empty">
+    <i class="bi bi-inbox"></i>
+    <p>No claims found</p>
+  </div>
+</div>

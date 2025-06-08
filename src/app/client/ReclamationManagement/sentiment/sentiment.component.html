@@ -1,0 +1,168 @@
+<div class="sentiment-container">
+  <!-- Analyse Section -->
+  <div class="card shadow border-0 mb-4">
+    <div class="card-body p-4">
+      <h2 class="text-center mb-4 text-primary">
+        <i class="fas fa-comment-alt me-2"></i>
+        Analyze the sentiment of your text
+      </h2>
+      
+      <div class="form-floating mb-3">
+        <textarea 
+          class="form-control" 
+          id="textInput" 
+          [(ngModel)]="textInput" 
+          placeholder="Enter your text"
+          style="height: 120px;"
+        ></textarea>
+        <label for="textInput">✍️ Enter your text to analyze...</label>
+      </div>
+      
+      <button 
+        class="btn btn-primary w-100 py-2" 
+        (click)="analyser()"
+      >
+        <i class="fas fa-search me-2"></i> Analyze Now
+      </button>
+    </div>
+  </div>
+
+  <!-- Results Section -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show mb-4">
+    <i class="fas fa-exclamation-circle me-2"></i>
+    {{ error }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+
+  <div *ngIf="result" class="card shadow border-0 mb-4">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">
+        <i class="fas fa-chart-pie me-2"></i>Analysis Results
+      </h3>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-6 border-end pe-3">
+          <div class="mb-4">
+            <h5 class="d-flex align-items-center text-muted">
+              <i class="fas fa-quote-left me-2"></i>Analyzed Text
+            </h5>
+            <div class="p-3 bg-light rounded">
+              <p class="mb-0">"{{ result.text }}"</p>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h5 class="text-muted">
+              <i class="fas fa-heart me-2"></i>Detected Sentiment
+            </h5>
+            <div class="d-flex justify-content-between align-items-center">
+              <span>Your text is:</span>
+              <span class="sentiment-badge" [class]="getSentimentClass(result.sentiment)">
+                <i [class]="getSentimentIcon(result.sentiment)" class="me-1"></i>
+                {{ result.sentiment }}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="col-md-6 ps-3">
+          <div class="mb-4">
+            <h5 class="text-muted">
+              <i class="fas fa-percentage me-2"></i>Confidence Level
+            </h5>
+            <div class="progress mt-2" style="height: 25px;">
+              <div 
+                class="progress-bar" 
+                [class]="getProgressBarClass(result.sentiment)"
+                [style.width]="result.confidence * 100 + '%'"
+              >
+                {{ result.confidence | percent:'1.0-1' }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <h5 class="text-muted">
+              <i class="fas fa-star me-2"></i>Predicted Rating
+            </h5>
+            <div class="d-flex align-items-center">
+              <ngx-star-rating 
+                [id]="'rating-result'" 
+                [ngModel]="result.note" 
+                [disabled]="true"
+              ></ngx-star-rating>
+              <span class="ms-2 badge bg-secondary">{{ result.note }}/5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Rating -->
+  <div *ngIf="averageRating > 0" class="card shadow border-0 mb-4">
+    <div class="card-body text-center py-3">
+      <h3 class="mb-3">
+        <i class="fas fa-star-half-alt text-warning me-2"></i>
+        Overall Average Rating
+      </h3>
+      
+      <div class="custom-star-rating">
+        <span *ngFor="let star of [1,2,3,4,5]" class="star-container">
+          <i class="fas" 
+             [class.fa-star]="star <= averageRating"
+             [class.fa-star-half-alt]="star > averageRating && star <= averageRating + 0.5"
+             [class.fa-star-o]="star > averageRating + 0.5"
+             [ngClass]="{'text-warning': isHighRating(averageRating), 'text-danger': !isHighRating(averageRating)}">
+          </i>
+        </span>
+        <span class="ms-3 fs-4 fw-bold">{{ averageRating | number:'1.1-1' }}/5</span>
+      </div>
+      
+      <p class="text-muted mb-0">
+        Based on {{ totalRatings }} rating(s)
+      </p>
+    </div>
+  </div>
+
+  <!-- Comments Section -->
+  <div *ngIf="comments && comments.length > 0" class="card shadow border-0 mb-4">
+    <div class="card-header bg-white">
+      <h3 class="mb-0">
+        <i class="fas fa-comments text-info me-2"></i>
+        Latest Comments
+      </h3>
+    </div>
+    
+    <div class="card-body">
+      <div class="list-group list-group-flush">
+        <div *ngFor="let comment of comments" class="list-group-item border-0 py-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="sentiment-badge" [class]="getSentimentClass(comment.sentiment)">
+              <i [class]="getSentimentIcon(comment.sentiment)" class="me-1"></i>
+              {{ comment.sentiment }}
+            </span>
+            <small class="text-muted">{{ comment.date | date:'dd/MM/yyyy' }}</small>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <!-- Moving the stars to the right -->
+            <p class="mb-0 flex-grow-1" style="font-size: 1.2rem;">
+              <i class="fas fa-quote-left text-muted me-2"></i>
+              {{ comment.commentaire }}
+            </p>
+            <ngx-star-rating 
+              [id]="'comment-rating-' + comment.id"
+              [ngModel]="comment.note"
+              [disabled]="true"
+              style="flex-shrink: 0;"
+            ></ngx-star-rating>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

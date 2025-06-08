@@ -1,0 +1,165 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between mb-3">
+    <h2>Liste des Collectes</h2>
+    <button class="btn btn-success" (click)="openModal()">+ Nouvelle Collecte</button>
+  </div>
+
+  <input
+    type="text"
+    class="form-control mb-3"
+    placeholder="Rechercher..."
+    [(ngModel)]="searchQuery"
+    (input)="onSearch()"
+  />
+
+  <table class="table table-bordered table-striped table-hover">
+    <thead>
+      <tr>
+        <th (click)="onSort('dateCollecte')">
+          Date <span *ngIf="sortColumn==='dateCollecte'">{{ sortDirection==='asc'?'↑':'↓' }}</span>
+        </th>
+        <th (click)="onSort('heureDebutCollecte')">
+          Début <span *ngIf="sortColumn==='heureDebutCollecte'">{{ sortDirection==='asc'?'↑':'↓' }}</span>
+        </th>
+        <th (click)="onSort('heureFinCollecte')">
+          Fin <span *ngIf="sortColumn==='heureFinCollecte'">{{ sortDirection==='asc'?'↑':'↓' }}</span>
+        </th>
+        <th>Point</th>
+        <th>Véhicule</th>
+        <th>Demande</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of filteredCollectes">
+        <td>{{ c.dateCollecte | date:'yyyy-MM-dd' }}</td>
+        <td>{{ c.heureDebutCollecte }}</td>
+        <td>{{ c.heureFinCollecte }}</td>
+        <td>{{ c.pointCollecte.adressePointCollecte }}</td>
+        <td>
+          {{ c.vehicule.marqueVehicule || '—' }}
+          {{ c.vehicule.modeleVehicule || '' }}
+        </td>
+        <td>{{ c.demandeRecyclage.title || '—' }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-2" (click)="openEditModal(c)">Modifier</button>
+          <button class="btn btn-sm btn-danger" (click)="onDelete(c.idCollecte)">Supprimer</button>
+        </td>
+      </tr>
+      <tr *ngIf="filteredCollectes.length===0">
+        <td colspan="7" class="text-center">Aucune collecte trouvée.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Add / Edit Modal -->
+<div class="modal fade" id="collecteModal" tabindex="-1" aria-labelledby="collecteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form #collecteForm="ngForm" (ngSubmit)="saveCollecte(collecteForm)">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="collecteModalLabel">
+            {{ isEditMode ? 'Modifier' : 'Nouvelle' }} Collecte
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Date -->
+          <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input
+            type="date"
+            name="dateCollecte"
+            class="form-control"
+            required
+            [ngModel]="currentCollecte.dateCollecte | date:'yyyy-MM-dd'"
+            (ngModelChange)="currentCollecte.dateCollecte = $event"
+          />
+          </div>
+
+          <!-- Times (with seconds) -->
+          <div class="mb-3 row">
+            <div class="col">
+              <label class="form-label">Heure début</label>
+              <input
+                type="time"
+                step="1"
+                name="heureDebutCollecte"
+                class="form-control"
+                required
+                [(ngModel)]="currentCollecte.heureDebutCollecte"
+              />
+            </div>
+            <div class="col">
+              <label class="form-label">Heure fin</label>
+              <input
+                type="time"
+                step="1"
+                name="heureFinCollecte"
+                class="form-control"
+                required
+                [(ngModel)]="currentCollecte.heureFinCollecte"
+              />
+            </div>
+          </div>
+
+          <!-- Point de collecte -->
+          <div class="mb-3">
+            <label class="form-label">Point de collecte</label>
+            <select
+              name="pointCollecte"
+              class="form-select"
+              required
+              [(ngModel)]="currentCollecte.pointCollecte"
+            >
+              <option *ngFor="let p of points" [ngValue]="p">
+                {{ p.adressePointCollecte }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Véhicule -->
+          <div class="mb-3">
+            <label class="form-label">Véhicule</label>
+            <select
+              name="vehicule"
+              class="form-select"
+              [(ngModel)]="currentCollecte.vehicule"
+            >
+              <option [ngValue]="null">— aucun —</option>
+              <option *ngFor="let v of vehicules" [ngValue]="v">
+                {{ v.marqueVehicule }} {{ v.modeleVehicule }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Demande -->
+          <div class="mb-3">
+            <label class="form-label">Demande</label>
+            <select
+              name="demandeRecyclage"
+              class="form-select"
+              required
+              [(ngModel)]="currentCollecte.demandeRecyclage"
+            >
+              <option *ngFor="let d of demandes" [ngValue]="d">
+                {{ d.title }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="collecteForm.invalid">
+            {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,285 @@
+/* Popup Styles */
+.camera-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.camera-popup {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.popup-header {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+
+
+/* Keep all your existing styles */
+/* ... */
+/* Main Card */
+.camera-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin: 25px 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Header */
+.card-header {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+}
+
+.ai-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  color: #4CAF50;
+}
+
+h3 {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.control-btn {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-btn i {
+  font-size: 14px;
+}
+
+.power {
+  background: #e74c3c;
+  color: white;
+}
+
+.power.active {
+  background: #2ecc71;
+}
+
+.scan {
+  background: #3498db;
+  color: white;
+}
+
+.scan.active {
+  background: #9b59b6;
+}
+
+.scan.scanning {
+  animation: pulse 1.5s infinite;
+}
+
+/* Camera View */
+.camera-view {
+  height: 400px;
+  background: #1a1a1a;
+  position: relative;
+  overflow: hidden;
+}
+
+.camera-view.pulse {
+  animation: softPulse 1s;
+}
+
+.video-feed {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.video-feed img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.scan-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    rgba(46, 204, 113, 0.1),
+    rgba(46, 204, 113, 0.1)
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.scan-overlay.active {
+  opacity: 1;
+  animation: scan 2s linear infinite;
+}
+
+/* Animations */
+@keyframes scan {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes softPulse {
+  0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+
+/* Detection Panel */
+.detection-panel {
+  background: white;
+  padding: 15px;
+  border-top: 1px solid #eee;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.panel-header i {
+  color: #3498db;
+}
+
+.detection-info p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Detected Items */
+.detected-items {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.item {
+  margin-bottom: 10px;
+}
+
+.item-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.confidence-bar {
+  height: 20px;
+  background: #ecf0f1;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2ecc71, #3498db);
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+.percentage {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: white;
+  text-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #95a5a6;
+}
+
+.empty-state i {
+  font-size: 24px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .controls {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

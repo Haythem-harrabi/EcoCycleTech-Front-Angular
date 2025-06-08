@@ -1,0 +1,404 @@
+
+
+  <div class="container mt-4">
+      <!-- Add Button -->
+      <button class="btn btn-primary mb-3"  style="background-color: #68b484; border-color: #68b484; color: #fff;" (click)="resetForm(); openModal()">Ajouter une demande</button>
+    
+      <!-- Search --> 
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Rechercher..." [(ngModel)]="searchQuery" (input)="applyFilters()" />
+      </div>
+    
+      <!-- Table -->
+      <table class="table table-bordered table-hover"  >
+        <thead>
+          <tr>
+            <th style="background-color: #68b484; color: white;">Image</th>
+            <th (click)="sortTable('user.username')" style="background-color: #68b484; color: white;">Utilisateur {{ getSortIcon('user.username') }}</th>
+            <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('title')">
+              Titre {{ getSortIcon('title') }}
+            <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('descriptionDemandeRecyclage')">
+              Description {{ getSortIcon('descriptionDemandeRecyclage') }}
+            </th>
+            <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('dateCreationDemandeRecyclage')">
+              Date {{ getSortIcon('dateCreationDemandeRecyclage') }}
+            </th>
+            <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('nbrAppareils')">
+              Nombre Appareils {{ getSortIcon('nbrAppareils') }}
+            </th>
+            <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('prixDemandeRecyclage')">
+              Prix {{ getSortIcon('prixDemandeRecyclage') }}
+            </th>
+            <th style="background-color: #68b484; color: white; cursor: pointer;" (click)="sortTable('etatDemandeRecyclage')">
+              Etat {{ getSortIcon('etatDemandeRecyclage') }}
+            </th>
+            <th style="background-color: #68b484; color: white;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let demande of filteredDemandes">
+            <td class="align-middle">
+              <img *ngIf="demande.imageBase64" [src]="'data:image/png;base64,' + demande.imageBase64" class="img-thumbnail" style="height: 80px; width: 80px;" />
+            </td>
+            <td class="align-middle">{{ demande.user?.username }}</td>
+            <td class="align-middle">{{ demande.title }}</td>
+            <td class="align-middle">{{ demande.descriptionDemandeRecyclage }}</td>
+            <td class="align-middle">{{ demande.dateCreationDemandeRecyclage | date: 'shortDate' }}</td>
+            <td class="align-middle">{{ demande.nbrAppareils }}</td>
+            <td class="align-middle">{{ demande.prixDemandeRecyclage | currency: 'TND  ' }}</td>
+            <td class="align-middle">{{  demande.etatDemandeRecyclage}}</td>
+
+            <td class="align-middle">
+              <!-- Voir → Eye icon -->
+              <button class="btn btn-sm btn-info me-1" (click)="viewDetails(demande)" title="Voir">
+                <i class="bi bi-eye"></i>
+              </button>
+            
+              <!-- Modifier → Pencil icon -->
+              <button class="btn btn-sm btn-warning me-1" (click)="edit(demande)" title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </button>
+            
+              <!-- Supprimer → Trash icon -->
+              <button class="btn btn-sm btn-danger" (click)="delete(demande.idDemandeRecyclage)" title="Supprimer">
+                <i class="bi bi-trash"></i>
+              </button>
+
+              <button      *ngIf="demande.etatDemandeRecyclage === 'TRAITE'"       class="btn btn-outline-primary"   (click)="downloadCertificat(demande)" 
+              title="Télécharger le certificat PDF"
+          >  <i class="bi bi-file-earmark-pdf"></i> PDF  </button>
+
+            </td>
+            
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  <!-- Modal -->
+  <div
+  class="modal fade"
+  id="staticBackdrop"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+  >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #form="ngForm" (ngSubmit)="saveOrUpdate(form)">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">
+            {{ isEditMode ? 'Modifier' : 'Ajouter' }} une Demande
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- ✅ Image Preview -->
+          <div class="mb-3 text-center" *ngIf="demande.imageData">
+            <img
+              [src]="demande.imageData"
+              class="img-fluid rounded"
+              alt="Aperçu image"
+              style="max-height: 150px;"
+            />
+          </div>
+
+          <!-- ✅ Image Upload -->
+          <div class="mb-3">
+           <!-- <label for="image" class="form-label">{{ imageLabel }}</label>-->
+            <input
+              #fileInput
+              id="image"
+              name="image"
+              type="file"
+              ngModel
+              #imageField="ngModel"
+              (change)="onFileChange($event)"
+              class="form-control"
+              [required]="!isEditMode"
+            />
+            <div
+              *ngIf="imageField.invalid && (imageField.dirty || imageField.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="imageField.errors?.['required']">
+                L'image est obligatoire.
+              </div>
+            </div>
+          </div>
+
+
+        <!-- ✅ ai generate titre -->
+        <div class="mb-3 d-flex align-items-center">
+          <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="onGenerateTitle()"
+          title="Générer automatiquement un titre depuis l'image"
+        >
+          <i class="bi bi-lightbulb"></i>
+        </button>
+          <label for="title" class="form-label mb-0">Génerer un titre depuis l'image with AI</label>
+        </div>
+
+
+          <!-- ✅ Title -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Titre</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              class="form-control"
+              required minlength="3" maxlength="25"
+              [(ngModel)]="demande.title" #titleField="ngModel"
+            />
+            <div *ngIf="titleField.invalid && (titleField.dirty || titleField.touched)" class="text-danger">
+              <div *ngIf="titleField.errors?.['required']">Le titre est obligatoire.</div>
+              <div *ngIf="titleField.errors?.['minlength']">
+                Minimum {{ titleField.errors?.['minlength'].requiredLength }} caractères.
+              </div>
+              <div *ngIf="titleField.errors?.['maxlength']">
+                Maximum {{ titleField.errors?.['maxlength'].requiredLength }} caractères.
+              </div>
+            </div>
+          </div>
+          
+
+          <!-- ✅ Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <input
+              id="description"
+              type="text"
+              [(ngModel)]="demande.descriptionDemandeRecyclage"
+              name="descriptionDemandeRecyclage"
+              #description="ngModel"
+              class="form-control"
+              required
+              minlength="15"
+            />
+            <div
+              *ngIf="description.invalid && (description.dirty || description.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="description.errors?.['required']">
+                La description est obligatoire.
+              </div>
+              <div *ngIf="description.errors?.['minlength']">
+                Minimum
+                {{ description.errors?.['minlength']?.requiredLength }}
+                caractères (actuellement
+                {{ description.errors?.['minlength']?.actualLength }}).
+              </div>
+            </div>
+          </div>
+          <!-- Date de création              [ngModel]="(demande.dateCreationDemandeRecyclage | date:'yyyy-MM-dd') || today"
+ -->
+          <div class="mb-3">
+            <label for="date" class="form-label">Date de création</label>
+            <input
+              id="date"
+              name="dateCreationDemandeRecyclage"
+              type="date"
+              class="form-control"
+              [ngModel]="(demande.dateCreationDemandeRecyclage | date:'yyyy-MM-dd' ) || today"
+              
+              (ngModelChange)="demande.dateCreationDemandeRecyclage = $event"
+              #dateField="ngModel"
+              required
+              pastDate             
+              [max]="today"         
+            />
+
+            <div
+              *ngIf="
+                (dateField.invalid && (dateField.dirty || dateField.touched))
+                || wasSubmitted
+              "
+              class="text-danger mt-1"
+            >
+              <div *ngIf="dateField.errors?.['required']">
+                La date est obligatoire.
+              </div>
+              <div *ngIf="dateField.errors?.['notInPast']">
+                La date doit être inférieure ou égale à aujourd’hui ({{ today }}).
+              </div>
+            </div>
+          </div>
+
+
+
+          <!-- ✅ Nombre d'appareils -->
+          <div class="mb-3">
+            <label for="nbr" class="form-label">Nombre d'appareils</label>
+            <input
+              id="nbr"
+              type="number"
+              [(ngModel)]="demande.nbrAppareils"
+              name="nbrAppareils"
+              #nbrField="ngModel"
+              class="form-control"
+              required
+              min="1"
+            />
+            <div
+              *ngIf="nbrField.invalid && (nbrField.dirty || nbrField.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="nbrField.errors?.['required']">
+                Le nombre est obligatoire.
+              </div>
+              <div *ngIf="nbrField.errors?.['min']">
+                Le nombre doit être supérieur ou égal à 1.
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Prix estimé -->
+          <div class="mb-3">
+            <label for="prix" class="form-label">Prix estimé</label>
+            <input
+              id="prix"
+              type="number"
+              [(ngModel)]="demande.prixDemandeRecyclage"
+              name="prixDemandeRecyclage"
+              #prixField="ngModel"
+              class="form-control"
+              required
+              min="1"
+            />
+            <div
+              *ngIf="prixField.invalid && (prixField.dirty || prixField.touched)"
+              class="text-danger mt-1"
+            >
+              <div *ngIf="prixField.errors?.['required']">
+                Le prix est obligatoire.
+              </div>
+              <div *ngIf="prixField.errors?.['min']">
+                Le prix doit être supérieur ou égal à 1.
+              </div>
+            </div>
+          </div>
+
+  <!-- ✅ État -->
+  <div class="mb-3">
+    <label for="etatDemandeRecyclage" class="form-label">État</label>
+    <select
+    class="form-select"
+    [(ngModel)]="demande.etatDemandeRecyclage"
+    name="etatDemandeRecyclage"
+    required
+  >
+    <option *ngFor="let et of availableEtats" [ngValue]="et">
+      {{ et }}
+    </option>
+  </select>
+  </div>
+
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-success">
+            {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          
+        </div>
+      </form>
+    </div>
+  </div>
+  </div>
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        Êtes-vous sûr de vouloir supprimer cette demande ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- Details Modal -->
+  <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Détails de la Demande</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="selectedDemande">
+          <img *ngIf="selectedDemande.imageBase64"
+          [src]="'data:image/png;base64,' + selectedDemande.imageBase64"
+          class="img-fluid mb-3 detail-image"
+          alt="Image de la demande" />
+          <p><strong>Utilisateur :</strong> {{ selectedDemande.user?.username }}</p>
+          <p><strong>Titre:</strong> {{ selectedDemande.title }}</p>
+              <p><strong>Description:</strong> {{ selectedDemande.descriptionDemandeRecyclage }}</p>
+          <p><strong>Date de création:</strong> {{ selectedDemande.dateCreationDemandeRecyclage | date: 'shortDate' }}</p>
+          <p><strong>Nombre d'appareils:</strong> {{ selectedDemande.nbrAppareils }}</p>
+          <p><strong>Prix estimé:</strong> {{ selectedDemande.prixDemandeRecyclage | currency: 'EUR' }}</p>
+          <p><strong>État:</strong> {{ selectedDemande.etatDemandeRecyclage || 'ENCOURS' }}</p>
+        </div>
+
+        <hr />
+        <h5>💬 Commentaires</h5>
+        
+<!-- comment-recycle.component.html -->
+<div
+  *ngFor="let c of commentaires"
+  class="comment mb-3 border-bottom pb-2"
+>
+  <!-- header row: name + date on left, trash on right -->
+  <div class="d-flex justify-content-between align-items-start comment-header">
+    <div class="comment-meta">
+      <strong>{{ c.userName }}</strong>
+      <small class="text-muted d-block">
+        {{ c.dateCreation | date:'short' }}
+      </small>
+    </div>
+    <button
+      *ngIf="isAdmin || (c.user?.idUser === currentUserId)"
+      class="btn btn-sm btn-outline-danger"
+      (click)="deleteComment(c.idCommentaire!)"
+      title="Supprimer le commentaire"
+    >
+      <i class="bi bi-trash" background-color="red"></i>
+    </button>
+  </div>
+
+  <!-- body -->
+  <p class="mb-0">{{ c.content }}</p>
+</div>
+
+        
+        
+        <div class="mt-3">
+          <textarea [(ngModel)]="newComment" rows="2" class="form-control" placeholder="Ajouter un commentaire..."></textarea>
+          <button class="btn btn-sm btn-primary mt-2" (click)="submitComment()">Commenter</button>
+        </div>
+        
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+  </div>

@@ -1,0 +1,150 @@
+/* Conteneur principal */
+.eco-update-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+/* Carte du formulaire */
+.eco-form-card {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+}
+
+/* En-tête centré */
+.eco-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.eco-form-title {
+  margin: 0;
+  color: #2e7d32;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.eco-emoji {
+  font-size: 1.5rem;
+}
+
+/* Groupes de champs (alignement vertical strict) */
+.eco-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.eco-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.eco-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.eco-input:focus {
+  border-color: #4caf50;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.eco-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Bouton de soumission */
+.eco-submit-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.eco-button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Bouton Annuler */
+.eco-cancel-btn {
+  flex: 1;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.eco-cancel-btn:hover {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+}
+
+/* Bouton Valider (légèrement modifié pour équilibrer visuellement) */
+.eco-submit-btn {
+  flex: 1;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.eco-submit-btn:hover {
+  background-color: #388e3c;
+}
+
+.eco-submit-btn:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+/* États (loading/error) */
+.eco-loading-state,
+.eco-error-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.eco-loading-state {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.eco-error-state {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Messages d'erreur */
+.eco-error {
+  color: #c62828;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
